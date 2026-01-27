@@ -4,10 +4,15 @@ namespace App\Controllers;
 
 class Register extends BaseController
 {
-    public function index(): string
-    {
-        return view('/pages/register');
+    public function index()
+{
+    if (!session()->get('isLoggedIn')) {
+        return redirect()->to('/')->with('error', 'You must log in first.');
     }
+
+    return view('/pages/login');
+}
+
     public function store()
     {
          $userModel = new \App\Models\UserModel();

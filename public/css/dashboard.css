@@ -1,30 +1,119 @@
 .card-dash {
+    border: 0;
+    border-radius: 1.25rem;
+    box-shadow: 0 .75rem 2rem rgba(0, 0, 0, .12);
+    overflow: hidden;
+    transition: transform .15s ease, box-shadow .15s ease;
+}
+
+.card-dash:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 1.2rem 2.6rem rgba(0, 0, 0, .16);
+}
+
+.card-dash-header {
+    background: rgba(13, 110, 253, .10);
+    border-bottom: 1px solid rgba(0, 0, 0, .08);
+}
+
+.stat-tile {
+    border: 1px solid rgba(0, 0, 0, .08);
+    border-radius: 1rem;
+    padding: 1rem;
+    background: #fff;
+    transition: transform .15s ease, box-shadow .15s ease;
+}
+
+.stat-tile:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 .5rem 1.25rem rgba(0, 0, 0, .08);
+}
+
+/* ===== NAVBAR POLISH ===== */
+
+.navbar-app {
+    backdrop-filter: blur(10px);
+    background: rgba(22, 22, 108, .92);
+    border-bottom: 1px solid rgba(255, 255, 255, .08);
+}
+
+.navbar-app .navbar-nav {
+    gap: .35rem;
+}
+
+.navbar-app .nav-link {
+    border-radius: 999px;
+    padding: .55rem 1rem !important;
+    transition: background .15s ease, transform .15s ease;
+}
+
+.navbar-app .nav-link:hover {
+    background: rgba(255, 255, 255, .10);
+    transform: translateY(-1px);
+}
+
+.navbar-app .nav-link.active {
+    background: rgba(255, 255, 255, .16);
+    border: 1px solid rgba(255, 255, 255, .18);
+}
+
+/* Logout button */
+.navbar-app .btn-logout {
+    background: #ff4d4f !important;
+    border: 1px solid #ff4d4f !important;
+    color: #fff !important;
+    box-shadow: none !important;
+    transition: transform .15s ease, box-shadow .15s ease, background .15s ease;
+}
+
+.navbar-app .btn-logout:hover {
+    background: #ff3b3d !important;
+    box-shadow: 0 .6rem 1.2rem rgba(255, 77, 79, .25) !important;
+    transform: translateY(-1px);
+}
+/* ===== Create/Add Record styling to match dashboard ===== */
+.form-card {
   border: 0;
   border-radius: 1.25rem;
   box-shadow: 0 .75rem 2rem rgba(0,0,0,.12);
   overflow: hidden;
-  transition: transform .15s ease, box-shadow .15s ease;
+  background: #fff;
 }
 
-.card-dash:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 1.2rem 2.6rem rgba(0,0,0,.16);
-}
-
-.card-dash-header {
+.form-card-header {
   background: rgba(13,110,253,.10);
   border-bottom: 1px solid rgba(0,0,0,.08);
 }
 
-.stat-tile {
-  border: 1px solid rgba(0,0,0,.08);
-  border-radius: 1rem;
-  padding: 1rem;
-  background: #fff;
-  transition: transform .15s ease, box-shadow .15s ease;
+.form-label-soft{
+  font-size: .82rem;
+  letter-spacing: .4px;
+  text-transform: uppercase;
+  color: #6c757d;
+  font-weight: 700;
+  margin-bottom: .45rem;
 }
 
-.stat-tile:hover {
-  transform: translateY(-1px);
-  box-shadow: 0 .5rem 1.25rem rgba(0,0,0,.08);
+.form-control.form-modern,
+.form-select.form-modern{
+  border: 1px solid rgba(0,0,0,.10);
+  border-radius: 1rem;
+  padding: .75rem 1rem;
+}
+
+.form-control.form-modern:focus,
+.form-select.form-modern:focus{
+  border-color: rgba(13,110,253,.45);
+  box-shadow: 0 0 0 .25rem rgba(13,110,253,.12);
+}
+
+textarea.form-control.form-modern{
+  min-height: 180px;
+  resize: vertical;
+}
+
+.btn-pill{
+  border-radius: 999px;
+  padding: .7rem 1.25rem;
+  font-weight: 700;
 }

@@ -28,3 +28,6 @@ $routes->get('/create', 'Create::create');
 
 // logout route
 $routes->get('/logout', 'Logout::index');
+
+// changepassword route
+$routes->get('/change_password', 'ChangePassword::change_password');

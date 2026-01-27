@@ -1,0 +1,30 @@
+.navbar-app{
+  background: linear-gradient(90deg, #16166c 0%, #121257 100%);
+  border-bottom: 1px solid rgba(255,255,255,.08);
+}
+
+.navbar-app .nav-link{
+  border-radius: 999px;
+  transition: background .15s ease, transform .15s ease;
+}
+
+.navbar-app .nav-link:hover{
+  background: rgba(255,255,255,.10);
+  transform: translateY(-1px);
+}
+
+.navbar-app .nav-link.active{
+  background: rgba(255,255,255,.16);
+}
+
+.btn-logout{
+  background:#ff4d4f;
+  border:1px solid #ff4d4f;
+  transition: transform .15s ease, box-shadow .15s ease, background .15s ease;
+}
+
+.btn-logout:hover{
+  transform: translateY(-1px);
+  box-shadow: 0 .6rem 1.2rem rgba(255,77,79,.25);
+  background:#ff3b3d;
+}

@@ -42,19 +42,7 @@
                         </button>
                     </div>
 
-                    <!-- Divider -->
-                    <div class="text-center mb-2">
-                        <small class="text-muted">Don’t have an account?</small>
-                    </div>
 
-                    <!-- Register Button -->
-                    <div class="d-grid">
-                        <a href="<?= base_url('register'); ?>"
-                            class="btn btn-outline-success btn-lg fw-bold"
-                            style="transition: 0.3s;">
-                            Register
-                        </a>
-                    </div>
                 </form>
             </div>
         </div>

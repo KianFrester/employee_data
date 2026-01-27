@@ -7,9 +7,9 @@
             <!-- Header / Logo -->
             <div class="card-header text-center rounded-top-4 border-0">
                 <img src="<?= base_url('assets/images/bolinao_logo.png'); ?>"
-                     alt="Logo"
-                     class="img-fluid"
-                     style="max-width: 180px; margin-bottom: 15px;">
+                    alt="Logo"
+                    class="img-fluid"
+                    style="max-width: 180px; margin-bottom: 15px;">
             </div>
 
             <!-- Card Body -->
@@ -42,30 +42,16 @@
 
                     <!-- Register Button -->
                     <div class="d-grid mb-3">
-                        <button type="submit" 
-                                class="btn btn-lg text-white fw-bold"
-                                style="background-color: #108f23; border: 1px solid #108f23; transition: 0.3s;"
-                                onmouseover="this.style.backgroundColor='#0e7a1b'; this.style.borderColor='#0e7a1b';"
-                                onmouseout="this.style.backgroundColor='#108f23'; this.style.borderColor='#108f23';">
+                        <button type="submit"
+                            class="btn btn-lg text-white fw-bold"
+                            style="background-color: #108f23; border: 1px solid #108f23; transition: 0.3s;"
+                            onmouseover="this.style.backgroundColor='#0e7a1b'; this.style.borderColor='#0e7a1b';"
+                            onmouseout="this.style.backgroundColor='#108f23'; this.style.borderColor='#108f23';">
                             Register
                         </button>
                     </div>
 
-                    <!-- Divider -->
-                    <div class="text-center mb-2">
-                        <small class="text-muted">Already have an account?</small>
-                    </div>
 
-                    <!-- Login Button -->
-                    <div class="d-grid">
-                        <a href="<?= base_url('/'); ?>" 
-                           class="btn btn-lg text-white fw-bold"
-                           style="background-color: #16166c; border: 1px solid #16166c; transition: 0.3s;"
-                            onmouseover="this.style.backgroundColor='#0f1255'; this.style.borderColor='#0f1255';"
-                            onmouseout="this.style.backgroundColor='#16166c'; this.style.borderColor='#16166c';">
-                            Login
-                        </a>
-                    </div>
 
                 </form>
             </div>
