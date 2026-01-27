@@ -1,13 +1,13 @@
-<?php echo $this->extend('main/master'); ?>
-<?php echo $this->section('content'); ?>
-<?php echo $this->include('main/navbar'); ?>
+<?= $this->extend('main/master'); ?>
+<?= $this->section('content'); ?>
+<?= $this->include('main/navbar'); ?>
 
-<div class="container my-5">
+<div class="container-fluid my-5 px-4">
 
     <!-- Page Title -->
     <div class="text-center mb-4">
-        <h2 class="fw-bold text-primary">Search Records</h2>
-        <hr>
+        <h2 class="fw-bold text-white"><i class="bi bi-search px-2"></i>Search Records</h2>
+        <hr class="border-light">
     </div>
 
     <!-- Search & Filter -->
@@ -21,7 +21,6 @@
                     id="tableSearch"
                     class="form-control form-control-lg rounded-pill shadow-sm pe-5"
                     placeholder="Search records...">
-
                 <button
                     type="button"
                     id="clearSearch"
@@ -33,112 +32,46 @@
         </div>
 
         <!-- Column Filter Dropdown -->
-        <div class="col-md-2">
-            <div class="dropdown w-auto">
+        <div class="col-12 col-md-4 col-lg-3 mb-3 mb-md-0">
+            <div class="dropdown w-100">
                 <button
-                    class="btn btn-light btn-lg w-100 rounded-pill shadow-sm text-primary text-black dropdown-toggle"
+                    class="btn btn-light btn-lg w-100 rounded-pill shadow-sm text-primary dropdown-toggle text-truncate"
                     type="button"
                     data-bs-toggle="dropdown"
-                    aria-expanded="false">
+                    aria-expanded="false"
+                    style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">
                     <i class="bi bi-funnel-fill text-primary me-2"></i>
                     Filter Columns
                 </button>
 
-                <ul class="dropdown-menu w-100 p-3 shadow rounded-4">
-                    <li class="mb-2">
-                        <div class="form-check">
-                            <input class="form-check-input column-check" type="checkbox" value="0" checked>
-                            <label class="form-check-label">Last Name</label>
-                        </div>
-                    </li>
-                    <li class="mb-2">
-                        <div class="form-check">
-                            <input class="form-check-input column-check" type="checkbox" value="1" checked>
-                            <label class="form-check-label">First Name</label>
-                        </div>
-                    </li>
-                    <li class="mb-2">
-                        <div class="form-check">
-                            <input class="form-check-input column-check" type="checkbox" value="2" checked>
-                            <label class="form-check-label">Middle Name</label>
-                        </div>
-                    </li>
-                    <li class="mb-2">
-                        <div class="form-check">
-                            <input class="form-check-input column-check" type="checkbox" value="2" checked>
-                            <label class="form-check-label">Extensions</label>
-                        </div>
-                    </li>
-                    <li class="mb-2">
-                        <div class="form-check">
-                            <input class="form-check-input column-check" type="checkbox" value="2" checked>
-                            <label class="form-check-label">Birthdate</label>
-                        </div>
-                    </li>
-                    <li>
-                        <div class="form-check">
-                            <input class="form-check-input column-check" type="checkbox" value="5" checked>
-                            <label class="form-check-label">Gender</label>
-                        </div>
-                    </li>
-                    <li class="mb-2">
-                        <div class="form-check">
-                            <input class="form-check-input column-check" type="checkbox" value="3" checked>
-                            <label class="form-check-label">Department</label>
-                        </div>
-                    </li>
-                    <li class="mb-2">
-                        <div class="form-check">
-                            <input class="form-check-input column-check" type="checkbox" value="4" checked>
-                            <label class="form-check-label">Designation</label>
-                        </div>
-                    </li>
-                    <li class="mb-2">
-                        <div class="form-check">
-                            <input class="form-check-input column-check" type="checkbox" value="2" checked>
-                            <label class="form-check-label">Eduacational Attainment</label>
-                        </div>
-                    </li>
-                    <li class="mb-2">
-                        <div class="form-check">
-                            <input class="form-check-input column-check" type="checkbox" value="2" checked>
-                            <label class="form-check-label">Rate</label>
-                        </div>
-                    </li>
-                    <li class="mb-2">
-                        <div class="form-check">
-                            <input class="form-check-input column-check" type="checkbox" value="2" checked>
-                            <label class="form-check-label">Eligibility</label>
-                        </div>
-                    </li>
-                    <li class="mb-2">
-                        <div class="form-check">
-                            <input class="form-check-input column-check" type="checkbox" value="2" checked>
-                            <label class="form-check-label">Date of Appointment</label>
-                        </div>
-                    </li>
-                    <li class="mb-2">
-                        <div class="form-check">
-                            <input class="form-check-input column-check" type="checkbox" value="2" checked>
-                            <label class="form-check-label">Service Duration</label>
-                        </div>
-                    </li>
-                    <li class="mb-2">
-                        <div class="form-check">
-                            <input class="form-check-input column-check" type="checkbox" value="2" checked>
-                            <label class="form-check-label">Remarks</label>
-                        </div>
-                    </li>
+                <ul class="dropdown-menu p-3 shadow rounded-4" style="max-height: 350px; overflow-y: auto;">
+                    <?php
+                    $columns = [
+                        'Last Name','First Name','Middle Name','Extensions','Birthdate','Gender',
+                        'Department','Educational Attainment','Designation','Rate','Eligibility',
+                        'Date of Appointment','Service Duration','Remarks'
+                    ];
+                    foreach ($columns as $index => $col): ?>
+                        <li class="mb-2">
+                            <div class="form-check d-flex align-items-center">
+                                <input class="form-check-input me-2 column-check" type="checkbox" value="<?= $index ?>" checked>
+                                <label class="form-check-label flex-grow-1"><?= $col ?></label>
+                            </div>
+                        </li>
+                    <?php endforeach; ?>
                 </ul>
             </div>
         </div>
 
     </div>
 
-    <!-- Table -->
-    <div class="card shadow rounded-4">
-        <div class="card-header bg-primary text-white fw-bold">
-            Employee Records
+    <!-- Table Card -->
+    <div class="card shadow-lg rounded-4 w-100">
+        <div class="card-header bg-primary text-white fw-bold d-flex justify-content-between align-items-center rounded-top-4">
+            <span>Employee Records</span>
+            <button class="btn btn-light btn-sm" onclick="printTable()" title="Print Table">
+                <i class="bi bi-printer-fill text-primary"></i>
+            </button>
         </div>
 
         <div class="card-body">
@@ -146,12 +79,9 @@
                 <table class="table table-bordered table-striped text-center align-middle" id="searchTable">
                     <thead class="table-primary">
                         <tr>
-                            <th>Last Name</th>
-                            <th>First Name</th>
-                            <th>Middle Name</th>
-                            <th>Department</th>
-                            <th>Designation</th>
-                            <th>Gender</th>
+                            <?php foreach ($columns as $col): ?>
+                                <th><?= $col ?></th>
+                            <?php endforeach; ?>
                         </tr>
                     </thead>
                     <tbody>
@@ -161,14 +91,22 @@
                                     <td><?= esc($rec['last_name']) ?></td>
                                     <td><?= esc($rec['first_name']) ?></td>
                                     <td><?= esc($rec['middle_name']) ?></td>
-                                    <td><?= esc($rec['department']) ?></td>
-                                    <td><?= esc($rec['designation']) ?></td>
+                                    <td><?= esc($rec['extensions']) ?></td>
+                                    <td><?= esc($rec['birthdate']) ?></td>
                                     <td><?= esc($rec['gender']) ?></td>
+                                    <td><?= esc($rec['department']) ?></td>
+                                    <td><?= esc($rec['educational_attainment']) ?></td>
+                                    <td><?= esc($rec['designation']) ?></td>
+                                    <td><?= esc($rec['rate']) ?></td>
+                                    <td><?= esc($rec['eligibility']) ?></td>
+                                    <td><?= esc($rec['date_of_appointment']) ?></td>
+                                    <td><?= esc($rec['service_duration']) ?></td>
+                                    <td><?= esc($rec['remarks']) ?></td>
                                 </tr>
                             <?php endforeach; ?>
                         <?php else: ?>
                             <tr>
-                                <td colspan="6">No records found.</td>
+                                <td colspan="<?= count($columns) ?>">No records found.</td>
                             </tr>
                         <?php endif; ?>
                     </tbody>
@@ -179,65 +117,7 @@
 
 </div>
 
-<!-- SCRIPT -->
-<script>
-    /* ===== ELEMENTS ===== */
-    const searchInput = document.getElementById('tableSearch');
-    const clearBtn = document.getElementById('clearSearch');
-    const table = document.getElementById('searchTable');
-    const checkboxes = document.querySelectorAll('.column-check');
+<script src="<?= base_url('js/main_search.js') ?>"></script>
+<script src="<?= base_url('js/print_table.js') ?>"></script>
 
-    /* ===== APPLY FILTERS ===== */
-    function applyFilters() {
-        const searchValue = searchInput.value.toLowerCase();
-        const selectedColumns = Array.from(checkboxes)
-            .filter(cb => cb.checked)
-            .map(cb => parseInt(cb.value));
-
-        const rows = table.querySelectorAll('tbody tr');
-
-        /* Show / Hide Columns */
-        table.querySelectorAll('tr').forEach(row => {
-            row.querySelectorAll('th, td').forEach((cell, index) => {
-                cell.style.display = selectedColumns.includes(index) ? '' : 'none';
-            });
-        });
-
-        /* Search Rows */
-        rows.forEach(row => {
-            let rowText = '';
-            selectedColumns.forEach(index => {
-                rowText += row.cells[index]?.innerText.toLowerCase() + ' ';
-            });
-            row.style.display = rowText.includes(searchValue) ? '' : 'none';
-        });
-    }
-
-    /* ===== CLEAR BUTTON VISIBILITY ===== */
-    function toggleClearButton() {
-        clearBtn.style.display = searchInput.value ? 'block' : 'none';
-    }
-
-    /* ===== EVENTS ===== */
-    searchInput.addEventListener('input', () => {
-        applyFilters();
-        toggleClearButton();
-    });
-
-    clearBtn.addEventListener('click', () => {
-        searchInput.value = '';
-        searchInput.focus();
-        applyFilters();
-        toggleClearButton();
-    });
-
-    checkboxes.forEach(cb => {
-        cb.addEventListener('change', applyFilters);
-    });
-
-    /* ===== INIT ===== */
-    toggleClearButton();
-    applyFilters();
-</script>
-
-<?php echo $this->endSection(); ?>
+<?= $this->endSection(); ?>

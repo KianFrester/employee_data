@@ -1,13 +1,9 @@
-document.addEventListener('DOMContentLoaded', () => {
 
     /* ===== ELEMENTS ===== */
     const searchInput = document.getElementById('tableSearch');
-    const clearBtn    = document.getElementById('clearSearch');
-    const table       = document.getElementById('searchTable');
-    const checkboxes  = document.querySelectorAll('.column-check');
-
-    // Safety check (prevents JS errors on other pages)
-    if (!searchInput || !table) return;
+    const clearBtn = document.getElementById('clearSearch');
+    const table = document.getElementById('searchTable');
+    const checkboxes = document.querySelectorAll('.column-check');
 
     /* ===== APPLY FILTERS ===== */
     function applyFilters() {
@@ -18,14 +14,14 @@ document.addEventListener('DOMContentLoaded', () => {
 
         const rows = table.querySelectorAll('tbody tr');
 
-        // Show / Hide Columns
+        /* Show / Hide Columns */
         table.querySelectorAll('tr').forEach(row => {
             row.querySelectorAll('th, td').forEach((cell, index) => {
                 cell.style.display = selectedColumns.includes(index) ? '' : 'none';
             });
         });
 
-        // Search Rows
+        /* Search Rows */
         rows.forEach(row => {
             let rowText = '';
             selectedColumns.forEach(index => {
@@ -35,7 +31,7 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    /* ===== CLEAR BUTTON ===== */
+    /* ===== CLEAR BUTTON VISIBILITY ===== */
     function toggleClearButton() {
         clearBtn.style.display = searchInput.value ? 'block' : 'none';
     }
@@ -60,5 +56,3 @@ document.addEventListener('DOMContentLoaded', () => {
     /* ===== INIT ===== */
     toggleClearButton();
     applyFilters();
-
-});
