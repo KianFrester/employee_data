@@ -10,7 +10,7 @@ class Register extends BaseController
         return redirect()->to('/')->with('error', 'You must log in first.');
     }
 
-    return view('/pages/login');
+    return view('/pages/register');
 }
 
     public function store()

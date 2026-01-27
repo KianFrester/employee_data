@@ -44,12 +44,23 @@
                     Filter Columns
                 </button>
 
-                <ul class="dropdown-menu p-3 shadow rounded-4" style="max-height: 350px; overflow-y: auto;">
+                <ul class="dropdown-menu w-100 p-3 shadow rounded-4" style="max-height: 400px; overflow-y: auto;">
                     <?php
                     $columns = [
-                        'Last Name','First Name','Middle Name','Extensions','Birthdate','Gender',
-                        'Department','Educational Attainment','Designation','Rate','Eligibility',
-                        'Date of Appointment','Service Duration','Remarks'
+                        'Last Name',
+                        'First Name',
+                        'Middle Name',
+                        'Extensions',
+                        'Birthdate',
+                        'Gender',
+                        'Department',
+                        'Educational Attainment',
+                        'Designation',
+                        'Rate',
+                        'Eligibility',
+                        'Date of Appointment',
+                        'Service Duration',
+                        'Remarks'
                     ];
                     foreach ($columns as $index => $col): ?>
                         <li class="mb-2">
@@ -62,7 +73,6 @@
                 </ul>
             </div>
         </div>
-
     </div>
 
     <!-- Table Card -->
