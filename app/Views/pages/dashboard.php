@@ -21,7 +21,7 @@
                 <div class="card-body text-center">
                     <div class="row">
                         <div class="col">
-                            <h2 class="fw-bold">MALE</h2>
+                            <h6 class="fw-bold">MALE</h6>
                             <div class="bg-info text-white fs-2 fw-bold py-4 rounded">Total Employees: 10</div>
                         </div>
                         <div class="col">
