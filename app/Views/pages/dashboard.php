@@ -21,12 +21,12 @@
                 <div class="card-body text-center">
                     <div class="row">
                         <div class="col">
-                            <h6 class="fw-bold">MALE</h6>
-                            <div class="bg-info text-white fs-3 fw-bold py-4 rounded">Total Employees: 10</div>
+                            <h2 class="fw-bold">MALE</h2>
+                            <div class="bg-info text-white fs-2 fw-bold py-4 rounded">Total Employees: 10</div>
                         </div>
                         <div class="col">
                             <h6 class="fw-bold">FEMALE</h6>
-                            <div class="text-white fs-2 fw-bold py-3 rounded" style="background:#ff1493;">Total Employees: 5</div>
+                            <div class="text-white fs-2 fw-bold py-4 rounded" style="background:#ff1493;">Total Employees: 5</div>
                         </div>
                     </div>
                     <a href="#" class="d-block mt-3 fw-bold text-primary" data-bs-toggle="modal" data-bs-target="#genderModal">VIEW ALL</a>
