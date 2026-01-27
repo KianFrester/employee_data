@@ -1,7 +1,7 @@
 <?= $this->extend('main/master'); ?>
 <?= $this->section('content'); ?>
 
-<nav class="navbar navbar-expand-lg navbar-dark bg-primary shadow-sm py-3">
+<nav class="navbar navbar-expand-lg shadow-sm py-3" style="background-color: #16166c;">
     <div class="container-fluid px-4">
 
         <!-- Brand -->
@@ -20,7 +20,7 @@
             aria-controls="navbarSupportedContent"
             aria-expanded="false"
             aria-label="Toggle navigation">
-            <span class="navbar-toggler-icon"></span>
+            <span class="navbar-toggler-icon" style="filter: invert(1);"></span>
         </button>
 
         <!-- Links -->
@@ -61,7 +61,8 @@
 
                 <!-- Logout Button -->
                 <li class="nav-item">
-                    <a class="btn btn-danger fw-semibold px-4 rounded-pill"
+                    <a class="btn text-white fw-semibold px-4 rounded-pill"
+                        style="background-color: #ff4d4f; border: 1px solid #ff4d4f;"
                         href="<?= base_url('logout') ?>">
                         <i class="bi bi-box-arrow-left"></i>
                         Logout
