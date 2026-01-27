@@ -9,7 +9,7 @@
         <h2 class="fw-bold text-primary">Search Records</h2>
         <hr>
     </div>
-<h1>Hi</h1>
+
     <!-- Search & Filter -->
     <div class="row g-3 align-items-center mb-4 justify-content-center">
 
