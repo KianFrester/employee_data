@@ -18,6 +18,10 @@ $routes->post('/register', 'Register::store');
 $routes->get('/dashboard', 'Dashboard::dashboard');
 $routes->post('/dashboard', 'Dashboard::dashboard');
 
+// search route
+$routes->get('/search', 'Search::search');
+// $routes->post('/search', 'Search::search');
+
 // create route
 $routes->get('/create', 'Create::create');
 // $routes->post('/create', 'Create::store');
