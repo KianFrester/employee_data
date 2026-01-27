@@ -18,7 +18,7 @@ class App extends BaseConfig
      */
 
     public string $baseURL = 'http://localhost/ci4/employee_data/public/';
-    //public string $baseURL = 'http://192.168.1.250/ci4/ci4/public/';
+    // public string $baseURL = 'http://192.168.1.250/ci4/ci4/public/';
 
     /**
      * Allowed Hostnames in the Site URL other than the hostname in the baseURL.
