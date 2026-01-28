@@ -113,19 +113,93 @@
                                 <label class="form-label-soft">Department</label>
                                 <select name="department" class="form-select form-modern" required>
                                     <option value="" selected disabled>Select Department</option>
-                                    <option value="HR">HR</option>
-                                    <option value="Finance">Finance</option>
-                                    <option value="IT">IT</option>
-                                    <option value="Marketing">Marketing</option>
-                                    <option value="Operations">Operations</option>
+                                    <option value="accounting_office">Accounting Office</option>
+                                    <option value="administrators_office">Administrator's Office</option>
+                                    <option value="agriculture_office">Agriculture Office</option>
+                                    <option value="assessor">Assessor</option>
+                                    <option value="bir">BIR</option>
+                                    <option value="bfp">BFP</option>
+                                    <option value="bolinao_water_works">Bolinao Water Works System</option>
+                                    <option value="budget">Budget</option>
+                                    <option value="coa">COA</option>
+                                    <option value="comelec">Comelec</option>
+                                    <option value="dilg">DILG</option>
+                                    <option value="engineering_office">Engineering Office</option>
+                                    <option value="gad">GAD</option>
+                                    <option value="garbage_collection">Garbage Collection</option>
+                                    <option value="gso">GSO</option>
+                                    <option value="hrmo">HRMO</option>
+                                    <option value="lcr">LCR</option>
+                                    <option value="market_slaughter">Market/Slaughter</option>
+                                    <option value="mdrrmo">MDRRMO</option>
+                                    <option value="mpdc">MPDC</option>
+                                    <option value="mswd_stac">MSWD/STAC</option>
+                                    <option value="mayors_office">Mayor's Office</option>
+                                    <option value="peso">PESO</option>
+                                    <option value="pnp">PNP</option>
+                                    <option value="rhu">RHU</option>
+                                    <option value="sb_municipal_library">SB/Municipal Library</option>
+                                    <option value="sanitary_land_filling">Sanitary Land Filling</option>
+                                    <option value="street_cleaning">Street Cleaning</option>
+                                    <option value="traffic_enforcement">Traffic Enforcement</option>
+                                    <option value="tourism_office">Tourism Office</option>
+                                    <option value="treasurer_office">Treasurer Office</option>
                                 </select>
                             </div>
 
                             <!-- Designation -->
                             <div class="col-12 col-md-6">
                                 <label class="form-label-soft">Designation</label>
-                                <input type="text" name="designation" class="form-control form-modern" placeholder="Designation" required>
+                                <select name="designation" class="form-select form-modern" required>
+                                    <option value="" selected disabled>Select Designation</option>
+                                    <option value="aircon_maintenance">Aircon Maintenance</option>
+                                    <option value="backhoe_operator">Backhoe Operator</option>
+                                    <option value="beach_ward">Beach Ward</option>
+                                    <option value="building_guard">Building Guard</option>
+                                    <option value="caregiver">Caregiver</option>
+                                    <option value="carpenter">Carpenter</option>
+                                    <option value="clerk">Clerk</option>
+                                    <option value="computer_technician">Computer Technician</option>
+                                    <option value="daycare_teacher">Daycare Teacher</option>
+                                    <option value="driver">Driver</option>
+                                    <option value="electrician">Electrician</option>
+                                    <option value="encoder">Encoder</option>
+                                    <option value="engineering_brigade">Engineering Brigade</option>
+                                    <option value="focal_person_senior_citizen">Focal Person for Senior Citizen</option>
+                                    <option value="financial_assistance_staff">Financial Assistance Staff</option>
+                                    <option value="first_responder">First Responder</option>
+                                    <option value="gad_personnel">GAD Personnel</option>
+                                    <option value="heavy_equipment_operator">Heavy Equipment Operator</option>
+                                    <option value="laboratory_assistant">Laboratory Assistant</option>
+                                    <option value="laboratory_technician">Laboratory Technician</option>
+                                    <option value="market_aide">Market Aide</option>
+                                    <option value="market_cleaner">Market Cleaner</option>
+                                    <option value="market_watchman">Market Watchman</option>
+                                    <option value="mechanic">Mechanic</option>
+                                    <option value="midwife_assistant">Midwife Assistant</option>
+                                    <option value="nurse">Nurse</option>
+                                    <option value="nursing_assistant">Nursing Assistant</option>
+                                    <option value="osca_head">OSCA Head</option>
+                                    <option value="plumber">Plumber</option>
+                                    <option value="pump_tender">Pump Tender</option>
+                                    <option value="pumping_station_guard">Pumping Station Guard</option>
+                                    <option value="recorder">Recorder</option>
+                                    <option value="rescue_personnel">Rescue Personnel</option>
+                                    <option value="school_guard">School Guard</option>
+                                    <option value="security">Security</option>
+                                    <option value="sped_teacher">SPED Teacher</option>
+                                    <option value="spring_guard">Spring Guard</option>
+                                    <option value="street_cleaner">Street Cleaner</option>
+                                    <option value="traffic_enforcer">Traffic Enforcer</option>
+                                    <option value="utility_worker">Utility Worker</option>
+                                    <option value="shadow_teacher">Shadow Teacher</option>
+                                    <option value="stac_staff">STAC Staff</option>
+                                    <option value="teacher_child_development">Child Development Teacher</option>
+                                    <option value="tourism_aide">Tourism Aide</option>
+                                    <option value="maintenance_personnel">Maintenance Personnel</option>
+                                </select>
                             </div>
+
                         </div>
 
                         <!-- Row 10 -->
