@@ -18,8 +18,8 @@ $routes->post('/register', 'Register::store');
 $routes->get('/dashboard', 'Dashboard::dashboard');
 $routes->post('/dashboard', 'Dashboard::dashboard');
 
-// search route
-$routes->get('/search', 'Search::search');
+// search_records route
+$routes->get('/search_records', 'SearchRecords::search_records');
 // $routes->post('/search', 'Search::search');
 
 // create route
@@ -31,3 +31,10 @@ $routes->get('/logout', 'Logout::index');
 
 // changepassword route
 $routes->get('/change_password', 'ChangePassword::change_password');
+
+
+// RECORDS TABLE
+
+// create records route
+$routes->get('/create', 'CreateRecords::index');
+$routes->post('/create', 'CreateRecords::create_records');

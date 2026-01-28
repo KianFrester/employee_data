@@ -34,7 +34,7 @@
 
                 <li class="nav-item">
                     <a class="nav-link text-white fw-semibold d-flex align-items-center gap-2 <?= ($path == 'search') ? 'active' : '' ?>"
-                        href="<?= base_url('search') ?>">
+                        href="<?= base_url('search_records') ?>">
                         <i class="bi bi-search"></i>
                         Search
                     </a>

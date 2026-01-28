@@ -16,6 +16,21 @@
     <div class="row justify-content-center">
         <div class="col-12 col-xl-10">
 
+
+        <!-- eto ung alert ng error/success creating record -->
+            <?php if (session()->getFlashdata('error')): ?>
+                <div class="alert alert-danger">
+                    <?= session()->getFlashdata('error') ?>
+                </div>
+            <?php endif; ?>
+
+            <?php if (session()->getFlashdata('success')): ?>
+                <div class="alert alert-success">
+                    <?= session()->getFlashdata('success') ?>
+                </div>
+            <?php endif; ?>
+
+            
             <div class="form-card">
 
                 <!-- Soft Header (dashboard style) -->
@@ -38,7 +53,7 @@
 
                 <!-- Body -->
                 <div class="p-4">
-                    <form method="post" action="<?= site_url('save-record') ?>">
+                    <form method="post" action="<?= site_url('create') ?>">
                         <?= csrf_field() ?>
 
                         <!-- Row 1 -->
@@ -48,29 +63,33 @@
                                 <input type="text" name="first_name" class="form-control form-modern" placeholder="First name" required>
                             </div>
 
+                            <!-- row 2 -->
                             <div class="col-12 col-md-3">
                                 <label class="form-label-soft">Middle Name</label>
-                                <input type="text" name="middle_name" class="form-control form-modern" placeholder="Middle name">
+                                <input type="text" name="middle_name" class="form-control form-modern" placeholder="Middle name" require>
                             </div>
 
+                            <!-- row 3 -->
                             <div class="col-12 col-md-3">
                                 <label class="form-label-soft">Last Name</label>
                                 <input type="text" name="last_name" class="form-control form-modern" placeholder="Last name" required>
                             </div>
 
+                            <!-- row 4 -->
                             <div class="col-12 col-md-3">
                                 <label class="form-label-soft">Ext.</label>
-                                <input type="text" name="ext" class="form-control form-modern" placeholder="Jr, Sr, III">
+                                <input type="text" name="extensions" class="form-control form-modern" placeholder="Jr, Sr, III">
                             </div>
                         </div>
 
-                        <!-- Row 2 -->
+                        <!-- Row 5 -->
                         <div class="row g-3 mt-1">
                             <div class="col-12 col-md-4">
                                 <label class="form-label-soft">Birthdate</label>
                                 <input type="date" name="birthdate" class="form-control form-modern" required>
                             </div>
 
+                            <!-- row 6 -->
                             <div class="col-12 col-md-4">
                                 <label class="form-label-soft">Gender</label>
                                 <select name="gender" class="form-select form-modern" required>
@@ -80,53 +99,56 @@
                                 </select>
                             </div>
 
+                            <!-- row 7 -->
                             <div class="col-12 col-md-4">
                                 <label class="form-label-soft">Rate</label>
                                 <input type="text" name="rate" class="form-control form-modern" placeholder="Rate">
                             </div>
                         </div>
 
-                        <!-- Row 3 -->
+                        <!-- Row 8 -->
                         <div class="row g-3 mt-1">
                             <div class="col-12 col-md-6">
                                 <label class="form-label-soft">Department</label>
                                 <input type="text" name="department" class="form-control form-modern" placeholder="Department" required>
                             </div>
 
+                            <!-- row 9 -->
                             <div class="col-12 col-md-6">
                                 <label class="form-label-soft">Designation</label>
                                 <input type="text" name="designation" class="form-control form-modern" placeholder="Designation" required>
                             </div>
                         </div>
 
-                        <!-- Row 4 -->
+                        <!-- Row 10 -->
                         <div class="row g-3 mt-1">
                             <div class="col-12 col-md-6">
                                 <label class="form-label-soft">Educational Attainment</label>
-                                <input type="text" name="department" class="form-control form-modern" placeholder="Education" required>
+                                <input type="text" name="educational_attainment" class="form-control form-modern" placeholder="Education" required>
                             </div>
 
-
+                            <!-- row 11 -->
                             <div class="col-12 col-md-6">
                                 <label class="form-label-soft">Eligibility</label>
-                                <input type="text" name="eligibility" class="form-control form-modern" placeholder="Eligibility">
+                                <input type="text" name="eligibility" class="form-control form-modern" placeholder="Eligibility" required>
                             </div>
                         </div>
 
-                        <!-- Row 5 -->
+                        <!-- Row 12 -->
                         <div class="row g-3 mt-1">
                             <div class="col-12 col-md-6">
                                 <label class="form-label-soft">Date of Appointment</label>
-                                <input type="date" name="date_appointment" class="form-control form-modern">
+                                <input type="date" name="date_of_appointment" class="form-control form-modern" required>
                             </div>
 
+                            <!-- row 13 -->
                             <div class="col-12 col-md-6">
                                 <label class="form-label-soft">Service Duration</label>
-                                <input type="text" name="service_duration" class="form-control form-modern" placeholder="e.g., 3 years">
+                                <input type="text" name="service_duration" class="form-control form-modern" placeholder="e.g., 3 years" required>
                             </div>
                         </div>
 
-                        <!-- Remarks -->
+                        <!-- row 14 -->
                         <div class="mt-3">
                             <label class="form-label-soft">Remarks</label>
                             <textarea name="remarks" rows="6" class="form-control form-modern" placeholder="Write remarks..."></textarea>
