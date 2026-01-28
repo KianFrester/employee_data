@@ -32,6 +32,7 @@ class CreateRecords extends BaseController
             'eligibility'            => trim($this->request->getPost('eligibility')),
             'date_of_appointment'    => $this->request->getPost('date_of_appointment'),
             'service_duration'       => trim($this->request->getPost('service_duration')),
+            'status'                 => trim($this->request->getPost('status')),
             'remarks'                => trim($this->request->getPost('remarks')),
         ];
 

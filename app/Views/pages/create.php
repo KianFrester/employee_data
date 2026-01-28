@@ -113,90 +113,92 @@
                                 <label class="form-label-soft">Department</label>
                                 <select name="department" class="form-select form-modern" required>
                                     <option value="" selected disabled>Select Department</option>
-                                    <option value="accounting_office">Accounting Office</option>
-                                    <option value="administrators_office">Administrator's Office</option>
-                                    <option value="agriculture_office">Agriculture Office</option>
-                                    <option value="assessor">Assessor</option>
-                                    <option value="bir">BIR</option>
-                                    <option value="bfp">BFP</option>
-                                    <option value="bolinao_water_works">Bolinao Water Works System</option>
-                                    <option value="budget">Budget</option>
-                                    <option value="coa">COA</option>
-                                    <option value="comelec">Comelec</option>
-                                    <option value="dilg">DILG</option>
-                                    <option value="engineering_office">Engineering Office</option>
-                                    <option value="gad">GAD</option>
-                                    <option value="garbage_collection">Garbage Collection</option>
-                                    <option value="gso">GSO</option>
-                                    <option value="hrmo">HRMO</option>
-                                    <option value="lcr">LCR</option>
-                                    <option value="market_slaughter">Market/Slaughter</option>
-                                    <option value="mdrrmo">MDRRMO</option>
-                                    <option value="mpdc">MPDC</option>
-                                    <option value="mswd_stac">MSWD/STAC</option>
-                                    <option value="mayors_office">Mayor's Office</option>
-                                    <option value="peso">PESO</option>
-                                    <option value="pnp">PNP</option>
-                                    <option value="rhu">RHU</option>
-                                    <option value="sb_municipal_library">SB/Municipal Library</option>
-                                    <option value="sanitary_land_filling">Sanitary Land Filling</option>
-                                    <option value="street_cleaning">Street Cleaning</option>
-                                    <option value="traffic_enforcement">Traffic Enforcement</option>
-                                    <option value="tourism_office">Tourism Office</option>
-                                    <option value="treasurer_office">Treasurer Office</option>
+                                    <option value="Accounting Office">Accounting Office</option>
+                                    <option value="Administrator's Office">Administrator's Office</option>
+                                    <option value="Agriculture Office">Agriculture Office</option>
+                                    <option value="Assessor">Assessor</option>
+                                    <option value="BIR">BIR</option>
+                                    <option value="BFP">BFP</option>
+                                    <option value="Bolinao Water Works System">Bolinao Water Works System</option>
+                                    <option value="Budget">Budget</option>
+                                    <option value="COA">COA</option>
+                                    <option value="COMELEC">COMELEC</option>
+                                    <option value="DILG">DILG</option>
+                                    <option value="Engineering Office">Engineering Office</option>
+                                    <option value="GAD">GAD</option>
+                                    <option value="Garbage Collection">Garbage Collection</option>
+                                    <option value="GSO">GSO</option>
+                                    <option value="HRMO">HRMO</option>
+                                    <option value="LCR">LCR</option>
+                                    <option value="Market / Slaughter">Market / Slaughter</option>
+                                    <option value="MDRRMO">MDRRMO</option>
+                                    <option value="MPDC">MPDC</option>
+                                    <option value="MSWD / STAC">MSWD / STAC</option>
+                                    <option value="Mayor's Office">Mayor's Office</option>
+                                    <option value="PESO">PESO</option>
+                                    <option value="PNP">PNP</option>
+                                    <option value="RHU">RHU</option>
+                                    <option value="SB / Municipal Library">SB / Municipal Library</option>
+                                    <option value="Sanitary Land Filling">Sanitary Land Filling</option>
+                                    <option value="Street Cleaning">Street Cleaning</option>
+                                    <option value="Traffic Enforcement">Traffic Enforcement</option>
+                                    <option value="Tourism Office">Tourism Office</option>
+                                    <option value="Treasurer Office">Treasurer Office</option>
                                 </select>
                             </div>
+
 
                             <!-- Designation -->
                             <div class="col-12 col-md-6">
                                 <label class="form-label-soft">Designation</label>
                                 <select name="designation" class="form-select form-modern" required>
                                     <option value="" selected disabled>Select Designation</option>
-                                    <option value="aircon_maintenance">Aircon Maintenance</option>
-                                    <option value="backhoe_operator">Backhoe Operator</option>
-                                    <option value="beach_ward">Beach Ward</option>
-                                    <option value="building_guard">Building Guard</option>
-                                    <option value="caregiver">Caregiver</option>
-                                    <option value="carpenter">Carpenter</option>
-                                    <option value="clerk">Clerk</option>
-                                    <option value="computer_technician">Computer Technician</option>
-                                    <option value="daycare_teacher">Daycare Teacher</option>
-                                    <option value="driver">Driver</option>
-                                    <option value="electrician">Electrician</option>
-                                    <option value="encoder">Encoder</option>
-                                    <option value="engineering_brigade">Engineering Brigade</option>
-                                    <option value="focal_person_senior_citizen">Focal Person for Senior Citizen</option>
-                                    <option value="financial_assistance_staff">Financial Assistance Staff</option>
-                                    <option value="first_responder">First Responder</option>
-                                    <option value="gad_personnel">GAD Personnel</option>
-                                    <option value="heavy_equipment_operator">Heavy Equipment Operator</option>
-                                    <option value="laboratory_assistant">Laboratory Assistant</option>
-                                    <option value="laboratory_technician">Laboratory Technician</option>
-                                    <option value="market_aide">Market Aide</option>
-                                    <option value="market_cleaner">Market Cleaner</option>
-                                    <option value="market_watchman">Market Watchman</option>
-                                    <option value="mechanic">Mechanic</option>
-                                    <option value="midwife_assistant">Midwife Assistant</option>
-                                    <option value="nurse">Nurse</option>
-                                    <option value="nursing_assistant">Nursing Assistant</option>
-                                    <option value="osca_head">OSCA Head</option>
-                                    <option value="plumber">Plumber</option>
-                                    <option value="pump_tender">Pump Tender</option>
-                                    <option value="pumping_station_guard">Pumping Station Guard</option>
-                                    <option value="recorder">Recorder</option>
-                                    <option value="rescue_personnel">Rescue Personnel</option>
-                                    <option value="school_guard">School Guard</option>
-                                    <option value="security">Security</option>
-                                    <option value="sped_teacher">SPED Teacher</option>
-                                    <option value="spring_guard">Spring Guard</option>
-                                    <option value="street_cleaner">Street Cleaner</option>
-                                    <option value="traffic_enforcer">Traffic Enforcer</option>
-                                    <option value="utility_worker">Utility Worker</option>
-                                    <option value="shadow_teacher">Shadow Teacher</option>
-                                    <option value="stac_staff">STAC Staff</option>
-                                    <option value="teacher_child_development">Child Development Teacher</option>
-                                    <option value="tourism_aide">Tourism Aide</option>
-                                    <option value="maintenance_personnel">Maintenance Personnel</option>
+                                    <option value="Aircon Maintenance">Aircon Maintenance</option>
+                                    <option value="Administrative Assistance">Administrative Assistance</option>
+                                    <option value="Backhoe Operator">Backhoe Operator</option>
+                                    <option value="Beach Ward">Beach Ward</option>
+                                    <option value="Building Guard">Building Guard</option>
+                                    <option value="Caregiver">Caregiver</option>
+                                    <option value="Carpenter">Carpenter</option>
+                                    <option value="Clerk">Clerk</option>
+                                    <option value="Computer Technician">Computer Technician</option>
+                                    <option value="Daycare Teacher">Daycare Teacher</option>
+                                    <option value="Driver">Driver</option>
+                                    <option value="Electrician">Electrician</option>
+                                    <option value="Encoder">Encoder</option>
+                                    <option value="Engineering Brigade">Engineering Brigade</option>
+                                    <option value="Focal Person for Senior Citizen">Focal Person for Senior Citizen</option>
+                                    <option value="Financial Assistance Staff">Financial Assistance Staff</option>
+                                    <option value="First Responder">First Responder</option>
+                                    <option value="GAD Personnel">GAD Personnel</option>
+                                    <option value="Heavy Equipment Operator">Heavy Equipment Operator</option>
+                                    <option value="Laboratory Assistant">Laboratory Assistant</option>
+                                    <option value="Laboratory Technician">Laboratory Technician</option>
+                                    <option value="Market Aide">Market Aide</option>
+                                    <option value="Market Cleaner">Market Cleaner</option>
+                                    <option value="Market Watchman">Market Watchman</option>
+                                    <option value="Mechanic">Mechanic</option>
+                                    <option value="Midwife Assistant">Midwife Assistant</option>
+                                    <option value="Nurse">Nurse</option>
+                                    <option value="Nursing Assistant">Nursing Assistant</option>
+                                    <option value="OSCA Head">OSCA Head</option>
+                                    <option value="Plumber">Plumber</option>
+                                    <option value="Pump Tender">Pump Tender</option>
+                                    <option value="Pumping Station Guard">Pumping Station Guard</option>
+                                    <option value="Recorder">Recorder</option>
+                                    <option value="Rescue Personnel">Rescue Personnel</option>
+                                    <option value="School Guard">School Guard</option>
+                                    <option value="Security">Security</option>
+                                    <option value="SPED Teacher">SPED Teacher</option>
+                                    <option value="Spring Guard">Spring Guard</option>
+                                    <option value="Street Cleaner">Street Cleaner</option>
+                                    <option value="Traffic Enforcer">Traffic Enforcer</option>
+                                    <option value="Utility Worker">Utility Worker</option>
+                                    <option value="Shadow Teacher">Shadow Teacher</option>
+                                    <option value="STAC Staff">STAC Staff</option>
+                                    <option value="Child Development Teacher">Child Development Teacher</option>
+                                    <option value="Tourism Aide">Tourism Aide</option>
+                                    <option value="Maintenance Personnel">Maintenance Personnel</option>
                                 </select>
                             </div>
 
@@ -226,15 +228,40 @@
                         <div class="row g-3 mt-1">
                             <div class="col-12 col-md-6">
                                 <label class="form-label-soft">Date of Appointment</label>
-                                <input type="date" name="date_of_appointment" class="form-control form-modern" required>
+                                <input
+                                    type="date"
+                                    name="date_of_appointment"
+                                    id="date_of_appointment"
+                                    class="form-control form-modern"
+                                    required>
                             </div>
 
-                            <!-- row 13 -->
                             <div class="col-12 col-md-6">
                                 <label class="form-label-soft">Service Duration</label>
-                                <input type="text" name="service_duration" class="form-control form-modern" placeholder="e.g., 3 years" required>
+                                <input
+                                    type="text"
+                                    name="service_duration"
+                                    id="service_duration"
+                                    class="form-control form-modern"
+                                    placeholder="Auto computed"
+                                    readonly
+                                    required>
+                            </div>
+                            <div class="col-12 col-md-6">
+                                <label class="form-label-soft">Status</label>
+                                <select name="status" id="status" class="form-select form-modern" required>
+                                    <option value="" selected disabled>Select Status</option>
+                                    <option value="resigned">Resigned</option>
+                                    <option value="terminated">Terminated</option>
+                                    <option value="currently_working">Currently Working</option>
+                                </select>
+                            </div>
+                            <div class="col-12 col-md-6 d-none" id="end_date_container">
+                                <label class="form-label-soft">Date Ended</label>
+                                <input type="date" name="date_ended" id="date_ended" class="form-control form-modern">
                             </div>
                         </div>
+
 
                         <!-- row 14 -->
                         <div class="mt-3">
@@ -258,5 +285,104 @@
     </div>
 
 </div>
+<script>
+    const appointmentInput = document.getElementById('date_of_appointment');
+    const serviceDurationInput = document.getElementById('service_duration');
+    const statusSelect = document.getElementById('status');
+    const endDateInput = document.getElementById('date_ended');
+    const endDateContainer = document.getElementById('end_date_container');
+
+    function daysInMonth(year, monthIndex) {
+        return new Date(year, monthIndex + 1, 0).getDate();
+    }
+
+    function diffYMD(fromDate, toDate) {
+        let y = toDate.getFullYear() - fromDate.getFullYear();
+        let m = toDate.getMonth() - fromDate.getMonth();
+        let d = toDate.getDate() - fromDate.getDate();
+
+        if (d < 0) {
+            m -= 1;
+            const prevMonth = (toDate.getMonth() - 1 + 12) % 12;
+            const prevMonthYear = prevMonth === 11 ? toDate.getFullYear() - 1 : toDate.getFullYear();
+            d += daysInMonth(prevMonthYear, prevMonth);
+        }
+
+        if (m < 0) {
+            y -= 1;
+            m += 12;
+        }
+
+        return {
+            years: y,
+            months: m,
+            days: d
+        };
+    }
+
+    function formatDuration({
+        years,
+        months,
+        days
+    }) {
+        const parts = [];
+        if (years > 0) parts.push(`${years} year${years !== 1 ? 's' : ''}`);
+        if (months > 0) parts.push(`${months} month${months !== 1 ? 's' : ''}`);
+        if (days > 0) parts.push(`${days} day${days !== 1 ? 's' : ''}`);
+        return parts.length ? parts.join(', ') : '0 days';
+    }
+
+    function computeServiceDuration() {
+        const startValue = appointmentInput.value;
+        const status = statusSelect.value;
+
+        if (!startValue) {
+            serviceDurationInput.value = '';
+            return;
+        }
+
+        const startDate = new Date(startValue + "T00:00:00");
+        let endDate;
+
+        if (status === "currently_working") {
+            endDate = new Date(); // today
+        } else {
+            if (!endDateInput.value) {
+                serviceDurationInput.value = 'Waiting for end date';
+                return;
+            }
+            endDate = new Date(endDateInput.value + "T00:00:00");
+        }
+
+        if (startDate > endDate) {
+            serviceDurationInput.value = 'Invalid dates';
+            return;
+        }
+
+        serviceDurationInput.value = formatDuration(diffYMD(startDate, endDate));
+    }
+
+    // Show/hide Date Ended based on status
+    function handleStatusChange() {
+        const status = statusSelect.value;
+
+        if (status === "currently_working") {
+            endDateContainer.classList.add('d-none');
+            endDateInput.value = '';
+        } else {
+            endDateContainer.classList.remove('d-none');
+        }
+
+        computeServiceDuration();
+    }
+
+    appointmentInput.addEventListener('change', computeServiceDuration);
+    statusSelect.addEventListener('change', handleStatusChange);
+    endDateInput.addEventListener('change', computeServiceDuration);
+
+    // Initial check
+    handleStatusChange();
+</script>
+
 
 <?= $this->endSection() ?>

@@ -25,7 +25,7 @@ class RecordsModel extends Model
         'educational_attainment',
         'eligibility',
         'date_of_appointment',
-        'service_duration',
+        'status',
         'remarks'
     ];
 

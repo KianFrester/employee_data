@@ -60,7 +60,6 @@
                         'Rate',
                         'Eligibility',
                         'Date of Appointment',
-                        'Service Duration',
                         'Remarks',
                         'Actions'
                     ];
@@ -112,7 +111,6 @@
                                     <td><?= esc($rec['rate']) ?></td>
                                     <td><?= esc($rec['eligibility']) ?></td>
                                     <td><?= esc($rec['date_of_appointment']) ?></td>
-                                    <td><?= esc($rec['service_duration']) ?></td>
                                     <td><?= esc($rec['remarks']) ?></td>
 
                                     <td>
