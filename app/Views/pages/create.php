@@ -17,7 +17,7 @@
         <div class="col-12 col-xl-10">
 
 
-        <!-- eto ung alert ng error/success creating record -->
+            <!-- eto ung alert ng error/success creating record -->
             <?php if (session()->getFlashdata('error')): ?>
                 <div class="alert alert-danger">
                     <?= session()->getFlashdata('error') ?>
@@ -30,7 +30,7 @@
                 </div>
             <?php endif; ?>
 
-            
+
             <div class="form-card">
 
                 <!-- Soft Header (dashboard style) -->
@@ -108,12 +108,20 @@
 
                         <!-- Row 8 -->
                         <div class="row g-3 mt-1">
+                            <!-- Department -->
                             <div class="col-12 col-md-6">
                                 <label class="form-label-soft">Department</label>
-                                <input type="text" name="department" class="form-control form-modern" placeholder="Department" required>
+                                <select name="department" class="form-select form-modern" required>
+                                    <option value="" selected disabled>Select Department</option>
+                                    <option value="HR">HR</option>
+                                    <option value="Finance">Finance</option>
+                                    <option value="IT">IT</option>
+                                    <option value="Marketing">Marketing</option>
+                                    <option value="Operations">Operations</option>
+                                </select>
                             </div>
 
-                            <!-- row 9 -->
+                            <!-- Designation -->
                             <div class="col-12 col-md-6">
                                 <label class="form-label-soft">Designation</label>
                                 <input type="text" name="designation" class="form-control form-modern" placeholder="Designation" required>
@@ -130,7 +138,13 @@
                             <!-- row 11 -->
                             <div class="col-12 col-md-6">
                                 <label class="form-label-soft">Eligibility</label>
-                                <input type="text" name="eligibility" class="form-control form-modern" placeholder="Eligibility" required>
+                                <select name="eligibility" class="form-select form-modern" required>
+                                    <option value="" selected disabled>Select Eligibility</option>
+                                    <option value="pro">PRO</option>
+                                    <option value="non_pro">NON-PRO</option>
+                                    <option value="prc">PRC</option>
+                                    <option value="non">NON</option>
+                                </select>
                             </div>
                         </div>
 

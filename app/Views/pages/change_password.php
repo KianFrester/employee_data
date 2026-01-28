@@ -54,7 +54,7 @@
                     <?php endif; ?>
 
                     <!-- Form -->
-                    <form action="<?= base_url('change-password') ?>" method="post" class="needs-validation" novalidate>
+                    <form action="<?= base_url('change_password') ?>" method="post" class="needs-validation" novalidate>
                         <?= csrf_field() ?>
 
                         <!-- Current Password -->
@@ -134,6 +134,45 @@
         </div>
     </div>
 </div>
+<!-- Success Modal -->
+<div class="modal fade" id="successModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content rounded-4">
+            <div class="modal-header border-0">
+                <h5 class="modal-title fw-bold text-success">
+                    <i class="bi bi-check-circle-fill me-2"></i>Password Updated
+                </h5>
+            </div>
+            <div class="modal-body text-center">
+                <p class="mb-0">
+                    Your password has been changed successfully.<br>
+                    You will be redirected to the login page.
+                </p>
+            </div>
+            <div class="modal-footer border-0 justify-content-center">
+                <button type="button" class="btn btn-success rounded-pill px-4" id="confirmRedirect">
+                    OK
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<?php if (session()->getFlashdata('password_changed')): ?>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const modal = new bootstrap.Modal(document.getElementById('successModal'));
+            modal.show();
+
+            // Click OK to redirect
+            document.getElementById('confirmRedirect').addEventListener('click', () => {
+                window.location.href = "<?= base_url('logout') ?>";
+            });
+        });
+    </script>
+<?php endif; ?>
+
+
 <script src="<?= base_url('js/change_password.js') ?>"></script>
 
 <?= $this->endSection(); ?>

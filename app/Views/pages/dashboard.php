@@ -6,12 +6,18 @@
 
     <!-- ===== DASHBOARD TITLE ===== -->
     <div class="mb-4 text-center">
-        <h2 class="fw-bold text-white"><i class="bi bi-bar-chart-line-fill px-2 text-white"></i>Dashboard</h2>
+        <h2 class="fw-bold text-white">
+            Hello <span style="color: #7CFC00;"><?= esc($username) ?></span>, welcome to Dashboard
+        </h2>
         <hr style="border-color: #16166c;">
     </div>
 
+
+
     <!-- ===== CARDS (2 per row) ===== -->
     <div class="row g-4">
+
+
         <!-- GENDER CARD -->
         <div class="col-12 col-lg-6">
             <div class="card card-dash">
@@ -206,6 +212,44 @@
                             <div class="col-12 col-md-4 col-lg">
                                 <div class="stat-tile text-center">
                                     <div class="text-uppercase text-secondary small fw-semibold mb-2"><?= esc($edu) ?></div>
+                                    <div class="fw-bold" style="font-size:34px; line-height:1;">10</div>
+                                    <div class="text-secondary small mt-1">People</div>
+                                </div>
+                            </div>
+                        <?php endforeach; ?>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-12 col-lg-6">
+            <div class="card card-dash">
+                <div class="card-dash-header px-4 py-3 d-flex align-items-center justify-content-between">
+                    <div class="d-flex align-items-center gap-2">
+                        <div class="rounded-3 d-flex align-items-center justify-content-center"
+                            style="width:38px;height:38px;background:rgba(13,110,253,.15);">
+                            <i class="bi bi-briefcase text-primary"></i>
+                        </div>
+                        <div>
+                            <div class="fw-bold text-uppercase text-secondary small mb-0">Employment Status</div>
+                            <div class="text-secondary" style="font-size:12px;">Current employment status</div>
+                        </div>
+                    </div>
+
+                    <a class="btn btn-outline-primary btn-sm rounded-pill fw-semibold"
+                        href="#"
+                        data-bs-toggle="modal"
+                        data-bs-target="#employmentModal">
+                        View Details →
+                    </a>
+                </div>
+
+                <div class="card-body px-4 py-4">
+                    <div class="row g-3">
+                        <?php foreach (['Employed', 'Unemployed', 'Retired'] as $emp): ?>
+                            <div class="col-12 col-md-4 col-lg">
+                                <div class="stat-tile text-center">
+                                    <div class="text-uppercase text-secondary small fw-semibold mb-2"><?= esc($emp) ?></div>
                                     <div class="fw-bold" style="font-size:34px; line-height:1;">10</div>
                                     <div class="text-secondary small mt-1">People</div>
                                 </div>

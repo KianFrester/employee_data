@@ -29,12 +29,26 @@ $routes->get('/create', 'Create::create');
 // logout route
 $routes->get('/logout', 'Logout::index');
 
-// changepassword route
-$routes->get('/change_password', 'ChangePassword::change_password');
-
 
 // RECORDS TABLE
 
 // create records route
 $routes->get('/create', 'CreateRecords::index');
 $routes->post('/create', 'CreateRecords::create_records');
+
+
+// update records route
+$routes->post('/update_record', 'UpdateRecords::update_records');
+
+// delete records route
+$routes->post('delete_records/(:num)', 'DeleteRecords::delete_records/$1');
+
+// search_records route (GET and POST)
+$routes->get('search_records', 'SearchRecords::search_records');
+$routes->post('search_records', 'SearchRecords::search_records');
+
+// change_password route
+$routes->get('change_password', 'ChangePassword::index');
+$routes->post('change_password', 'ChangePassword::update');
+
+
