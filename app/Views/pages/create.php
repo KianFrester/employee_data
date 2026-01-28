@@ -216,10 +216,10 @@
                                 <label class="form-label-soft">Eligibility</label>
                                 <select name="eligibility" class="form-select form-modern" required>
                                     <option value="" selected disabled>Select Eligibility</option>
-                                    <option value="pro">PRO</option>
-                                    <option value="non_pro">NON-PRO</option>
-                                    <option value="prc">PRC</option>
-                                    <option value="non">NON</option>
+                                    <option value="PRO">PRO</option>
+                                    <option value="NON PRO">NON PRO</option>
+                                    <option value="PRC">PRC</option>
+                                    <option value="NON">NON</option>
                                 </select>
                             </div>
                         </div>
@@ -251,9 +251,9 @@
                                 <label class="form-label-soft">Status</label>
                                 <select name="status" id="status" class="form-select form-modern" required>
                                     <option value="" selected disabled>Select Status</option>
-                                    <option value="resigned">Resigned</option>
-                                    <option value="terminated">Terminated</option>
-                                    <option value="currently_working">Currently Working</option>
+                                    <option value="Resigned">Resigned</option>
+                                    <option value="Terminated">Terminated</option>
+                                    <option value="Currently Working">Currently Working</option>
                                 </select>
                             </div>
                             <div class="col-12 col-md-6 d-none" id="end_date_container">

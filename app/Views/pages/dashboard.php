@@ -45,6 +45,7 @@
                 <!-- Body -->
                 <div class="card-body px-4 py-4">
                     <div class="row g-3">
+
                         <!-- Male -->
                         <div class="col-12 col-md-6">
                             <div class="stat-tile d-flex gap-3 align-items-start">
@@ -54,7 +55,7 @@
                                 </div>
                                 <div>
                                     <div class="text-uppercase text-secondary small fw-semibold">Male</div>
-                                    <div class="fw-bold" style="font-size:40px; line-height:1;">10</div>
+                                    <div class="fw-bold" style="font-size:40px; line-height:1;"><?= esc($maleCount) ?></div>
                                     <div class="text-secondary small">Employees</div>
                                 </div>
                             </div>
@@ -69,11 +70,13 @@
                                 </div>
                                 <div>
                                     <div class="text-uppercase text-secondary small fw-semibold">Female</div>
-                                    <div class="fw-bold" style="font-size:40px; line-height:1;">5</div>
+                                    <div class="fw-bold" style="font-size:40px; line-height:1;"><?= esc($femaleCount) ?></div>
                                     <div class="text-secondary small">Employees</div>
                                 </div>
                             </div>
                         </div>
+
+
 
                     </div>
                 </div>
@@ -107,32 +110,22 @@
                 <!-- Body -->
                 <div class="card-body px-4 py-4">
                     <div class="row g-3">
-                        <?php
-                        $elig = [
-                            ['label' => 'PRO', 'value' => 10],
-                            ['label' => 'NONPRO', 'value' => 10],
-                            ['label' => 'PRC', 'value' => 10],
-                            ['label' => 'NON', 'value' => 10],
-                        ];
-                        ?>
-
-                        <?php foreach ($elig as $e): ?>
+                        <?php foreach ($eligibility_counts as $label => $value): ?>
                             <div class="col-12 col-md-6 col-lg-3">
                                 <div class="stat-tile d-flex gap-3 align-items-start">
                                     <div class="rounded-4 bg-primary bg-opacity-10 d-flex align-items-center justify-content-center"
                                         style="width:46px;height:46px;">
-                                        <span class="text-primary fw-bold"><?= esc(substr($e['label'], 0, 1)) ?></span>
+                                        <span class="text-primary fw-bold"><?= esc(substr($label, 0, 1)) ?></span>
                                     </div>
 
                                     <div>
-                                        <div class="text-uppercase text-secondary small fw-semibold"><?= esc($e['label']) ?></div>
-                                        <div class="fw-bold" style="font-size:34px; line-height:1;"><?= esc($e['value']) ?></div>
+                                        <div class="text-uppercase text-secondary small fw-semibold"><?= esc($label) ?></div>
+                                        <div class="fw-bold" style="font-size:34px; line-height:1;"><?= esc($value) ?></div>
                                         <div class="text-secondary small">Qualified</div>
                                     </div>
                                 </div>
                             </div>
                         <?php endforeach; ?>
-
                     </div>
                 </div>
             </div>
@@ -286,6 +279,7 @@
                                 <input type="text" id="genderSearch" class="form-control w-auto d-inline-block" placeholder="Search...">
                             </div>
                         </div>
+
                         <table class="table table-bordered table-striped text-center" id="genderTable">
                             <thead style="background-color: #16166c; color: #fff;">
                                 <tr>
@@ -305,7 +299,7 @@
                                             <td><?= esc($rec['last_name']) ?></td>
                                             <td><?= esc($rec['first_name']) ?></td>
                                             <td><?= esc($rec['middle_name']) ?></td>
-                                            <td><?= esc($rec['ext']) ?></td>
+                                            <td><?= esc($rec['extensions']) ?></td>
                                             <td><?= esc($rec['department']) ?></td>
                                             <td><?= esc($rec['designation']) ?></td>
                                             <td><?= esc($rec['gender']) ?></td>
@@ -319,14 +313,16 @@
                             </tbody>
                         </table>
                     </div>
+
                     <div class="modal-footer">
+                        <button class="btn btn-success rounded-pill" id="printGenderTable">Print</button>
                         <button class="btn btn-secondary rounded-pill" data-bs-dismiss="modal">Close</button>
                     </div>
+
                 </div>
             </div>
         </div>
 
-        <!-- Repeat same style changes for Eligibility, Age, Education modals -->
         <!-- Eligibility Modal -->
         <div class="modal fade" id="eligibilityModal" tabindex="-1" aria-labelledby="eligibilityModalLabel" aria-hidden="true">
             <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable" style="max-width: 80vw;">
@@ -342,7 +338,7 @@
                                 <select id="eligibilityFilter" class="form-select w-auto d-inline-block">
                                     <option value="All" selected>All</option>
                                     <option value="PRO">PRO</option>
-                                    <option value="NONPRO">NONPRO</option>
+                                    <option value="NON PRO">NON PRO</option>
                                     <option value="PRC">PRC</option>
                                     <option value="NON">NON</option>
                                 </select>
@@ -371,7 +367,7 @@
                                             <td><?= esc($rec['last_name']) ?></td>
                                             <td><?= esc($rec['first_name']) ?></td>
                                             <td><?= esc($rec['middle_name']) ?></td>
-                                            <td><?= esc($rec['ext']) ?></td>
+                                            <td><?= esc($rec['extensions']) ?></td>
                                             <td><?= esc($rec['department']) ?></td>
                                             <td><?= esc($rec['designation']) ?></td>
                                             <td><?= esc($rec['eligibility']) ?></td>
@@ -385,7 +381,9 @@
                             </tbody>
                         </table>
                     </div>
+
                     <div class="modal-footer">
+                        <button class="btn btn-success rounded-pill" id="printEligibilityTable">Print</button>
                         <button class="btn btn-secondary rounded-pill" data-bs-dismiss="modal">Close</button>
                     </div>
                 </div>
@@ -393,6 +391,8 @@
         </div>
 
         <!-- Age Modal -->
+        <!-- Dito ako mag start bukas (KIAN) -->
+
         <div class="modal fade" id="ageModal" tabindex="-1" aria-labelledby="ageModalLabel" aria-hidden="true">
             <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable" style="max-width: 80vw;">
                 <div class="modal-content rounded-4">
@@ -529,5 +529,8 @@
         <script src="<?= base_url('js/eligibility_search.js') ?>"></script>
         <script src="<?= base_url('js/age_search.js') ?>"></script>
         <script src="<?= base_url('js/educational_attainment.js') ?>"></script>
+        <script src="<?= base_url('js/dashboard_gender_modal.js') ?>"></script>
+        <script src="<?= base_url('js/print_gender_table.js') ?>"></script>
+        <script src="<?= base_url('js/print_eligibility_table.js') ?>"></script>
 
         <?= $this->endSection(); ?>
