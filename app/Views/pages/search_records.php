@@ -92,7 +92,22 @@
         </div>
     <?php endif; ?>
 
+    <?php if (session()->getFlashdata('success')): ?>
+        <div class="form-card w-100 my-3 rounded-4 shadow-sm"
+            style="background-color:#198754; color:white; border:none;">
+            <div class="px-4 py-3 d-flex align-items-center justify-content-center gap-2">
+                <div class="d-flex align-items-center justify-content-center"
+                    style="width:32px; height:32px; background:rgba(255,255,255,0.3); border-radius:50%;">
+                    <i class="bi bi-check-circle-fill"></i>
+                </div>
+                <div class="fw-semibold text-center">
+                    <?= session()->getFlashdata('success') ?>
+                </div>
+            </div>
+        </div>
+    <?php endif; ?>
 
+    
     <!-- ===== Dashboard-style Table Card ===== -->
     <div class="form-card w-100">
         <div class="section-divider"></div>
@@ -105,8 +120,6 @@
                     <i class="bi bi-people-fill text-primary"></i>
                 </div>
 
-
-
                 <div>
                     <div class="fw-bold text-uppercase text-secondary small mb-0">Employee Records</div>
                     <div class="text-secondary" style="font-size:12px;">Search and manage employee information</div>
@@ -118,8 +131,6 @@
             </button>
         </div>
         <div class="section-divider"></div>
-
-
 
         <!-- Table Body -->
         <div class="p-4">

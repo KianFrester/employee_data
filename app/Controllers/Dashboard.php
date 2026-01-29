@@ -92,11 +92,17 @@ class Dashboard extends BaseController
         foreach ($age_records as $rec) {
             $age = (int) $rec['age'];
 
-            if ($age >= 18 && $age <= 30) $ageGroups['18-30']++;
-            elseif ($age <= 40) $ageGroups['31-40']++;
-            elseif ($age <= 50) $ageGroups['41-50']++;
-            elseif ($age <= 60) $ageGroups['51-60']++;
-            elseif ($age > 60)  $ageGroups['60+']++;
+            if ($age >= 18 && $age <= 30) {
+                $ageGroups['18-30']++;
+            } elseif ($age >= 31 && $age <= 40) {
+                $ageGroups['31-40']++;
+            } elseif ($age >= 41 && $age <= 50) {
+                $ageGroups['41-50']++;
+            } elseif ($age >= 51 && $age <= 60) {
+                $ageGroups['51-60']++;
+            } elseif ($age > 60) {
+                $ageGroups['60+']++;
+            }
         }
 
         // ================= EDUCATION RECORDS (WITH SERVICE DATA) =================

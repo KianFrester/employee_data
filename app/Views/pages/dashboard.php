@@ -665,4 +665,5 @@
         <script src="<?= base_url('js/print_age_table.js') ?>"></script>
         <script src="<?= base_url('js/print_educational_attainment_table.js') ?>"></script>
         <script src="<?= base_url('js/print_employment_status_table.js') ?>"></script>
+        
         <?= $this->endSection(); ?>
