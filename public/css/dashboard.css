@@ -117,3 +117,67 @@ textarea.form-control.form-modern{
   padding: .7rem 1.25rem;
   font-weight: 700;
 }
+
+/* ===== Modern table with soft clear dividers ===== */
+.table-modern{
+  border-collapse: separate;
+  border-spacing: 0;
+  width: 100%;
+  border: 1px solid #d6e2ff;
+  border-radius: 14px;
+  overflow: hidden;
+  background: #ffffff;
+}
+
+/* Header */
+.table-modern thead th{
+  background:#eef4ff;
+  color:#4a5a7a;
+  font-weight:700;
+  font-size:12px;
+  letter-spacing:.04em;
+  text-transform:uppercase;
+  padding:14px 12px;
+  border-bottom: 2px solid #d6e2ff; /* header separator */
+  border-right: 1px solid #e3edff;
+}
+
+.table-modern thead th:last-child{
+  border-right:none;
+}
+
+/* Body cells */
+.table-modern tbody td{
+  padding:14px 12px;
+  border-bottom: 1px solid #edf2ff;  /* horizontal lines */
+  border-right: 1px solid #edf2ff;   /* vertical lines */
+}
+
+/* Remove extra borders */
+.table-modern tbody tr:last-child td{
+  border-bottom:none;
+}
+.table-modern tbody td:last-child{
+  border-right:none;
+}
+
+/* Soft zebra striping */
+.table-modern tbody tr:nth-child(even){
+  background:#f9fbff;
+}
+
+/* Hover highlight */
+.table-modern tbody tr:hover{
+  background:#f1f6ff;
+  transition: background .2s ease;
+}
+
+/* Section divider inside cards */
+.section-divider{
+  height:1px;
+  background:linear-gradient(to right, transparent, #dbe7ff, transparent);
+  margin:0;
+}
+
+
+
