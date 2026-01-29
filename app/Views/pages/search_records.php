@@ -77,9 +77,26 @@
         </div>
     </div>
 
+    <?php if (session()->getFlashdata('error')): ?>
+        <div class="form-card w-100 my-3 rounded-4 shadow-sm"
+            style="background-color:#dc3545; color:white; border:none;">
+            <div class="px-4 py-3 d-flex align-items-center justify-content-center gap-2">
+                <div class="d-flex align-items-center justify-content-center"
+                    style="width:32px; height:32px; background:rgba(255,255,255,0.3); border-radius:50%;">
+                    <i class="bi bi-exclamation-circle-fill"></i>
+                </div>
+                <div class="fw-semibold text-center">
+                    <?= session()->getFlashdata('error') ?>
+                </div>
+            </div>
+        </div>
+    <?php endif; ?>
+
+
     <!-- ===== Dashboard-style Table Card ===== -->
     <div class="form-card w-100">
         <div class="section-divider"></div>
+
         <!-- Soft Header -->
         <div class="form-card-header px-4 py-3 d-flex align-items-center justify-content-between">
             <div class="d-flex align-items-center gap-2">
@@ -87,6 +104,9 @@
                     style="width:38px;height:38px;background:rgba(13,110,253,.15);">
                     <i class="bi bi-people-fill text-primary"></i>
                 </div>
+
+
+
                 <div>
                     <div class="fw-bold text-uppercase text-secondary small mb-0">Employee Records</div>
                     <div class="text-secondary" style="font-size:12px;">Search and manage employee information</div>
@@ -99,62 +119,64 @@
         </div>
         <div class="section-divider"></div>
 
+
+
         <!-- Table Body -->
         <div class="p-4">
             <div class="table-responsive">
                 <table class="table table-modern align-middle text-center table-sm" id="searchTable" style="table-layout: fixed; width: 100%;">
-            <thead>
-                <tr>
-                    <?php foreach ($columns as $col): ?>
-                        <th class="text-truncate" style="max-width: 120px;"><?= $col ?></th>
-                    <?php endforeach; ?>
-                </tr>
-            </thead>
-            <tbody>
-                <?php if (!empty($records)): ?>
-                    <?php foreach ($records as $rec): ?>
+                    <thead>
                         <tr>
-                            <td class="text-truncate" style="max-width: 120px;"><?= esc($rec['last_name']) ?></td>
-                            <td class="text-truncate" style="max-width: 120px;"><?= esc($rec['first_name']) ?></td>
-                            <td class="text-truncate" style="max-width: 120px;"><?= esc($rec['middle_name']) ?></td>
-                            <td class="text-truncate" style="max-width: 80px;"><?= esc($rec['extensions']) ?></td>
-                            <td class="text-truncate" style="max-width: 100px;"><?= esc($rec['birthdate']) ?></td>
-                            <td class="text-truncate" style="max-width: 80px;"><?= esc($rec['gender']) ?></td>
-                            <td class="text-truncate" style="max-width: 120px;"><?= $rec['department'] ?></td>
-                            <td class="text-truncate" style="max-width: 120px;"><?= esc($rec['educational_attainment']) ?></td>
-                            <td class="text-truncate" style="max-width: 120px;"><?= $rec['designation'] ?></td>
-                            <td class="text-truncate" style="max-width: 80px;"><?= esc($rec['rate']) ?></td>
-                            <td class="text-truncate" style="max-width: 120px;"><?= esc($rec['eligibility']) ?></td>
-                            <td class="text-truncate" style="max-width: 120px;"><?= $rec['date_of_appointment'] ?></td>
-                            <td class="text-truncate" style="max-width: 100px;"><?= $rec['status'] ?></td>
-                            <td class="text-truncate" style="max-width: 150px;"><?= esc($rec['remarks']) ?></td>
-                            <td style="width: 120px;">
-                                <div class="d-flex justify-content-center gap-2 flex-wrap">
-                                    <button
-                                        class="btn btn-sm btn-primary btn-pill"
-                                        data-bs-toggle="modal"
-                                        data-bs-target="#editModal"
-                                        onclick="openEditModal(<?= htmlspecialchars(json_encode($rec), ENT_QUOTES, 'UTF-8') ?>)">
-                                        <i class="bi bi-pencil-square"></i>
-                                    </button>
-                                    <button
-                                        class="btn btn-sm btn-danger btn-pill delete-trigger"
-                                        data-bs-toggle="modal"
-                                        data-bs-target="#deleteConfirmModal"
-                                        data-record-id="<?= $rec['id'] ?>">
-                                        <i class="bi bi-trash-fill"></i>
-                                    </button>
-                                </div>
-                            </td>
+                            <?php foreach ($columns as $col): ?>
+                                <th class="text-truncate" style="max-width: 120px;"><?= $col ?></th>
+                            <?php endforeach; ?>
                         </tr>
-                    <?php endforeach; ?>
-                <?php else: ?>
-                    <tr>
-                        <td colspan="<?= count($columns) ?>">No records found.</td>
-                    </tr>
-                <?php endif; ?>
-            </tbody>
-        </table>
+                    </thead>
+                    <tbody>
+                        <?php if (!empty($records)): ?>
+                            <?php foreach ($records as $rec): ?>
+                                <tr>
+                                    <td class="text-truncate" style="max-width: 120px;"><?= esc($rec['last_name']) ?></td>
+                                    <td class="text-truncate" style="max-width: 120px;"><?= esc($rec['first_name']) ?></td>
+                                    <td class="text-truncate" style="max-width: 120px;"><?= esc($rec['middle_name']) ?></td>
+                                    <td class="text-truncate" style="max-width: 80px;"><?= esc($rec['extensions']) ?></td>
+                                    <td class="text-truncate" style="max-width: 100px;"><?= esc($rec['birthdate']) ?></td>
+                                    <td class="text-truncate" style="max-width: 80px;"><?= esc($rec['gender']) ?></td>
+                                    <td class="text-truncate" style="max-width: 120px;"><?= $rec['department'] ?></td>
+                                    <td class="text-truncate" style="max-width: 120px;"><?= esc($rec['educational_attainment']) ?></td>
+                                    <td class="text-truncate" style="max-width: 120px;"><?= $rec['designation'] ?></td>
+                                    <td class="text-truncate" style="max-width: 80px;"><?= esc($rec['rate']) ?></td>
+                                    <td class="text-truncate" style="max-width: 120px;"><?= esc($rec['eligibility']) ?></td>
+                                    <td class="text-truncate" style="max-width: 120px;"><?= $rec['date_of_appointment'] ?></td>
+                                    <td class="text-truncate" style="max-width: 100px;"><?= $rec['status'] ?></td>
+                                    <td class="text-truncate" style="max-width: 150px;"><?= esc($rec['remarks']) ?></td>
+                                    <td style="width: 120px;">
+                                        <div class="d-flex justify-content-center gap-2 flex-wrap">
+                                            <button
+                                                class="btn btn-sm btn-primary btn-pill"
+                                                data-bs-toggle="modal"
+                                                data-bs-target="#editModal"
+                                                onclick="openEditModal(<?= htmlspecialchars(json_encode($rec), ENT_QUOTES, 'UTF-8') ?>)">
+                                                <i class="bi bi-pencil-square"></i>
+                                            </button>
+                                            <button
+                                                class="btn btn-sm btn-danger btn-pill delete-trigger"
+                                                data-bs-toggle="modal"
+                                                data-bs-target="#deleteConfirmModal"
+                                                data-record-id="<?= $rec['id'] ?>">
+                                                <i class="bi bi-trash-fill"></i>
+                                            </button>
+                                        </div>
+                                    </td>
+                                </tr>
+                            <?php endforeach; ?>
+                        <?php else: ?>
+                            <tr>
+                                <td colspan="<?= count($columns) ?>">No records found.</td>
+                            </tr>
+                        <?php endif; ?>
+                    </tbody>
+                </table>
 
                 <!-- ========================= -->
                 <!-- EDIT MODAL -->
@@ -171,6 +193,8 @@
                                 <?= csrf_field() ?>
                                 <div class="modal-body">
                                     <input type="hidden" name="id" id="edit_id">
+
+
 
                                     <div class="row g-3">
                                         <div class="col-md-3">
@@ -329,6 +353,8 @@
                         </div>
                     </div>
                 </div>
+
+
 
 
                 <!-- ========================= -->
