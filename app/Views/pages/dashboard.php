@@ -159,11 +159,13 @@
                 <!-- Body -->
                 <div class="card-body px-4 py-4">
                     <div class="row g-3">
-                        <?php foreach (['18-30', '31-40', '41-50', '51-60', '60+'] as $age): ?>
+                        <?php foreach ($ageGroups as $age => $count): ?>
                             <div class="col-12 col-md-4 col-lg">
                                 <div class="stat-tile text-center">
                                     <div class="text-uppercase text-secondary small fw-semibold mb-2"><?= esc($age) ?></div>
-                                    <div class="fw-bold" style="font-size:34px; line-height:1;">10</div>
+                                    <div class="fw-bold" style="font-size:34px; line-height:1;">
+                                        <?= esc($count) ?>
+                                    </div>
                                     <div class="text-secondary small mt-1">People</div>
                                 </div>
                             </div>
@@ -471,7 +473,7 @@
                                             <td><?= $rec['designation'] ?? '' ?></td>
 
                                             <!-- age count -->
-                                            <td><?= esc($rec['age'] ?? '') ?></td>
+                                            <td><?= esc($rec['age']) ?></td>
                                         </tr>
                                     <?php endforeach; ?>
                                 <?php else: ?>
@@ -483,7 +485,12 @@
                         </table>
                     </div>
                     <div class="modal-footer">
-                        <button class="btn btn-secondary rounded-pill" data-bs-dismiss="modal">Close</button>
+                        <button class="btn btn-success rounded-pill" id="printEducationalAttainmentTable">
+                            <i class="bi bi-printer me-1"></i>Print
+                        </button>
+                        <button class="btn btn-secondary rounded-pill" data-bs-dismiss="modal">
+                            Close
+                        </button>
                     </div>
                 </div>
             </div>
@@ -552,11 +559,100 @@
                         </table>
                     </div>
                     <div class="modal-footer">
-                        <button class="btn btn-secondary rounded-pill" data-bs-dismiss="modal">Close</button>
+                        <button class="btn btn-success rounded-pill" id="printAgeTable">
+                            <i class="bi bi-printer me-1"></i>Print
+                        </button>
+                        <button class="btn btn-secondary rounded-pill" data-bs-dismiss="modal">
+                            Close
+                        </button>
                     </div>
                 </div>
             </div>
         </div>
+
+        <!-- ========================= -->
+        <!-- EMPLOYMENT STATUS MODAL -->
+        <!-- ========================= -->
+        <div class="modal fade" id="employmentModal" tabindex="-1" aria-labelledby="employmentModalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable" style="max-width: 80vw;">
+                <div class="modal-content rounded-4">
+                    <div class="modal-header text-white" style="background-color: #16166c;">
+                        <h5 class="modal-title fw-bold" id="employmentModalLabel">Employment Status Records</h5>
+                        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                    </div>
+
+                    <div class="modal-body">
+
+                        <!-- Filter + Search (same layout as education modal) -->
+                        <div class="d-flex justify-content-end mb-3 gap-2">
+                            <div>
+                                <label for="employmentFilter" class="form-label fw-bold me-2">Filter Status:</label>
+                                <select id="employmentFilter" class="form-select w-auto d-inline-block">
+                                    <option value="All" selected>All</option>
+                                    <option value="Employed">Employed</option>
+                                    <option value="Unemployed">Unemployed</option>
+                                    <option value="Retired">Retired</option>
+                                </select>
+                            </div>
+
+                            <div>
+                                <label for="employmentSearch" class="form-label fw-bold me-2">Search:</label>
+                                <input type="text" id="employmentSearch" class="form-control w-auto d-inline-block" placeholder="Search...">
+                            </div>
+                        </div>
+
+                        <!-- Table -->
+                        <table class="table table-bordered table-striped text-center" id="employmentTable">
+                            <thead style="background-color: #16166c; color: #fff;">
+                                <tr>
+                                    <th>Last Name</th>
+                                    <th>First Name</th>
+                                    <th>Middle Name</th>
+                                    <th>Ext</th>
+                                    <th>Department</th>
+                                    <th>Designation</th>
+                                    <th>Employment Status</th>
+                                </tr>
+                            </thead>
+
+                            <tbody>
+                                <?php if (!empty($employment_records)): ?>
+                                    <?php foreach ($employment_records as $rec): ?>
+                                        <tr>
+                                            <td><?= esc($rec['last_name'] ?? '') ?></td>
+                                            <td><?= esc($rec['first_name'] ?? '') ?></td>
+                                            <td><?= esc($rec['middle_name'] ?? '') ?></td>
+                                            <td><?= esc($rec['extensions'] ?? '') ?></td>
+
+                                            <!-- allow HTML if your department/designation contains multiple records -->
+                                            <td><?= $rec['department'] ?? '' ?></td>
+                                            <td><?= $rec['designation'] ?? '' ?></td>
+
+                                            <td><?= esc($rec['employment_status'] ?? '') ?></td>
+                                        </tr>
+                                    <?php endforeach; ?>
+                                <?php else: ?>
+                                    <tr>
+                                        <td colspan="7">No records found.</td>
+                                    </tr>
+                                <?php endif; ?>
+                            </tbody>
+                        </table>
+
+                    </div>
+
+                    <div class="modal-footer">
+                        <button class="btn btn-success rounded-pill" id="printEmploymentTable">
+                            <i class="bi bi-printer me-1"></i>Print
+                        </button>
+                        <button class="btn btn-secondary rounded-pill" data-bs-dismiss="modal">
+                            Close
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
 
         <!-- JS Search and Filters -->
         <script src="<?= base_url('js/gender_search.js') ?>"></script>
@@ -566,5 +662,7 @@
         <script src="<?= base_url('js/dashboard_gender_modal.js') ?>"></script>
         <script src="<?= base_url('js/print_gender_table.js') ?>"></script>
         <script src="<?= base_url('js/print_eligibility_table.js') ?>"></script>
-
+        <script src="<?= base_url('js/print_age_table.js') ?>"></script>
+        <script src="<?= base_url('js/print_educational_attainment_table.js') ?>"></script>
+        <script src="<?= base_url('js/print_employment_status_table.js') ?>"></script>
         <?= $this->endSection(); ?>

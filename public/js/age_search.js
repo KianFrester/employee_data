@@ -1,24 +1,55 @@
-// ageModal.js
+document.addEventListener("DOMContentLoaded", function () {
+  const ageFilter = document.getElementById("ageFilter");
+  const ageSearch = document.getElementById("ageSearch");
+  const table = document.getElementById("ageTable");
 
-document.addEventListener('DOMContentLoaded', function () {
-    const ageFilter = document.getElementById('ageFilter');
-    const ageSearch = document.getElementById('ageSearch');
-    const ageTable = document.getElementById('ageTable').getElementsByTagName('tbody')[0];
+  if (!ageFilter || !ageSearch || !table) return;
 
-    function filterAgeTable() {
-        const filterValue = ageFilter.value;
-        const searchValue = ageSearch.value.toLowerCase();
+  const tbody = table.tBodies[0];
 
-        Array.from(ageTable.rows).forEach(row => {
-            const ageCell = row.cells[6].textContent.trim(); // Age column
-            const rowText = Array.from(row.cells).map(cell => cell.textContent.toLowerCase()).join(' ');
-            const matchesFilter = filterValue === 'All' || ageCell === filterValue;
-            const matchesSearch = rowText.includes(searchValue);
+  // ✅ Adjust if your AGE column is not the last column
+  const AGE_COL_INDEX = table.tHead.rows[0].cells.length - 1;
 
-            row.style.display = (matchesFilter && matchesSearch) ? '' : 'none';
-        });
+  function inAgeRange(ageNumber, rangeText) {
+    if (!rangeText || rangeText === "All") return true;
+
+    // "60+" case
+    if (rangeText.includes("+")) {
+      const min = parseInt(rangeText.replace("+", ""), 10);
+      return ageNumber >= min;
     }
 
-    ageFilter.addEventListener('change', filterAgeTable);
-    ageSearch.addEventListener('input', filterAgeTable);
+    // "31-40" case
+    const [minStr, maxStr] = rangeText.split("-");
+    const min = parseInt(minStr, 10);
+    const max = parseInt(maxStr, 10);
+
+    if (Number.isNaN(min) || Number.isNaN(max)) return true;
+    return ageNumber >= min && ageNumber <= max;
+  }
+
+  function applyFilters() {
+    const selected = ageFilter.value; // "All", "18-30", "31-40", ...
+    const keyword = ageSearch.value.trim().toLowerCase();
+
+    Array.from(tbody.rows).forEach((row) => {
+      const cellsText = row.innerText.toLowerCase();
+
+      // read numeric age from the Age column
+      const ageCell = row.cells[AGE_COL_INDEX];
+      const ageRaw = (ageCell?.innerText || "").trim();
+      const ageNum = parseInt(ageRaw, 10);
+
+      const matchRange = Number.isNaN(ageNum) ? false : inAgeRange(ageNum, selected);
+      const matchSearch = keyword === "" ? true : cellsText.includes(keyword);
+
+      row.style.display = matchRange && matchSearch ? "" : "none";
+    });
+  }
+
+  ageFilter.addEventListener("change", applyFilters);
+  ageSearch.addEventListener("input", applyFilters);
+
+  // Run once on load
+  applyFilters();
 });

@@ -80,6 +80,25 @@ class Dashboard extends BaseController
             ->orderBy('records.last_name', 'ASC')
             ->findAll();
 
+        // ================= AGE GROUP COUNTS =================
+        $ageGroups = [
+            '18-30' => 0,
+            '31-40' => 0,
+            '41-50' => 0,
+            '51-60' => 0,
+            '60+'   => 0,
+        ];
+
+        foreach ($age_records as $rec) {
+            $age = (int) $rec['age'];
+
+            if ($age >= 18 && $age <= 30) $ageGroups['18-30']++;
+            elseif ($age <= 40) $ageGroups['31-40']++;
+            elseif ($age <= 50) $ageGroups['41-50']++;
+            elseif ($age <= 60) $ageGroups['51-60']++;
+            elseif ($age > 60)  $ageGroups['60+']++;
+        }
+
         // ================= EDUCATION RECORDS (WITH SERVICE DATA) =================
         $education_records = $recordsModel
             ->select("
@@ -129,6 +148,7 @@ class Dashboard extends BaseController
             'eligibility_counts'  => $eligibility_counts,
             'age_records'         => $age_records,
             'education_records'   => $education_records,
+            'ageGroups'           => $ageGroups,
         ]);
     }
 }
