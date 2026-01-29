@@ -7,41 +7,63 @@ document.addEventListener("DOMContentLoaded", function () {
 
   const tbody = table.tBodies[0];
 
-  // ✅ Adjust if your AGE column is not the last column
-  const AGE_COL_INDEX = table.tHead.rows[0].cells.length - 1;
+  // ✅ Find AGE column by header text (so it won't break if columns change)
+  const headers = Array.from(table.tHead.rows[0].cells).map((th) =>
+    (th.innerText || "").trim().toLowerCase()
+  );
+  const AGE_COL_INDEX = headers.findIndex((h) => h === "age");
+
+  if (AGE_COL_INDEX === -1) {
+    console.error("Age column not found. Check your <th> text says 'Age'.");
+    return;
+  }
+
+  function normalizeRangeText(txt) {
+    return (txt || "")
+      .trim()
+      .replace("–", "-") // handle en-dash
+      .replace("—", "-"); // handle em-dash
+  }
 
   function inAgeRange(ageNumber, rangeText) {
-    if (!rangeText || rangeText === "All") return true;
+    const r = normalizeRangeText(rangeText);
 
-    // "60+" case
-    if (rangeText.includes("+")) {
-      const min = parseInt(rangeText.replace("+", ""), 10);
+    if (!r || r === "All") return true;
+
+    // "60+"
+    if (r.includes("+")) {
+      const min = parseInt(r.replace("+", ""), 10);
       return ageNumber >= min;
     }
 
-    // "31-40" case
-    const [minStr, maxStr] = rangeText.split("-");
-    const min = parseInt(minStr, 10);
-    const max = parseInt(maxStr, 10);
+    // "31-40"
+    const parts = r.split("-").map((p) => parseInt(p.trim(), 10));
+    const min = parts[0];
+    const max = parts[1];
 
     if (Number.isNaN(min) || Number.isNaN(max)) return true;
     return ageNumber >= min && ageNumber <= max;
   }
 
+  function extractNumber(text) {
+    // ✅ extracts first number anywhere (handles "33 years old", etc.)
+    const match = String(text || "").match(/\d+/);
+    return match ? parseInt(match[0], 10) : NaN;
+  }
+
   function applyFilters() {
-    const selected = ageFilter.value; // "All", "18-30", "31-40", ...
+    const selected = normalizeRangeText(ageFilter.value);
     const keyword = ageSearch.value.trim().toLowerCase();
 
     Array.from(tbody.rows).forEach((row) => {
-      const cellsText = row.innerText.toLowerCase();
+      const rowText = row.innerText.toLowerCase();
 
-      // read numeric age from the Age column
       const ageCell = row.cells[AGE_COL_INDEX];
       const ageRaw = (ageCell?.innerText || "").trim();
-      const ageNum = parseInt(ageRaw, 10);
+      const ageNum = extractNumber(ageRaw);
 
-      const matchRange = Number.isNaN(ageNum) ? false : inAgeRange(ageNum, selected);
-      const matchSearch = keyword === "" ? true : cellsText.includes(keyword);
+      const matchRange = !Number.isNaN(ageNum) && inAgeRange(ageNum, selected);
+      const matchSearch = keyword === "" ? true : rowText.includes(keyword);
 
       row.style.display = matchRange && matchSearch ? "" : "none";
     });
