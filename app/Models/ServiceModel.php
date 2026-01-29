@@ -4,42 +4,25 @@ namespace App\Models;
 
 use CodeIgniter\Model;
 
-class RecordsModel extends Model
+class ServiceModel extends Model
 {
-    protected $table            = 'records';
+    protected $table            = 'service_records';
     protected $primaryKey       = 'id';
     protected $useAutoIncrement = true;
     protected $returnType       = 'array';
     protected $useSoftDeletes   = false;
     protected $protectFields    = true;
     protected $allowedFields    = [
+        'employee_id',
         'first_name',
         'middle_name',
         'last_name',
         'extensions',
-        'birthdate',
-        'gender',
-        'rate',
-        'educational_attainment',
-        'eligibility',
-        'remarks'
+        'department',
+        'designation',
+        'date_of_appointment',
+        'status',
     ];
-
-    public function getEmployeesWithServices()
-    {
-        $builder = $this->db->table('records r');
-        $builder->select('r.*,
-            GROUP_CONCAT(s.department SEPARATOR "<br>") AS departments,
-            GROUP_CONCAT(s.designation SEPARATOR "<br>") AS designations,
-            GROUP_CONCAT(s.date_of_appointment SEPARATOR "<br>") AS dates,
-            GROUP_CONCAT(s.status SEPARATOR "<br>") AS statuses
-        ');
-        $builder->join('service_records s', 's.employee_id = r.id', 'left');
-        $builder->groupBy('r.id');
-        $builder->orderBy('r.last_name', 'ASC');
-
-        return $builder->get()->getResultArray();
-    }
 
     protected bool $allowEmptyInserts = false;
     protected bool $updateOnlyChanged = true;

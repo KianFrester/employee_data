@@ -60,6 +60,7 @@
                         'Rate',
                         'Eligibility',
                         'Date of Appointment',
+                        'Status',
                         'Remarks',
                         'Actions'
                     ];
@@ -79,7 +80,7 @@
     <!-- ===== Dashboard-style Table Card ===== -->
     <div class="form-card w-100">
         <div class="section-divider"></div>
-        <!-- Soft Header (dashboard style) -->
+        <!-- Soft Header -->
         <div class="form-card-header px-4 py-3 d-flex align-items-center justify-content-between">
             <div class="d-flex align-items-center gap-2">
                 <div class="rounded-3 d-flex align-items-center justify-content-center"
@@ -97,68 +98,63 @@
             </button>
         </div>
         <div class="section-divider"></div>
-        <!-- Body -->
+
+        <!-- Table Body -->
         <div class="p-4">
             <div class="table-responsive">
-                <table class="table table-modern align-middle text-center" id="searchTable">
-                    <thead>
+                <table class="table table-modern align-middle text-center table-sm" id="searchTable" style="table-layout: fixed; width: 100%;">
+            <thead>
+                <tr>
+                    <?php foreach ($columns as $col): ?>
+                        <th class="text-truncate" style="max-width: 120px;"><?= $col ?></th>
+                    <?php endforeach; ?>
+                </tr>
+            </thead>
+            <tbody>
+                <?php if (!empty($records)): ?>
+                    <?php foreach ($records as $rec): ?>
                         <tr>
-                            <?php foreach ($columns as $col): ?>
-                                <th><?= $col ?></th>
-                            <?php endforeach; ?>
+                            <td class="text-truncate" style="max-width: 120px;"><?= esc($rec['last_name']) ?></td>
+                            <td class="text-truncate" style="max-width: 120px;"><?= esc($rec['first_name']) ?></td>
+                            <td class="text-truncate" style="max-width: 120px;"><?= esc($rec['middle_name']) ?></td>
+                            <td class="text-truncate" style="max-width: 80px;"><?= esc($rec['extensions']) ?></td>
+                            <td class="text-truncate" style="max-width: 100px;"><?= esc($rec['birthdate']) ?></td>
+                            <td class="text-truncate" style="max-width: 80px;"><?= esc($rec['gender']) ?></td>
+                            <td class="text-truncate" style="max-width: 120px;"><?= $rec['department'] ?></td>
+                            <td class="text-truncate" style="max-width: 120px;"><?= esc($rec['educational_attainment']) ?></td>
+                            <td class="text-truncate" style="max-width: 120px;"><?= $rec['designation'] ?></td>
+                            <td class="text-truncate" style="max-width: 80px;"><?= esc($rec['rate']) ?></td>
+                            <td class="text-truncate" style="max-width: 120px;"><?= esc($rec['eligibility']) ?></td>
+                            <td class="text-truncate" style="max-width: 120px;"><?= $rec['date_of_appointment'] ?></td>
+                            <td class="text-truncate" style="max-width: 100px;"><?= $rec['status'] ?></td>
+                            <td class="text-truncate" style="max-width: 150px;"><?= esc($rec['remarks']) ?></td>
+                            <td style="width: 120px;">
+                                <div class="d-flex justify-content-center gap-2 flex-wrap">
+                                    <button
+                                        class="btn btn-sm btn-primary btn-pill"
+                                        data-bs-toggle="modal"
+                                        data-bs-target="#editModal"
+                                        onclick="openEditModal(<?= htmlspecialchars(json_encode($rec), ENT_QUOTES, 'UTF-8') ?>)">
+                                        <i class="bi bi-pencil-square"></i>
+                                    </button>
+                                    <button
+                                        class="btn btn-sm btn-danger btn-pill delete-trigger"
+                                        data-bs-toggle="modal"
+                                        data-bs-target="#deleteConfirmModal"
+                                        data-record-id="<?= $rec['id'] ?>">
+                                        <i class="bi bi-trash-fill"></i>
+                                    </button>
+                                </div>
+                            </td>
                         </tr>
-                    </thead>
-
-                    <tbody>
-                        <?php if (!empty($records)): ?>
-                            <?php foreach ($records as $rec): ?>
-                                <tr>
-                                    <td><?= esc($rec['last_name']) ?></td>
-                                    <td><?= esc($rec['first_name']) ?></td>
-                                    <td><?= esc($rec['middle_name']) ?></td>
-                                    <td><?= esc($rec['extensions']) ?></td>
-                                    <td><?= esc($rec['birthdate']) ?></td>
-                                    <td><?= esc($rec['gender']) ?></td>
-                                    <td><?= esc($rec['department']) ?></td>
-                                    <td><?= esc($rec['educational_attainment']) ?></td>
-                                    <td><?= esc($rec['designation']) ?></td>
-                                    <td><?= esc($rec['rate']) ?></td>
-                                    <td><?= esc($rec['eligibility']) ?></td>
-                                    <td><?= esc($rec['date_of_appointment']) ?></td>
-                                    <td><?= esc($rec['remarks']) ?></td>
-
-                                    <td>
-                                        <div class="d-flex justify-content-center gap-2">
-
-                                            <!-- EDIT BUTTON -->
-                                            <button
-                                                class="btn btn-sm btn-primary btn-pill"
-                                                data-bs-toggle="modal"
-                                                data-bs-target="#editModal"
-                                                onclick="openEditModal(<?= htmlspecialchars(json_encode($rec), ENT_QUOTES, 'UTF-8') ?>)">
-                                                <i class="bi bi-pencil-square"></i>
-                                            </button>
-
-                                            <!-- DELETE BUTTON -->
-                                            <button
-                                                class="btn btn-sm btn-danger btn-pill delete-trigger"
-                                                data-bs-toggle="modal"
-                                                data-bs-target="#deleteConfirmModal"
-                                                data-record-id="<?= $rec['id'] ?>">
-                                                <i class="bi bi-trash-fill"></i>
-                                            </button>
-
-                                        </div>
-                                    </td>
-                                </tr>
-                            <?php endforeach; ?>
-                        <?php else: ?>
-                            <tr>
-                                <td colspan="<?= count($columns) ?>">No records found.</td>
-                            </tr>
-                        <?php endif; ?>
-                    </tbody>
-                </table>
+                    <?php endforeach; ?>
+                <?php else: ?>
+                    <tr>
+                        <td colspan="<?= count($columns) ?>">No records found.</td>
+                    </tr>
+                <?php endif; ?>
+            </tbody>
+        </table>
 
                 <!-- ========================= -->
                 <!-- EDIT MODAL -->
@@ -173,7 +169,6 @@
 
                             <form action="<?= site_url('update_record') ?>" method="post">
                                 <?= csrf_field() ?>
-
                                 <div class="modal-body">
                                     <input type="hidden" name="id" id="edit_id">
 
@@ -182,27 +177,22 @@
                                             <label class="form-label">Last Name</label>
                                             <input type="text" name="last_name" id="edit_last_name" class="form-control rounded-pill">
                                         </div>
-
                                         <div class="col-md-3">
                                             <label class="form-label">First Name</label>
                                             <input type="text" name="first_name" id="edit_first_name" class="form-control rounded-pill">
                                         </div>
-
                                         <div class="col-md-3">
                                             <label class="form-label">Middle Name</label>
                                             <input type="text" name="middle_name" id="edit_middle_name" class="form-control rounded-pill">
                                         </div>
-
                                         <div class="col-md-3">
                                             <label class="form-label">Extensions</label>
                                             <input type="text" name="extensions" id="edit_extensions" class="form-control rounded-pill">
                                         </div>
-
                                         <div class="col-md-3">
                                             <label class="form-label">Birthdate</label>
                                             <input type="date" name="birthdate" id="edit_birthdate" class="form-control rounded-pill">
                                         </div>
-
                                         <div class="col-md-3">
                                             <label class="form-label">Gender</label>
                                             <select name="gender" id="edit_gender" class="form-select rounded-pill">
@@ -210,42 +200,120 @@
                                                 <option value="Female">Female</option>
                                             </select>
                                         </div>
-
                                         <div class="col-md-3">
                                             <label class="form-label">Department</label>
-                                            <input type="text" name="department" id="edit_department" class="form-control rounded-pill">
+                                            <select name="department" id="edit_department" class="form-select rounded-pill">
+                                                <option value="" selected disabled>Select Department</option>
+                                                <option value="Accounting Office">Accounting Office</option>
+                                                <option value="Administrator's Office">Administrator's Office</option>
+                                                <option value="Agriculture Office">Agriculture Office</option>
+                                                <option value="Assessor">Assessor</option>
+                                                <option value="BIR">BIR</option>
+                                                <option value="BFP">BFP</option>
+                                                <option value="Bolinao Water Works System">Bolinao Water Works System</option>
+                                                <option value="Budget">Budget</option>
+                                                <option value="COA">COA</option>
+                                                <option value="COMELEC">COMELEC</option>
+                                                <option value="DEPED">DEPED</option>
+                                                <option value="DILG">DILG</option>
+                                                <option value="Engineering Office">Engineering Office</option>
+                                                <option value="GAD">GAD</option>
+                                                <option value="Garbage Collection">Garbage Collection</option>
+                                                <option value="GSO">GSO</option>
+                                                <option value="HRMO">HRMO</option>
+                                                <option value="LCR">LCR</option>
+                                                <option value="Market / Slaughter">Market / Slaughter</option>
+                                                <option value="MDRRMO">MDRRMO</option>
+                                                <option value="MPDC">MPDC</option>
+                                                <option value="MSWD / STAC">MSWD / STAC</option>
+                                                <option value="Mayor's Office">Mayor's Office</option>
+                                                <option value="PESO">PESO</option>
+                                                <option value="PNP">PNP</option>
+                                                <option value="RHU">RHU</option>
+                                                <option value="SB / Municipal Library">SB / Municipal Library</option>
+                                                <option value="Sanitary Land Filling">Sanitary Land Filling</option>
+                                                <option value="Street Cleaning">Street Cleaning</option>
+                                                <option value="Traffic Enforcement">Traffic Enforcement</option>
+                                                <option value="Tourism Office">Tourism Office</option>
+                                                <option value="Treasurer Office">Treasurer Office</option>
+                                                <!-- Add other departments here -->
+                                            </select>
                                         </div>
-
                                         <div class="col-md-3">
                                             <label class="form-label">Educational Attainment</label>
                                             <input type="text" name="educational_attainment" id="edit_educational_attainment" class="form-control rounded-pill">
                                         </div>
-
                                         <div class="col-md-3">
                                             <label class="form-label">Designation</label>
-                                            <input type="text" name="designation" id="edit_designation" class="form-control rounded-pill">
+                                            <select name="designation" id="edit_designation" class="form-select rounded-pill">
+                                                <option value="" selected disabled>Select Designation</option>
+                                                <option value="Aircon Maintenance">Aircon Maintenance</option>
+                                                <option value="Administrative Assistance">Administrative Assistance</option>
+                                                <option value="Backhoe Operator">Backhoe Operator</option>
+                                                <option value="Beach Ward">Beach Ward</option>
+                                                <option value="Building Guard">Building Guard</option>
+                                                <option value="Caregiver">Caregiver</option>
+                                                <option value="Carpenter">Carpenter</option>
+                                                <option value="Clerk">Clerk</option>
+                                                <option value="Computer Technician">Computer Technician</option>
+                                                <option value="Daycare Teacher">Daycare Teacher</option>
+                                                <option value="Driver">Driver</option>
+                                                <option value="Electrician">Electrician</option>
+                                                <option value="Encoder">Encoder</option>
+                                                <option value="Engineering Brigade">Engineering Brigade</option>
+                                                <option value="Focal Person for Senior Citizen">Focal Person for Senior Citizen</option>
+                                                <option value="Financial Assistance Staff">Financial Assistance Staff</option>
+                                                <option value="First Responder">First Responder</option>
+                                                <option value="GAD Personnel">GAD Personnel</option>
+                                                <option value="Heavy Equipment Operator">Heavy Equipment Operator</option>
+                                                <option value="Laboratory Assistant">Laboratory Assistant</option>
+                                                <option value="Laboratory Technician">Laboratory Technician</option>
+                                                <option value="Market Aide">Market Aide</option>
+                                                <option value="Market Cleaner">Market Cleaner</option>
+                                                <option value="Market Watchman">Market Watchman</option>
+                                                <option value="Mechanic">Mechanic</option>
+                                                <option value="Midwife Assistant">Midwife Assistant</option>
+                                                <option value="Nurse">Nurse</option>
+                                                <option value="Nursing Assistant">Nursing Assistant</option>
+                                                <option value="OSCA Head">OSCA Head</option>
+                                                <option value="Plumber">Plumber</option>
+                                                <option value="Pump Tender">Pump Tender</option>
+                                                <option value="Pumping Station Guard">Pumping Station Guard</option>
+                                                <option value="Recorder">Recorder</option>
+                                                <option value="Rescue Personnel">Rescue Personnel</option>
+                                                <option value="School Guard">School Guard</option>
+                                                <option value="Security">Security</option>
+                                                <option value="SPED Teacher">SPED Teacher</option>
+                                                <option value="Spring Guard">Spring Guard</option>
+                                                <option value="Street Cleaner">Street Cleaner</option>
+                                                <option value="Traffic Enforcer">Traffic Enforcer</option>
+                                                <option value="Utility Worker">Utility Worker</option>
+                                                <option value="Shadow Teacher">Shadow Teacher</option>
+                                                <option value="STAC Staff">STAC Staff</option>
+                                                <option value="Child Development Teacher">Child Development Teacher</option>
+                                                <option value="Tourism Aide">Tourism Aide</option>
+                                                <option value="Maintenance Personnel">Maintenance Personnel</option>
+                                                <!-- Add other designations here -->
+                                            </select>
                                         </div>
-
                                         <div class="col-md-3">
                                             <label class="form-label">Rate</label>
                                             <input type="text" name="rate" id="edit_rate" class="form-control rounded-pill">
                                         </div>
-
                                         <div class="col-md-3">
                                             <label class="form-label">Eligibility</label>
-                                            <input type="text" name="eligibility" id="edit_eligibility" class="form-control rounded-pill">
+                                            <select name="eligibility" id="edit_eligibility" class="form-select rounded-pill">
+                                                <option value="" selected disabled>Select Eligibility</option>
+                                                <option value="PRO">PRO</option>
+                                                <option value="NON PRO">NON PRO</option>
+                                                <option value="PRC">PRC</option>
+                                                <option value="NON">NON</option>
+                                            </select>
                                         </div>
-
                                         <div class="col-md-3">
                                             <label class="form-label">Date of Appointment</label>
                                             <input type="date" name="date_of_appointment" id="edit_date_of_appointment" class="form-control rounded-pill">
                                         </div>
-
-                                        <div class="col-md-3">
-                                            <label class="form-label">Service Duration</label>
-                                            <input type="text" name="service_duration" id="edit_service_duration" class="form-control rounded-pill">
-                                        </div>
-
                                         <div class="col-12">
                                             <label class="form-label">Remarks</label>
                                             <textarea name="remarks" id="edit_remarks" class="form-control rounded-4"></textarea>
@@ -261,6 +329,7 @@
                         </div>
                     </div>
                 </div>
+
 
                 <!-- ========================= -->
                 <!-- DELETE CONFIRMATION MODAL -->
@@ -303,7 +372,7 @@
 <script src="<?= base_url('js/print_table.js') ?>"></script>
 <script src="<?= base_url('js/fill_records_modal.js') ?>"></script>
 
-<!-- DELETE BUTTON FIX -->
+<!-- DELETE BUTTON SCRIPT -->
 <script>
     document.addEventListener('DOMContentLoaded', function() {
         const deleteForm = document.getElementById('deleteForm');

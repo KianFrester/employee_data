@@ -41,7 +41,7 @@
                             <i class="bi bi-clipboard2-plus-fill text-primary"></i>
                         </div>
                         <div>
-                            <div class="fw-bold text-uppercase text-secondary small mb-0">Employee Information</div>
+                            <div class="fw-bold text-uppercase text-secondary small mb-0">Employee's Basic Information</div>
                             <div class="text-secondary" style="font-size:12px;">Add a new employee record</div>
                         </div>
                     </div>
@@ -107,102 +107,7 @@
                         </div>
 
                         <!-- Row 8 -->
-                        <div class="row g-3 mt-1">
-                            <!-- Department -->
-                            <div class="col-12 col-md-6">
-                                <label class="form-label-soft">Department</label>
-                                <select name="department" class="form-select form-modern" required>
-                                    <option value="" selected disabled>Select Department</option>
-                                    <option value="Accounting Office">Accounting Office</option>
-                                    <option value="Administrator's Office">Administrator's Office</option>
-                                    <option value="Agriculture Office">Agriculture Office</option>
-                                    <option value="Assessor">Assessor</option>
-                                    <option value="BIR">BIR</option>
-                                    <option value="BFP">BFP</option>
-                                    <option value="Bolinao Water Works System">Bolinao Water Works System</option>
-                                    <option value="Budget">Budget</option>
-                                    <option value="COA">COA</option>
-                                    <option value="COMELEC">COMELEC</option>
-                                    <option value="DILG">DILG</option>
-                                    <option value="Engineering Office">Engineering Office</option>
-                                    <option value="GAD">GAD</option>
-                                    <option value="Garbage Collection">Garbage Collection</option>
-                                    <option value="GSO">GSO</option>
-                                    <option value="HRMO">HRMO</option>
-                                    <option value="LCR">LCR</option>
-                                    <option value="Market / Slaughter">Market / Slaughter</option>
-                                    <option value="MDRRMO">MDRRMO</option>
-                                    <option value="MPDC">MPDC</option>
-                                    <option value="MSWD / STAC">MSWD / STAC</option>
-                                    <option value="Mayor's Office">Mayor's Office</option>
-                                    <option value="PESO">PESO</option>
-                                    <option value="PNP">PNP</option>
-                                    <option value="RHU">RHU</option>
-                                    <option value="SB / Municipal Library">SB / Municipal Library</option>
-                                    <option value="Sanitary Land Filling">Sanitary Land Filling</option>
-                                    <option value="Street Cleaning">Street Cleaning</option>
-                                    <option value="Traffic Enforcement">Traffic Enforcement</option>
-                                    <option value="Tourism Office">Tourism Office</option>
-                                    <option value="Treasurer Office">Treasurer Office</option>
-                                </select>
-                            </div>
 
-
-                            <!-- Designation -->
-                            <div class="col-12 col-md-6">
-                                <label class="form-label-soft">Designation</label>
-                                <select name="designation" class="form-select form-modern" required>
-                                    <option value="" selected disabled>Select Designation</option>
-                                    <option value="Aircon Maintenance">Aircon Maintenance</option>
-                                    <option value="Administrative Assistance">Administrative Assistance</option>
-                                    <option value="Backhoe Operator">Backhoe Operator</option>
-                                    <option value="Beach Ward">Beach Ward</option>
-                                    <option value="Building Guard">Building Guard</option>
-                                    <option value="Caregiver">Caregiver</option>
-                                    <option value="Carpenter">Carpenter</option>
-                                    <option value="Clerk">Clerk</option>
-                                    <option value="Computer Technician">Computer Technician</option>
-                                    <option value="Daycare Teacher">Daycare Teacher</option>
-                                    <option value="Driver">Driver</option>
-                                    <option value="Electrician">Electrician</option>
-                                    <option value="Encoder">Encoder</option>
-                                    <option value="Engineering Brigade">Engineering Brigade</option>
-                                    <option value="Focal Person for Senior Citizen">Focal Person for Senior Citizen</option>
-                                    <option value="Financial Assistance Staff">Financial Assistance Staff</option>
-                                    <option value="First Responder">First Responder</option>
-                                    <option value="GAD Personnel">GAD Personnel</option>
-                                    <option value="Heavy Equipment Operator">Heavy Equipment Operator</option>
-                                    <option value="Laboratory Assistant">Laboratory Assistant</option>
-                                    <option value="Laboratory Technician">Laboratory Technician</option>
-                                    <option value="Market Aide">Market Aide</option>
-                                    <option value="Market Cleaner">Market Cleaner</option>
-                                    <option value="Market Watchman">Market Watchman</option>
-                                    <option value="Mechanic">Mechanic</option>
-                                    <option value="Midwife Assistant">Midwife Assistant</option>
-                                    <option value="Nurse">Nurse</option>
-                                    <option value="Nursing Assistant">Nursing Assistant</option>
-                                    <option value="OSCA Head">OSCA Head</option>
-                                    <option value="Plumber">Plumber</option>
-                                    <option value="Pump Tender">Pump Tender</option>
-                                    <option value="Pumping Station Guard">Pumping Station Guard</option>
-                                    <option value="Recorder">Recorder</option>
-                                    <option value="Rescue Personnel">Rescue Personnel</option>
-                                    <option value="School Guard">School Guard</option>
-                                    <option value="Security">Security</option>
-                                    <option value="SPED Teacher">SPED Teacher</option>
-                                    <option value="Spring Guard">Spring Guard</option>
-                                    <option value="Street Cleaner">Street Cleaner</option>
-                                    <option value="Traffic Enforcer">Traffic Enforcer</option>
-                                    <option value="Utility Worker">Utility Worker</option>
-                                    <option value="Shadow Teacher">Shadow Teacher</option>
-                                    <option value="STAC Staff">STAC Staff</option>
-                                    <option value="Child Development Teacher">Child Development Teacher</option>
-                                    <option value="Tourism Aide">Tourism Aide</option>
-                                    <option value="Maintenance Personnel">Maintenance Personnel</option>
-                                </select>
-                            </div>
-
-                        </div>
 
                         <!-- Row 10 -->
                         <div class="row g-3 mt-1">
@@ -224,49 +129,155 @@
                             </div>
                         </div>
 
-                        <!-- Row 12 -->
-                        <div class="row g-3 mt-1">
-                            <div class="col-12 col-md-6">
-                                <label class="form-label-soft">Date of Appointment</label>
-                                <input
-                                    type="date"
-                                    name="date_of_appointment"
-                                    id="date_of_appointment"
-                                    class="form-control form-modern"
-                                    required>
-                            </div>
+                        <!-- date of appointment -->
 
-                            <div class="col-12 col-md-6">
-                                <label class="form-label-soft">Service Duration</label>
-                                <input
-                                    type="text"
-                                    name="service_duration"
-                                    id="service_duration"
-                                    class="form-control form-modern"
-                                    placeholder="Auto computed"
-                                    readonly
-                                    required>
-                            </div>
-                            <div class="col-12 col-md-6">
-                                <label class="form-label-soft">Status</label>
-                                <select name="status" id="status" class="form-select form-modern" required>
-                                    <option value="" selected disabled>Select Status</option>
-                                    <option value="Resigned">Resigned</option>
-                                    <option value="Terminated">Terminated</option>
-                                    <option value="Currently Working">Currently Working</option>
-                                </select>
-                            </div>
-                            <div class="col-12 col-md-6 d-none" id="end_date_container">
-                                <label class="form-label-soft">Date Ended</label>
-                                <input type="date" name="date_ended" id="date_ended" class="form-control form-modern">
-                            </div>
-                        </div>
 
 
                         <!-- row 14 -->
                         <div class="mt-3">
                             <label class="form-label-soft">Remarks</label>
                             <textarea name="remarks" rows="6" class="form-control form-modern" placeholder="Write remarks..."></textarea>
+                        </div>
+
+                        <br>
+
+                        <div id="serviceContainer">
+
+                            <div class="service-row">
+
+                                <!-- HEADER -->
+                                <div class="form-card-header px-4 py-3 d-flex align-items-center justify-content-between">
+                                    <div class="d-flex align-items-center gap-2">
+                                        <div class="rounded-3 d-flex align-items-center justify-content-center"
+                                            style="width:38px;height:38px;background:rgba(13,110,253,.15);">
+                                            <i class="bi bi-clipboard2-plus-fill text-primary"></i>
+                                        </div>
+                                        <div>
+                                            <div class="fw-bold text-uppercase text-secondary small mb-0">Employee's Service Information</div>
+                                            <div class="text-secondary" style="font-size:12px;">Add a service record</div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="row g-3 mt-1">
+                                    <!-- Department -->
+                                    <div class="col-12 col-md-6">
+                                        <label class="form-label-soft">Department</label>
+                                        <select name="department[]" class="form-select form-modern" required>
+                                            <option value="" selected disabled>Select Department</option>
+                                            <option value="Accounting Office">Accounting Office</option>
+                                            <option value="Administrator's Office">Administrator's Office</option>
+                                            <option value="Agriculture Office">Agriculture Office</option>
+                                            <option value="Assessor">Assessor</option>
+                                            <option value="BIR">BIR</option>
+                                            <option value="BFP">BFP</option>
+                                            <option value="Bolinao Water Works System">Bolinao Water Works System</option>
+                                            <option value="Budget">Budget</option>
+                                            <option value="COA">COA</option>
+                                            <option value="COMELEC">COMELEC</option>
+                                            <option value="DEPED">DEPED</option>
+                                            <option value="DILG">DILG</option>
+                                            <option value="Engineering Office">Engineering Office</option>
+                                            <option value="GAD">GAD</option>
+                                            <option value="Garbage Collection">Garbage Collection</option>
+                                            <option value="GSO">GSO</option>
+                                            <option value="HRMO">HRMO</option>
+                                            <option value="LCR">LCR</option>
+                                            <option value="Market / Slaughter">Market / Slaughter</option>
+                                            <option value="MDRRMO">MDRRMO</option>
+                                            <option value="MPDC">MPDC</option>
+                                            <option value="MSWD / STAC">MSWD / STAC</option>
+                                            <option value="Mayor's Office">Mayor's Office</option>
+                                            <option value="PESO">PESO</option>
+                                            <option value="PNP">PNP</option>
+                                            <option value="RHU">RHU</option>
+                                            <option value="SB / Municipal Library">SB / Municipal Library</option>
+                                            <option value="Sanitary Land Filling">Sanitary Land Filling</option>
+                                            <option value="Street Cleaning">Street Cleaning</option>
+                                            <option value="Traffic Enforcement">Traffic Enforcement</option>
+                                            <option value="Tourism Office">Tourism Office</option>
+                                            <option value="Treasurer Office">Treasurer Office</option>
+                                        </select>
+                                    </div>
+
+                                    <!-- Designation -->
+                                    <div class="col-12 col-md-6">
+                                        <label class="form-label-soft">Designation</label>
+                                        <select name="designation[]" class="form-select form-modern" required>
+                                            <option value="" selected disabled>Select Designation</option>
+                                            <option value="Aircon Maintenance">Aircon Maintenance</option>
+                                            <option value="Administrative Assistance">Administrative Assistance</option>
+                                            <option value="Backhoe Operator">Backhoe Operator</option>
+                                            <option value="Beach Ward">Beach Ward</option>
+                                            <option value="Building Guard">Building Guard</option>
+                                            <option value="Caregiver">Caregiver</option>
+                                            <option value="Carpenter">Carpenter</option>
+                                            <option value="Clerk">Clerk</option>
+                                            <option value="Computer Technician">Computer Technician</option>
+                                            <option value="Daycare Teacher">Daycare Teacher</option>
+                                            <option value="Driver">Driver</option>
+                                            <option value="Electrician">Electrician</option>
+                                            <option value="Encoder">Encoder</option>
+                                            <option value="Engineering Brigade">Engineering Brigade</option>
+                                            <option value="Focal Person for Senior Citizen">Focal Person for Senior Citizen</option>
+                                            <option value="Financial Assistance Staff">Financial Assistance Staff</option>
+                                            <option value="First Responder">First Responder</option>
+                                            <option value="GAD Personnel">GAD Personnel</option>
+                                            <option value="Heavy Equipment Operator">Heavy Equipment Operator</option>
+                                            <option value="Laboratory Assistant">Laboratory Assistant</option>
+                                            <option value="Laboratory Technician">Laboratory Technician</option>
+                                            <option value="Market Aide">Market Aide</option>
+                                            <option value="Market Cleaner">Market Cleaner</option>
+                                            <option value="Market Watchman">Market Watchman</option>
+                                            <option value="Mechanic">Mechanic</option>
+                                            <option value="Midwife Assistant">Midwife Assistant</option>
+                                            <option value="Nurse">Nurse</option>
+                                            <option value="Nursing Assistant">Nursing Assistant</option>
+                                            <option value="OSCA Head">OSCA Head</option>
+                                            <option value="Plumber">Plumber</option>
+                                            <option value="Pump Tender">Pump Tender</option>
+                                            <option value="Pumping Station Guard">Pumping Station Guard</option>
+                                            <option value="Recorder">Recorder</option>
+                                            <option value="Rescue Personnel">Rescue Personnel</option>
+                                            <option value="School Guard">School Guard</option>
+                                            <option value="Security">Security</option>
+                                            <option value="SPED Teacher">SPED Teacher</option>
+                                            <option value="Spring Guard">Spring Guard</option>
+                                            <option value="Street Cleaner">Street Cleaner</option>
+                                            <option value="Traffic Enforcer">Traffic Enforcer</option>
+                                            <option value="Utility Worker">Utility Worker</option>
+                                            <option value="Shadow Teacher">Shadow Teacher</option>
+                                            <option value="STAC Staff">STAC Staff</option>
+                                            <option value="Child Development Teacher">Child Development Teacher</option>
+                                            <option value="Tourism Aide">Tourism Aide</option>
+                                            <option value="Maintenance Personnel">Maintenance Personnel</option>
+                                        </select>
+                                    </div>
+                                </div>
+
+                                <div class="row g-3 mt-1">
+                                    <div class="col-12 col-md-6">
+                                        <label class="form-label-soft">Date of Appointment</label>
+                                        <input type="date" name="date_of_appointment[]" class="form-control form-modern" required>
+                                    </div>
+
+                                    <div class="col-12 col-md-6">
+                                        <label class="form-label-soft">Status</label>
+                                        <select name="status[]" class="form-select form-modern" required>
+                                            <option value="" disabled selected>Select Status</option>
+                                            <option value="Employed">Employed</option>
+                                            <option value="Resigned/Retired">Resigned/Retired</option>
+                                            <option value="Terminated">Terminated</option>
+                                        </select>
+                                    </div>
+                                </div>
+
+                                <div class="d-flex gap-2 justify-content-center mt-4">
+                                    <button type="button" class="btn btn-danger mt-3 removeService">Remove</button>
+                                    <button type="button" class="btn btn-outline-primary mt-3 addService">+ Add Service Record</button>
+                                </div>
+                            </div>
+                            <br>
                         </div>
 
                         <!-- Buttons (dashboard style: right side) -->
@@ -276,13 +287,16 @@
                                 <i class="bi bi-check2-circle me-1"></i> Submit
                             </button>
                         </div>
-
-                    </form>
                 </div>
+
             </div>
 
+            </form>
         </div>
     </div>
+
+</div>
+</div>
 
 </div>
 <script>
@@ -384,5 +398,6 @@
     handleStatusChange();
 </script>
 
+<script src="<?= base_url('js/dynamic_service_records.js') ?>"></script>
 
 <?= $this->endSection() ?>

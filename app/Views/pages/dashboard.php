@@ -259,69 +259,95 @@
         <!-- Gender Modal -->
         <div class="modal fade" id="genderModal" tabindex="-1" aria-labelledby="genderModalLabel" aria-hidden="true">
             <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable" style="max-width: 80vw;">
-                <div class="modal-content rounded-4">
-                    <div class="modal-header text-white" style="background-color: #16166c;">
-                        <h5 class="modal-title fw-bold" id="genderModalLabel">Gender Records</h5>
+                <div class="modal-content rounded-4 shadow">
+
+                    <!-- HEADER -->
+                    <div class="modal-header text-white" style="background-color:#16166c;">
+                        <h5 class="modal-title fw-bold" id="genderModalLabel">
+                            <i class="bi bi-gender-ambiguous me-2"></i>Gender Records
+                        </h5>
                         <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
                     </div>
+
+                    <!-- BODY -->
                     <div class="modal-body">
-                        <div class="d-flex justify-content-end mb-3 gap-2">
+
+                        <!-- FILTERS -->
+                        <div class="d-flex justify-content-end mb-3 gap-3 flex-wrap">
+
                             <div>
-                                <label for="genderFilter" class="form-label fw-bold me-2">Filter Gender:</label>
-                                <select id="genderFilter" class="form-select w-auto d-inline-block">
+                                <label class="form-label fw-bold me-2">Filter Gender:</label>
+                                <select id="genderFilter" class="form-select d-inline-block w-auto">
                                     <option value="All" selected>All</option>
                                     <option value="Male">Male</option>
                                     <option value="Female">Female</option>
                                 </select>
                             </div>
+
                             <div>
-                                <label for="genderSearch" class="form-label fw-bold me-2">Search:</label>
-                                <input type="text" id="genderSearch" class="form-control w-auto d-inline-block" placeholder="Search...">
+                                <label class="form-label fw-bold me-2">Search:</label>
+                                <input type="text" id="genderSearch" class="form-control d-inline-block w-auto" placeholder="Search...">
                             </div>
+
                         </div>
 
-                        <table class="table table-bordered table-striped text-center" id="genderTable">
-                            <thead style="background-color: #16166c; color: #fff;">
-                                <tr>
-                                    <th>Last Name</th>
-                                    <th>First Name</th>
-                                    <th>Middle Name</th>
-                                    <th>Ext</th>
-                                    <th>Department</th>
-                                    <th>Designation</th>
-                                    <th>Gender</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <?php if (!empty($gender_records)): ?>
-                                    <?php foreach ($gender_records as $rec): ?>
-                                        <tr>
-                                            <td><?= esc($rec['last_name']) ?></td>
-                                            <td><?= esc($rec['first_name']) ?></td>
-                                            <td><?= esc($rec['middle_name']) ?></td>
-                                            <td><?= esc($rec['extensions']) ?></td>
-                                            <td><?= esc($rec['department']) ?></td>
-                                            <td><?= esc($rec['designation']) ?></td>
-                                            <td><?= esc($rec['gender']) ?></td>
-                                        </tr>
-                                    <?php endforeach; ?>
-                                <?php else: ?>
+                        <!-- TABLE -->
+                        <div class="table-responsive">
+                            <table class="table table-bordered table-striped align-middle text-center" id="genderTable">
+
+                                <thead style="background-color:#16166c; color:#fff;">
                                     <tr>
-                                        <td colspan="7">No records found.</td>
+                                        <th>Last Name</th>
+                                        <th>First Name</th>
+                                        <th>Middle Name</th>
+                                        <th>Ext</th>
+                                        <th>Department</th>
+                                        <th>Designation</th>
+                                        <th>Gender</th>
                                     </tr>
-                                <?php endif; ?>
-                            </tbody>
-                        </table>
+                                </thead>
+
+                                <tbody>
+                                    <?php if (!empty($gender_records)): ?>
+                                        <?php foreach ($gender_records as $rec): ?>
+                                            <tr>
+                                                <td><?= esc($rec['last_name'] ?? '') ?></td>
+                                                <td><?= esc($rec['first_name'] ?? '') ?></td>
+                                                <td><?= esc($rec['middle_name'] ?? '') ?></td>
+                                                <td><?= esc($rec['extensions'] ?? '') ?></td>
+
+                                                <!-- 🔥 MULTIPLE SERVICE RECORDS (HTML ALLOWED) -->
+                                                <td><?= $rec['department'] ?? '' ?></td>
+                                                <td><?= $rec['designation'] ?? '' ?></td>
+
+                                                <td><?= esc($rec['gender'] ?? '') ?></td>
+                                            </tr>
+                                        <?php endforeach; ?>
+                                    <?php else: ?>
+                                        <tr>
+                                            <td colspan="7" class="text-muted">No records found.</td>
+                                        </tr>
+                                    <?php endif; ?>
+                                </tbody>
+
+                            </table>
+                        </div>
                     </div>
 
+                    <!-- FOOTER -->
                     <div class="modal-footer">
-                        <button class="btn btn-success rounded-pill" id="printGenderTable">Print</button>
-                        <button class="btn btn-secondary rounded-pill" data-bs-dismiss="modal">Close</button>
+                        <button class="btn btn-success rounded-pill" id="printGenderTable">
+                            <i class="bi bi-printer me-1"></i>Print
+                        </button>
+                        <button class="btn btn-secondary rounded-pill" data-bs-dismiss="modal">
+                            Close
+                        </button>
                     </div>
 
                 </div>
             </div>
         </div>
+
 
         <!-- Eligibility Modal -->
         <div class="modal fade" id="eligibilityModal" tabindex="-1" aria-labelledby="eligibilityModalLabel" aria-hidden="true">
@@ -364,12 +390,14 @@
                                 <?php if (!empty($eligibility_records)): ?>
                                     <?php foreach ($eligibility_records as $rec): ?>
                                         <tr>
-                                            <td><?= esc($rec['last_name']) ?></td>
-                                            <td><?= esc($rec['first_name']) ?></td>
-                                            <td><?= esc($rec['middle_name']) ?></td>
-                                            <td><?= esc($rec['extensions']) ?></td>
-                                            <td><?= esc($rec['department']) ?></td>
-                                            <td><?= esc($rec['designation']) ?></td>
+                                            <td><?= esc($rec['last_name'] ?? '') ?></td>
+                                            <td><?= esc($rec['first_name'] ?? '') ?></td>
+                                            <td><?= esc($rec['middle_name'] ?? '') ?></td>
+                                            <td><?= esc($rec['extensions'] ?? '') ?></td>
+
+                                            <!-- 🔥 MULTIPLE SERVICE RECORDS (HTML ALLOWED) -->
+                                            <td><?= $rec['department'] ?? '' ?></td>
+                                            <td><?= $rec['designation'] ?? '' ?></td>
                                             <td><?= esc($rec['eligibility']) ?></td>
                                         </tr>
                                     <?php endforeach; ?>
@@ -391,7 +419,6 @@
         </div>
 
         <!-- Age Modal -->
-        <!-- Dito ako mag start bukas (KIAN) -->
 
         <div class="modal fade" id="ageModal" tabindex="-1" aria-labelledby="ageModalLabel" aria-hidden="true">
             <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable" style="max-width: 80vw;">
@@ -434,13 +461,17 @@
                                 <?php if (!empty($age_records)): ?>
                                     <?php foreach ($age_records as $rec): ?>
                                         <tr>
-                                            <td><?= esc($rec['last_name']) ?></td>
-                                            <td><?= esc($rec['first_name']) ?></td>
-                                            <td><?= esc($rec['middle_name']) ?></td>
-                                            <td><?= esc($rec['ext']) ?></td>
-                                            <td><?= esc($rec['department']) ?></td>
-                                            <td><?= esc($rec['designation']) ?></td>
-                                            <td><?= esc($rec['age']) ?></td>
+                                            <td><?= esc($rec['last_name'] ?? '') ?></td>
+                                            <td><?= esc($rec['first_name'] ?? '') ?></td>
+                                            <td><?= esc($rec['middle_name'] ?? '') ?></td>
+                                            <td><?= esc($rec['extensions'] ?? '') ?></td>
+
+                                            <!-- 🔥 MULTIPLE SERVICE RECORDS (HTML ALLOWED) -->
+                                            <td><?= $rec['department'] ?? '' ?></td>
+                                            <td><?= $rec['designation'] ?? '' ?></td>
+
+                                            <!-- age count -->
+                                            <td><?= esc($rec['age'] ?? '') ?></td>
                                         </tr>
                                     <?php endforeach; ?>
                                 <?php else: ?>
@@ -500,13 +531,16 @@
                                 <?php if (!empty($education_records)): ?>
                                     <?php foreach ($education_records as $rec): ?>
                                         <tr>
-                                            <td><?= esc($rec['last_name']) ?></td>
-                                            <td><?= esc($rec['first_name']) ?></td>
-                                            <td><?= esc($rec['middle_name']) ?></td>
-                                            <td><?= esc($rec['ext']) ?></td>
-                                            <td><?= esc($rec['department']) ?></td>
-                                            <td><?= esc($rec['designation']) ?></td>
-                                            <td><?= esc($rec['education']) ?></td>
+                                            <td><?= esc($rec['last_name'] ?? '') ?></td>
+                                            <td><?= esc($rec['first_name'] ?? '') ?></td>
+                                            <td><?= esc($rec['middle_name'] ?? '') ?></td>
+                                            <td><?= esc($rec['extensions'] ?? '') ?></td>
+
+                                            <!-- 🔥 MULTIPLE SERVICE RECORDS (HTML ALLOWED) -->
+                                            <td><?= $rec['department'] ?? '' ?></td>
+                                            <td><?= $rec['designation'] ?? '' ?></td>
+
+                                            <td><?= esc($rec['educational_attainment']) ?></td>
                                         </tr>
                                     <?php endforeach; ?>
                                 <?php else: ?>
