@@ -510,11 +510,11 @@
                                 <label for="educationFilter" class="form-label fw-bold me-2">Filter Education:</label>
                                 <select id="educationFilter" class="form-select w-auto d-inline-block">
                                     <option value="All" selected>All</option>
-                                    <option value="ELEM">ELEM</option>
-                                    <option value="HS">HS</option>
+                                    <option value="ELEM">ELEMENTARY</option>
+                                    <option value="HS">HIGH SCHOOL</option>
                                     <option value="COLLEGE">COLLEGE</option>
-                                    <option value="VOC">VOC</option>
-                                    <option value="GRAD">GRAD</option>
+                                    <option value="VOC">VOCATIONAL</option>
+                                    <option value="GRAD">GRADUATE</option>
                                 </select>
                             </div>
                             <div>
@@ -528,7 +528,7 @@
                                     <th>Last Name</th>
                                     <th>First Name</th>
                                     <th>Middle Name</th>
-                                    <th>Ext</th>
+                                    <th>Extensions</th>
                                     <th>Department</th>
                                     <th>Designation</th>
                                     <th>Educational Attainment</th>
@@ -665,5 +665,5 @@
         <script src="<?= base_url('js/print_age_table.js') ?>"></script>
         <script src="<?= base_url('js/print_educational_attainment_table.js') ?>"></script>
         <script src="<?= base_url('js/print_employment_status_table.js') ?>"></script>
-        
+
         <?= $this->endSection(); ?>
