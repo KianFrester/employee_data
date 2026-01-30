@@ -22,12 +22,12 @@ class CreateRecords extends BaseController
         $serviceModel = new ServiceModel();
 
         // ================= EMPLOYEE DATA =================
-        $firstName  = trim($this->request->getPost('first_name'));
-        $middleName = trim($this->request->getPost('middle_name'));
-        $lastName   = trim($this->request->getPost('last_name'));
-        $extensions = trim($this->request->getPost('extensions'));
+        $firstName  = trim((string)$this->request->getPost('first_name'));
+        $middleName = trim((string)$this->request->getPost('middle_name'));
+        $lastName   = trim((string)$this->request->getPost('last_name'));
+        $extensions = trim((string)$this->request->getPost('extensions'));
 
-        // 🔹 Check if the employee already exists
+        // 🔹 Check if employee already exists (exact match)
         $existing = $recordsModel->where([
             'first_name'  => $firstName,
             'middle_name' => $middleName,
@@ -36,53 +36,120 @@ class CreateRecords extends BaseController
         ])->first();
 
         if ($existing) {
-            // Employee already exists
-            return redirect()->back()->withInput()->with('error', 'Employee is already registered.');
+            return redirect()->back()
+                ->withInput()
+                ->with('error', 'Employee is already registered.');
         }
 
+        // ✅ rate removed here (rate belongs to service_records)
         $employeeData = [
-            'first_name'  => $firstName,
-            'middle_name' => $middleName,
-            'last_name'   => $lastName,
-            'extensions'  => $extensions,
-            'birthdate'   => $this->request->getPost('birthdate'),
-            'gender'      => $this->request->getPost('gender'),
-            'rate'        => trim($this->request->getPost('rate')),
-            'educational_attainment' => trim($this->request->getPost('educational_attainment')),
-            'eligibility' => trim($this->request->getPost('eligibility')),
-            'remarks'     => trim($this->request->getPost('remarks')),
+            'first_name'             => $firstName,
+            'middle_name'            => $middleName,
+            'last_name'              => $lastName,
+            'extensions'             => $extensions,
+            'birthdate'              => $this->request->getPost('birthdate'),
+            'gender'                 => $this->request->getPost('gender'),
+            'educational_attainment' => trim((string)$this->request->getPost('educational_attainment')),
+            'eligibility'            => trim((string)$this->request->getPost('eligibility')),
+            'remarks'                => trim((string)$this->request->getPost('remarks')),
         ];
 
-        // 🔹 Insert employee
+        // Insert employee
         $recordsModel->insert($employeeData);
-        $employeeId = $recordsModel->getInsertID(); // This ID will link to service records
+        $employeeId = $recordsModel->getInsertID();
 
         // ================= SERVICE RECORDS =================
-        $departments  = $this->request->getPost('department');        
-        $designations = $this->request->getPost('designation');       
-        $dates        = $this->request->getPost('date_of_appointment'); 
-        $statuses     = $this->request->getPost('status');            
+        $departments  = $this->request->getPost('department') ?? [];
+        $designations = $this->request->getPost('designation') ?? [];
+        $rates        = $this->request->getPost('rate') ?? [];
+        $dates        = $this->request->getPost('date_of_appointment') ?? [];
+        $statuses     = $this->request->getPost('status') ?? [];
+        $endedDates   = $this->request->getPost('date_ended') ?? [];
+        $durations    = $this->request->getPost('service_duration') ?? [];
+
+        // Normalize in case one item is submitted not as array
+        if (!is_array($departments))  $departments  = [$departments];
+        if (!is_array($designations)) $designations = [$designations];
+        if (!is_array($rates))        $rates        = [$rates];
+        if (!is_array($dates))        $dates        = [$dates];
+        if (!is_array($statuses))     $statuses     = [$statuses];
+        if (!is_array($endedDates))   $endedDates   = [$endedDates];
+        if (!is_array($durations))    $durations    = [$durations];
 
         $serviceData = [];
 
         foreach ($departments as $i => $dept) {
-            if (!empty($dept)) {
-                $serviceData[] = [
-                    'employee_id'         => $employeeId,  
-                    'first_name'          => $firstName,
-                    'middle_name'         => $middleName,
-                    'last_name'           => $lastName,
-                    'extensions'          => $extensions,
-                    'department'          => $dept,
-                    'designation'         => $designations[$i] ?? '',
-                    'date_of_appointment' => $dates[$i] ?? null,
-                    'status'              => $statuses[$i] ?? ''
-                ];
+            $dept   = trim((string)$dept);
+            $desig  = trim((string)($designations[$i] ?? ''));
+            $rate   = trim((string)($rates[$i] ?? ''));
+            $appoint = trim((string)($dates[$i] ?? ''));
+            $status = trim((string)($statuses[$i] ?? ''));
+            $ended  = trim((string)($endedDates[$i] ?? ''));
+            $dur    = $durations[$i] ?? null;
+
+            // Skip fully empty row (in case of extra clone)
+            if ($dept === '' && $desig === '' && $rate === '' && $appoint === '' && $status === '') {
+                continue;
             }
+
+            // ✅ Required service fields
+            if ($dept === '' || $desig === '' || $rate === '' || $appoint === '' || $status === '') {
+                return redirect()->back()
+                    ->withInput()
+                    ->with('error', 'Please complete Department, Designation, Rate, Date of Appointment, and Status for every service record.');
+            }
+
+            // ✅ Apply your Date Ended rules
+            if ($status === 'Employed') {
+                // store as zero-date (as you requested)
+                $dateEndedToSave = '0000-00-00';
+
+                // Employed => duration saved NULL (UI can show "Currently Working")
+                $durToSave = null;
+            } elseif ($status === 'Terminated' || $status === 'Resigned/Retired') {
+
+                // must have ended date and cannot be zero-date
+                if ($ended === '' || $ended === '0000-00-00') {
+                    return redirect()->back()
+                        ->withInput()
+                        ->with('error', 'Date Ended is required for Terminated or Resigned/Retired employees.');
+                }
+
+                // accept date OR datetime-local
+                // datetime-local: 2026-01-01T13:30 -> 2026-01-01 13:30:00
+                if (strpos($ended, 'T') !== false) {
+                    $dateEndedToSave = str_replace('T', ' ', $ended) . ':00';
+                } else {
+                    // date only: 2026-01-01
+                    $dateEndedToSave = $ended;
+                }
+
+                $durToSave = $dur ?: null;
+            } else {
+                // unknown status
+                $dateEndedToSave = null;
+                $durToSave = null;
+            }
+
+            $serviceData[] = [
+                'employee_id'         => $employeeId,
+                'department'          => $dept,
+                'designation'         => $desig,
+                'rate'                => $rate,
+                'date_of_appointment' => $appoint,
+                'status'              => $status,
+                'date_ended'          => $dateEndedToSave,
+                'service_duration'    => $durToSave,
+            ];
         }
 
         if (!empty($serviceData)) {
-            $serviceModel->insertBatch($serviceData); // Insert multiple service records
+            $serviceModel->insertBatch($serviceData);
+        } else {
+            // no service rows at all
+            return redirect()->back()
+                ->withInput()
+                ->with('error', 'Please add at least one service record.');
         }
 
         return redirect()->to('/create')

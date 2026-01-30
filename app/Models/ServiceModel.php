@@ -20,7 +20,10 @@ class ServiceModel extends Model
         'extensions',
         'department',
         'designation',
+        'rate',
         'date_of_appointment',
+        'date_ended',
+        'service_duration',
         'status',
     ];
 
@@ -32,7 +35,7 @@ class ServiceModel extends Model
 
     // Dates
     protected $useTimestamps = false;
-    protected $dateFormat    = 'datetime';
+    protected $dateFormat    = 'date';
     protected $createdField  = 'created_at';
     protected $updatedField  = 'updated_at';
     protected $deletedField  = 'deleted_at';

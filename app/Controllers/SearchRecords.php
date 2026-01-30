@@ -28,12 +28,16 @@ class SearchRecords extends BaseController
                 'birthdate' => $emp['birthdate'],
                 'gender' => $emp['gender'],
                 'department' => $emp['departments'] ?? '',
-                'educational_attainment' => $emp['educational_attainment'],
                 'designation' => $emp['designations'] ?? '',
-                'rate' => $emp['rate'],
+
+                // ✅ RATE NOW COMES FROM SERVICE TABLE GROUP_CONCAT
+                'rate' => $emp['rates'] ?? '',
+
+                'educational_attainment' => $emp['educational_attainment'],
                 'eligibility' => $emp['eligibility'],
                 'date_of_appointment' => $emp['dates'] ?? '',
                 'status' => $emp['statuses'] ?? '',
+                'date_ended' => $emp['date_ended'] ?? '',
                 'remarks' => $emp['remarks']
             ];
         }
