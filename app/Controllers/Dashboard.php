@@ -105,24 +105,29 @@ class Dashboard extends BaseController
             }
         }
 
-        // ================= EDUCATION RECORDS (WITH SERVICE DATA) =================
-        $education_records = $recordsModel
-            ->select("
-        records.*,
-        GROUP_CONCAT(
-            CONCAT('<div>', service_records.department, '</div>')
-            SEPARATOR ''
-        ) AS department,
-        GROUP_CONCAT(
-            CONCAT('<div>', service_records.designation, '</div>')
-            SEPARATOR ''
-        ) AS designation
-    ")
-            ->join('service_records', 'service_records.employee_id = records.id', 'left')
-            ->where('records.educational_attainment IS NOT NULL')
-            ->groupBy('records.id')
-            ->orderBy('records.last_name', 'ASC')
+        // ================= EDUCATION COUNTS =================
+        $raw_education_counts = $recordsModel
+            ->select('educational_attainment, COUNT(*) as value')
+            ->where('educational_attainment IS NOT NULL')
+            ->groupBy('educational_attainment')
             ->findAll();
+
+        // default values (so always shows 0 if none)
+        $education_counts = [
+            'ELEM'   => 0,
+            'HS'     => 0,
+            'COLLEGE' => 0,
+            'VOC'    => 0,
+            'GRAD'   => 0,
+        ];
+
+        foreach ($raw_education_counts as $row) {
+            $key = strtoupper(trim($row['educational_attainment']));
+            if (isset($education_counts[$key])) {
+                $education_counts[$key] = (int) $row['value'];
+            }
+        }
+
 
 
 
@@ -153,7 +158,7 @@ class Dashboard extends BaseController
             'eligibility_records' => $eligibility_records,
             'eligibility_counts'  => $eligibility_counts,
             'age_records'         => $age_records,
-            'education_records'   => $education_records,
+            'education_counts'   => $education_counts,
             'ageGroups'           => $ageGroups,
         ]);
     }

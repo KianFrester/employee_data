@@ -207,12 +207,15 @@
                             <div class="col-12 col-md-4 col-lg">
                                 <div class="stat-tile text-center">
                                     <div class="text-uppercase text-secondary small fw-semibold mb-2"><?= esc($edu) ?></div>
-                                    <div class="fw-bold" style="font-size:34px; line-height:1;">10</div>
+                                    <div class="fw-bold" style="font-size:34px; line-height:1;">
+                                        <?= esc($education_counts[$edu] ?? 0) ?>
+                                    </div>
                                     <div class="text-secondary small mt-1">People</div>
                                 </div>
                             </div>
                         <?php endforeach; ?>
                     </div>
+
                 </div>
             </div>
         </div>
@@ -515,6 +518,7 @@
                                     <option value="COLLEGE">COLLEGE</option>
                                     <option value="VOC">VOCATIONAL</option>
                                     <option value="GRAD">GRADUATE</option>
+                                    <option value="N/A">N/A</option>
                                 </select>
                             </div>
                             <div>
@@ -559,7 +563,7 @@
                         </table>
                     </div>
                     <div class="modal-footer">
-                        <button class="btn btn-success rounded-pill" id="printAgeTable">
+                        <button class="btn btn-success rounded-pill" id="printEducationTable">
                             <i class="bi bi-printer me-1"></i>Print
                         </button>
                         <button class="btn btn-secondary rounded-pill" data-bs-dismiss="modal">
@@ -665,5 +669,7 @@
         <script src="<?= base_url('js/print_age_table.js') ?>"></script>
         <script src="<?= base_url('js/print_educational_attainment_table.js') ?>"></script>
         <script src="<?= base_url('js/print_employment_status_table.js') ?>"></script>
+        <script src="<?= base_url('js/employment_status.js') ?>"></script>
+
 
         <?= $this->endSection(); ?>
