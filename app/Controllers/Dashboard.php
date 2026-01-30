@@ -89,6 +89,7 @@ class Dashboard extends BaseController
             '60+'   => 0,
         ];
 
+        
         foreach ($age_records as $rec) {
             $age = (int) $rec['age'];
 

@@ -7,7 +7,7 @@
     <!-- ===== DASHBOARD TITLE ===== -->
     <div class="mb-4 text-center">
         <h2 class="fw-bold text-white">
-            Hello <span style="color: #7CFC00;"><?= esc($username) ?></span>, welcome to Dashboard
+            Hello <span style="color: #7CFC00;"><?= esc($username) ?></span>, welcome to Dashboard!
         </h2>
         <hr style="border-color: #16166c;">
     </div>
