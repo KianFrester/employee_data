@@ -1,15 +1,30 @@
-/* ===== ELEMENTS ===== */
+/* ===============================
+   ELEMENTS
+================================ */
 const searchInput = document.getElementById("tableSearch");
 const clearBtn = document.getElementById("clearSearch");
 const table = document.getElementById("searchTable");
 const checkboxes = document.querySelectorAll(".column-check");
 
 if (!searchInput || !clearBtn || !table) {
-  console.warn("main_search.js: missing elements.");
+  console.warn("main_search.js: required elements not found.");
 } else {
-  /* ===== APPLY FILTERS ===== */
+  function toggleClearButton() {
+    clearBtn.style.display = searchInput.value.trim() ? "block" : "none";
+  }
+
+  // ✅ retry pagination refresh (fixes “pagination not yet loaded”)
+  function refreshPaginationWithRetry(tries = 10) {
+    if (typeof window.__paginationRefresh === "function") {
+      window.__paginationRefresh();
+      return;
+    }
+    if (tries <= 0) return;
+    setTimeout(() => refreshPaginationWithRetry(tries - 1), 50);
+  }
+
   function applyFilters() {
-    const searchValue = searchInput.value.toLowerCase();
+    const searchValue = searchInput.value.toLowerCase().trim();
 
     const selectedColumns = Array.from(checkboxes)
       .filter((cb) => cb.checked)
@@ -17,48 +32,38 @@ if (!searchInput || !clearBtn || !table) {
 
     const rows = table.querySelectorAll("tbody tr");
 
-    /* Show / Hide Columns */
+    /* ---- Show / Hide Columns ---- */
     table.querySelectorAll("tr").forEach((row) => {
       row.querySelectorAll("th, td").forEach((cell, index) => {
         cell.style.display = selectedColumns.includes(index) ? "" : "none";
       });
     });
 
-    /* Search Rows -> sets data-filtered only */
+    /* ---- Mark filtered (DO NOT show/hide here) ---- */
     rows.forEach((row) => {
-      // ignore "No records found" row
-      if (row.querySelectorAll("td").length <= 1) return;
+      if (row.querySelectorAll("td").length <= 1) return; // ignore "No records found"
 
       let rowText = "";
       selectedColumns.forEach((index) => {
         rowText += (row.cells[index]?.innerText || "").toLowerCase() + " ";
       });
 
-      const match = rowText.includes(searchValue);
-      row.dataset.filtered = match ? "1" : "0";
+      row.dataset.filtered = rowText.includes(searchValue) ? "1" : "0";
     });
 
-    /* ✅ VERY IMPORTANT:
-       hide all rows first so pagination can re-show only 10 rows on page 1
-       (prevents “show all results” bug after search)
-    */
+    /* ✅ CRITICAL: hide all data rows immediately (prevents "all rows show") */
     rows.forEach((row) => {
       if (row.querySelectorAll("td").length <= 1) return;
-      row.style.display = "none";
+      row.style.setProperty("display", "none", "important");
     });
 
-    /* ✅ refresh pagination */
-    if (typeof window.__paginationRefresh === "function") {
-      window.__paginationRefresh();
-    }
+    /* ✅ Now let pagination re-show ONLY the 10 rows of page 1 */
+    refreshPaginationWithRetry();
   }
 
-  /* ===== CLEAR BUTTON VISIBILITY ===== */
-  function toggleClearButton() {
-    clearBtn.style.display = searchInput.value ? "block" : "none";
-  }
-
-  /* ===== EVENTS ===== */
+  /* ===============================
+     EVENTS
+  ================================ */
   searchInput.addEventListener("input", () => {
     applyFilters();
     toggleClearButton();
@@ -71,11 +76,11 @@ if (!searchInput || !clearBtn || !table) {
     toggleClearButton();
   });
 
-  checkboxes.forEach((cb) => {
-    cb.addEventListener("change", applyFilters);
-  });
+  checkboxes.forEach((cb) => cb.addEventListener("change", applyFilters));
 
-  /* ===== INIT ===== */
+  /* ===============================
+     INIT
+  ================================ */
   toggleClearButton();
   applyFilters();
 }

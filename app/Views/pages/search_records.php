@@ -1048,7 +1048,6 @@
         const tbody = table.tBodies[0];
         const paginationEl = document.getElementById("tablePagination");
         const infoEl = document.getElementById("paginationInfo");
-
         if (!paginationEl || !infoEl) return;
 
         const ROWS_PER_PAGE = 10;
@@ -1056,18 +1055,26 @@
 
         function getDataRows() {
             return Array.from(tbody.querySelectorAll("tr"))
-                .filter(r => r.querySelectorAll("td").length > 1); // ignore "No records found"
+                .filter(r => r.querySelectorAll("td").length > 1);
         }
 
         function getFilteredRows() {
             return getDataRows().filter(r => r.dataset.filtered !== "0");
         }
 
+        function forceHide(row) {
+            row.style.setProperty("display", "none", "important");
+        }
+
+        function forceShow(row) {
+            row.style.removeProperty("display"); // back to normal
+        }
+
         function applyFinalVisibility() {
             getDataRows().forEach(row => {
                 const filtered = row.dataset.filtered !== "0";
                 const paged = row.dataset.page === "1";
-                row.style.display = (filtered && paged) ? "" : "none";
+                (filtered && paged) ? forceShow(row): forceHide(row);
             });
         }
 
@@ -1125,10 +1132,10 @@
 
             currentPage = Math.min(Math.max(page, 1), totalPages);
 
-            // reset page markers
+            // reset page markers for ALL rows
             getDataRows().forEach(r => r.dataset.page = "0");
 
-            // mark current page rows
+            // set page=1 only for current slice
             const startIndex = (currentPage - 1) * ROWS_PER_PAGE;
             const endIndex = startIndex + ROWS_PER_PAGE;
             filteredRows.slice(startIndex, endIndex).forEach(r => r.dataset.page = "1");
@@ -1142,12 +1149,10 @@
             renderPagination(totalPages);
         }
 
-        // ✅ This is what main_search.js will call every time search/filter changes
-        window.__paginationRefresh = function() {
-            renderPage(1);
-        };
+        // called by main_search.js
+        window.__paginationRefresh = () => renderPage(1);
 
-        // default: if main_search hasn't run yet, set all as filtered
+        // init defaults
         getDataRows().forEach(r => {
             if (typeof r.dataset.filtered === "undefined") r.dataset.filtered = "1";
         });
@@ -1155,6 +1160,9 @@
         renderPage(1);
     });
 </script>
+
+
+
 
 <link rel="stylesheet" href="<?= base_url('css/search_records.css') ?>">
 
