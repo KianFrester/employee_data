@@ -7,20 +7,17 @@
     <!-- ===== DASHBOARD TITLE ===== -->
     <div class="mb-4 text-center">
         <h2 class="fw-bold text-white">
-            Hello <span style="color: #7CFC00;"><?= esc($username) ?></span>, welcome to Dashboard!
+            Hello <span style="color: #7CFC00;"><?= esc($username) ?></span>, Welcome to Dashboard
         </h2>
         <hr style="border-color: #16166c;">
     </div>
 
 
-
-    <!-- ===== CARDS (2 per row) ===== -->
     <div class="row g-4">
 
-
         <!-- GENDER CARD -->
-        <div class="col-12 col-lg-6">
-            <div class="card card-dash">
+        <div class="col-12 col-lg-6 d-flex">
+            <div class="card card-dash h-100 w-100">
                 <!-- Header -->
                 <div class="card-dash-header px-4 py-3 d-flex align-items-center justify-content-between">
                     <div class="d-flex align-items-center gap-2">
@@ -33,7 +30,6 @@
                             <div class="text-secondary" style="font-size:12px;">Employee breakdown</div>
                         </div>
                     </div>
-
                     <a class="btn btn-outline-primary btn-sm rounded-pill fw-semibold"
                         href="#"
                         data-bs-toggle="modal"
@@ -45,7 +41,6 @@
                 <!-- Body -->
                 <div class="card-body px-4 py-4">
                     <div class="row g-3">
-
                         <!-- Male -->
                         <div class="col-12 col-md-6">
                             <div class="stat-tile d-flex gap-3 align-items-start">
@@ -76,7 +71,72 @@
                             </div>
                         </div>
 
+                        <!-- Gender Pie Chart -->
+                        <div class="mt-4">
+                            <div class="d-flex justify-content-between align-items-center mb-2">
+                                <span class="fw-semibold text-secondary small text-uppercase">
+                                    Gender Distribution
+                                </span>
+                                <span class="badge bg-light text-dark">
+                                    Total: <?= esc($maleCount + $femaleCount) ?>
+                                </span>
+                            </div>
 
+                            <div class="d-flex justify-content-center">
+                                <div class="w-100" style="max-width:260px; height:220px;">
+                                    <canvas id="genderPieChart"></canvas>
+                                </div>
+                            </div>
+                        </div>
+
+                        <script>
+                            document.addEventListener("DOMContentLoaded", function() {
+                                const male = Number("<?= esc($maleCount) ?>") || 0;
+                                const female = Number("<?= esc($femaleCount) ?>") || 0;
+
+                                const ctx = document.getElementById("genderPieChart");
+                                if (!ctx) return;
+
+                                const hasData = male + female > 0;
+
+                                new Chart(ctx, {
+                                    type: "pie",
+                                    data: {
+                                        labels: hasData ? ["Male", "Female"] : ["No Data"],
+                                        datasets: [{
+                                            data: hasData ? [male, female] : [1],
+                                            backgroundColor: hasData ? ["#0d6efd", "#dc3545"] : ["#adb5bd"],
+                                            borderColor: "#fff",
+                                            borderWidth: 2,
+                                        }, ],
+                                    },
+                                    options: {
+                                        responsive: true,
+                                        maintainAspectRatio: false,
+                                        plugins: {
+                                            legend: {
+                                                position: "bottom",
+                                                labels: {
+                                                    usePointStyle: true,
+                                                    boxWidth: 12,
+                                                    padding: 15,
+                                                },
+                                            },
+                                            tooltip: {
+                                                callbacks: {
+                                                    label: function(ctx) {
+                                                        const total = ctx.dataset.data.reduce((a, b) => a + b, 0);
+                                                        const val = ctx.raw;
+                                                        const pct = total ? ((val / total) * 100).toFixed(1) : 0;
+                                                        return `${ctx.label}: ${val} (${pct}%)`;
+                                                    },
+                                                },
+                                            },
+                                        },
+                                    },
+                                });
+                            });
+                        </script>
 
                     </div>
                 </div>
@@ -84,8 +144,8 @@
         </div>
 
         <!-- ELIGIBILITY CARD -->
-        <div class="col-12 col-lg-6">
-            <div class="card card-dash">
+        <div class="col-12 col-lg-6 d-flex">
+            <div class="card card-dash h-100 w-100">
                 <!-- Header -->
                 <div class="card-dash-header px-4 py-3 d-flex align-items-center justify-content-between">
                     <div class="d-flex align-items-center gap-2">
@@ -119,22 +179,109 @@
                                     </div>
 
                                     <div>
-                                        <div class="text-uppercase text-secondary small fw-semibold"><?= esc($label) ?></div>
+                                        <div class="text-uppercase text-secondary small fw-semibold text-nowrap text-truncate"
+                                            style="max-width: 90px;"
+                                            title="<?= esc($label) ?>">
+                                            <?= esc($label) ?>
+                                        </div>
+
                                         <div class="fw-bold" style="font-size:34px; line-height:1;"><?= esc($value) ?></div>
                                         <div class="text-secondary small">Qualified</div>
                                     </div>
+
                                 </div>
                             </div>
                         <?php endforeach; ?>
                     </div>
+                    <!-- Eligibility Pie Chart -->
+                    <div class="mt-4">
+                        <div class="d-flex justify-content-between align-items-center mb-2">
+                            <span class="fw-semibold text-secondary small text-uppercase">
+                                Eligibility Distribution
+                            </span>
+                            <span class="badge bg-light text-dark">
+                                Total: <?= esc(array_sum($eligibility_counts)) ?>
+                            </span>
+                        </div>
+
+                        <div class="d-flex justify-content-center">
+                            <div class="w-100" style="max-width:300px; height:230px;">
+                                <canvas id="eligibilityPieChart"></canvas>
+                            </div>
+                        </div>
+                    </div>
                 </div>
+
+
+
+                <script>
+                    document.addEventListener("DOMContentLoaded", function() {
+
+                        const labels = <?= json_encode(array_keys($eligibility_counts)) ?>;
+                        const values = <?= json_encode(array_values($eligibility_counts)) ?>;
+
+                        const canvas = document.getElementById("eligibilityPieChart");
+                        if (!canvas) return;
+
+                        const total = values.reduce((a, b) => a + b, 0);
+                        const hasData = total > 0;
+
+                        const bootstrapColors = [
+                            "#0d6efd", // primary
+                            "#198754", // success
+                            "#ffc107", // warning
+                            "#dc3545", // danger
+                            "#6f42c1", // purple
+                            "#20c997" // teal
+                        ];
+
+                        new Chart(canvas, {
+                            type: "pie",
+                            data: {
+                                labels: hasData ? labels : ["No Data"],
+                                datasets: [{
+                                    data: hasData ? values : [1],
+                                    backgroundColor: hasData ?
+                                        bootstrapColors.slice(0, labels.length) : ["#adb5bd"],
+                                    borderColor: "#ffffff",
+                                    borderWidth: 2
+                                }]
+                            },
+                            options: {
+                                responsive: true,
+                                maintainAspectRatio: false,
+                                plugins: {
+                                    legend: {
+                                        position: "bottom",
+                                        labels: {
+                                            usePointStyle: true,
+                                            boxWidth: 12,
+                                            padding: 15
+                                        }
+                                    },
+                                    tooltip: {
+                                        callbacks: {
+                                            label: function(ctx) {
+                                                const val = ctx.raw;
+                                                const pct = total ? ((val / total) * 100).toFixed(1) : 0;
+                                                return `${ctx.label}: ${val} (${pct}%)`;
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        });
+                    });
+                </script>
+
+
             </div>
         </div>
 
 
         <!-- AGE CARD -->
-        <div class="col-12 col-lg-6">
-            <div class="card card-dash">
+        <div class="col-12 col-lg-6 d-flex">
+            <div class="card card-dash h-100 w-100">
                 <!-- Header -->
                 <div class="card-dash-header px-4 py-3 d-flex align-items-center justify-content-between">
                     <div class="d-flex align-items-center gap-2">
@@ -170,10 +317,83 @@
                                 </div>
                             </div>
                         <?php endforeach; ?>
+                    </div> <!-- Age Pie Chart (bottom aligned) -->
+                    <div class="mt-auto pt-3">
+                        <div class="d-flex justify-content-between align-items-center mb-2">
+                            <span class="fw-semibold text-secondary small text-uppercase">
+                                Age Distribution
+                            </span>
+                            <span class="badge bg-light text-dark">
+                                Total: <?= esc(array_sum($ageGroups)) ?>
+                            </span>
+                        </div>
+
+                        <div class="d-flex justify-content-center">
+                            <div class="w-100" style="max-width:300px; height:230px;">
+                                <canvas id="agePieChart"></canvas>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
+        <script>
+            document.addEventListener("DOMContentLoaded", function() {
+
+                const labels = <?= json_encode(array_keys($ageGroups)) ?>;
+                const values = <?= json_encode(array_values($ageGroups)) ?>;
+
+                const canvas = document.getElementById("agePieChart");
+                if (!canvas) return;
+
+                const total = values.reduce((a, b) => a + b, 0);
+                const hasData = total > 0;
+
+                const bootstrapColors = [
+                    "#0d6efd", "#198754", "#ffc107", "#dc3545",
+                    "#6f42c1", "#20c997", "#0dcaf0", "#fd7e14",
+                    "#6c757d"
+                ];
+
+                new Chart(canvas, {
+                    type: "pie",
+                    data: {
+                        labels: hasData ? labels : ["No Data"],
+                        datasets: [{
+                            data: hasData ? values : [1],
+                            backgroundColor: hasData ?
+                                labels.map((_, i) => bootstrapColors[i % bootstrapColors.length]) : ["#adb5bd"],
+                            borderColor: "#ffffff",
+                            borderWidth: 2
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: {
+                            legend: {
+                                position: "bottom",
+                                labels: {
+                                    usePointStyle: true,
+                                    boxWidth: 12,
+                                    padding: 15
+                                }
+                            },
+                            tooltip: {
+                                callbacks: {
+                                    label: function(ctx) {
+                                        const val = ctx.raw || 0;
+                                        const pct = total ? ((val / total) * 100).toFixed(1) : 0;
+                                        return `${ctx.label}: ${val} (${pct}%)`;
+                                    }
+                                }
+                            }
+                        }
+                    }
+                });
+            });
+        </script>
+
 
 
         <!-- EDUCATION CARD -->
@@ -670,6 +890,13 @@
         <script src="<?= base_url('js/print_educational_attainment_table.js') ?>"></script>
         <script src="<?= base_url('js/print_employment_status_table.js') ?>"></script>
         <script src="<?= base_url('js/employment_status.js') ?>"></script>
+
+        <!-- gender pie graph -->
+        <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+        <!-- eligibility pie graph -->
+        <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+        <!-- age pie graph -->
+        <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
 
 
         <?= $this->endSection(); ?>
