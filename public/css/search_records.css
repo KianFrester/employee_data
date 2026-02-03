@@ -1,17 +1,22 @@
+/* =========================
+   MULTI-LINE CELLS
+   ========================= */
 .multi-cell{
   white-space: normal !important;
-  overflow: hidden;
   word-break: break-word;
   overflow-wrap: anywhere;
-  vertical-align: top;
+  vertical-align: middle;
 }
 
 .multi-line-item{
-  line-height: 1.25;
-  margin-bottom: 2px;
+  line-height: 1.35;
+  padding: 3px 0;
+  text-align: center;
 }
 
-/* ===== EDIT MODAL SCROLL FIX ===== */
+/* =========================
+   EDIT MODAL SCROLL FIX
+   ========================= */
 #editModal .modal-dialog,
 #editModal .modal-content {
   max-height: 90vh;
@@ -20,5 +25,112 @@
 #editModal .modal-body {
   max-height: calc(90vh - 140px);
   overflow-y: auto;
-  scroll-behavior: smooth;
+}
+
+/* =========================
+   TABLE BASE
+   ========================= */
+.table-modern {
+  width: 100%;
+  border-collapse: separate !important;
+  border-spacing: 0;
+  background: #ffffff;
+  border: 1px solid #cfd9ec;   /* visible but not thick */
+  border-radius: 12px;
+  overflow: hidden;
+}
+
+/* =========================
+   TABLE HEADER
+   ========================= */
+.table-modern thead th {
+  background: #eef3fb;
+  color: #344767;
+  font-weight: 700;
+  font-size: 0.8rem;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+
+  text-align: center !important;
+  vertical-align: middle !important;
+
+  padding: 12px 10px;
+  border-bottom: 1.5px solid #cfd9ec;
+  border-right: 1px solid #d8e0f0;
+}
+
+.table-modern thead th:last-child {
+  border-right: none;
+}
+
+/* =========================
+   TABLE BODY CELLS
+   ========================= */
+.table-modern tbody td {
+  text-align: center !important;
+  vertical-align: middle !important;
+
+  padding: 12px 10px;
+  font-size: 0.95rem;
+  color: #1f2937;
+
+  border-bottom: 1px solid #e2e8f5;
+  border-right: 1px solid #e2e8f5;
+
+  transition: background-color 0.25s ease;
+}
+
+.table-modern tbody td:last-child {
+  border-right: none;
+}
+
+/* =========================
+   ALTERNATE ROW COLOR
+   ========================= */
+.table-modern tbody tr:nth-child(even) td {
+  background-color: #fafcff;
+}
+
+/* =========================
+   STRONG ROW HOVER EFFECT
+   ========================= */
+.table-modern tbody tr td {
+  transition:
+    background-color 0.25s ease,
+    box-shadow 0.25s ease,
+    transform 0.15s ease;
+}
+
+.table-modern tbody tr:hover td {
+  background-color: #e7f0ff !important; /* strong but clean */
+}
+
+/* subtle lift */
+.table-modern tbody tr:hover {
+  /* transform: scale(1.002); */
+  transform:none;
+}
+
+/* =========================
+   MULTI-LINE ITEM SEPARATOR
+   ========================= */
+.multi-line-item + .multi-line-item {
+  border-top: 1px dashed #cfd9ec;
+  margin-top: 4px;
+  padding-top: 5px;
+}
+
+/* =========================
+   ACTION BUTTONS
+   ========================= */
+.table-modern .btn-pill {
+  border-radius: 999px !important;
+}
+
+/* =========================
+   RESPONSIVE
+   ========================= */
+.table-responsive {
+  border-radius: 12px;
+  overflow: hidden;
 }

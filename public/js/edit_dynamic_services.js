@@ -195,12 +195,13 @@ window.openEditModal = function (rec) {
   document.getElementById("edit_remarks").value = rec.remarks ?? "";
 
   // ✅ service arrays
-  const departments = splitPipe(rec.department);
-  const designations = splitPipe(rec.designation);
-  const rates = splitPipe(rec.rate); // ✅ IMPORTANT: your SearchRecords must provide rec.rate (string "a||b")
-  const appoints = splitPipe(rec.date_of_appointment);
-  const statuses = splitPipe(rec.status);
+  const departments = splitPipe(rec.departments);
+  const designations = splitPipe(rec.designations);
+  const rates = splitPipe(rec.rates); // ✅ IMPORTANT: your SearchRecords must provide rec.rate (string "a||b")
+  const appoints = splitPipe(rec.date_of_appointments);
+  const statuses = splitPipe(rec.statuses);
   const endeds = splitPipe(rec.date_ended);
+  const serviceIds   = splitPipe(rec.service_ids);
 
   const container = document.getElementById("editServiceContainer");
   container.innerHTML = "";

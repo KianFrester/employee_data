@@ -470,6 +470,44 @@
 
             </div>
         </div>
+
+        <div class="col-12 col-lg-6">
+            <div class="card card-dash">
+                <div class="card-dash-header px-4 py-3 d-flex align-items-center justify-content-between">
+                    <div class="d-flex align-items-center gap-2">
+                        <div class="rounded-3 d-flex align-items-center justify-content-center"
+                            style="width:38px;height:38px;background:rgba(13,110,253,.15);">
+                            <i class="bi bi-briefcase text-primary"></i>
+                        </div>
+                        <div>
+                            <div class="fw-bold text-uppercase text-secondary small mb-0">Employment Status</div>
+                            <div class="text-secondary" style="font-size:12px;">Current employment status</div>
+                        </div>
+                    </div>
+
+                    <a class="btn btn-outline-primary btn-sm rounded-pill fw-semibold"
+                        href="#"
+                        data-bs-toggle="modal"
+                        data-bs-target="#employmentModal">
+                        View Details →
+                    </a>
+                </div>
+
+                <div class="card-body px-4 py-4">
+                    <div class="row g-3">
+                        <?php foreach (['Employed', 'Unemployed', 'Retired'] as $emp): ?>
+                            <div class="col-12 col-md-4 col-lg">
+                                <div class="stat-tile text-center">
+                                    <div class="text-uppercase text-secondary small fw-semibold mb-2"><?= esc($emp) ?></div>
+                                    <div class="fw-bold" style="font-size:34px; line-height:1;">10</div>
+                                    <div class="text-secondary small mt-1">People</div>
+                                </div>
+                            </div>
+                        <?php endforeach; ?>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
 </div>
 <script>
@@ -529,43 +567,6 @@
     });
 </script>
 
-<div class="col-12 col-lg-6">
-    <div class="card card-dash">
-        <div class="card-dash-header px-4 py-3 d-flex align-items-center justify-content-between">
-            <div class="d-flex align-items-center gap-2">
-                <div class="rounded-3 d-flex align-items-center justify-content-center"
-                    style="width:38px;height:38px;background:rgba(13,110,253,.15);">
-                    <i class="bi bi-briefcase text-primary"></i>
-                </div>
-                <div>
-                    <div class="fw-bold text-uppercase text-secondary small mb-0">Employment Status</div>
-                    <div class="text-secondary" style="font-size:12px;">Current employment status</div>
-                </div>
-            </div>
-
-            <a class="btn btn-outline-primary btn-sm rounded-pill fw-semibold"
-                href="#"
-                data-bs-toggle="modal"
-                data-bs-target="#employmentModal">
-                View Details →
-            </a>
-        </div>
-
-        <div class="card-body px-4 py-4">
-            <div class="row g-3">
-                <?php foreach (['Employed', 'Unemployed', 'Retired'] as $emp): ?>
-                    <div class="col-12 col-md-4 col-lg">
-                        <div class="stat-tile text-center">
-                            <div class="text-uppercase text-secondary small fw-semibold mb-2"><?= esc($emp) ?></div>
-                            <div class="fw-bold" style="font-size:34px; line-height:1;">10</div>
-                            <div class="text-secondary small mt-1">People</div>
-                        </div>
-                    </div>
-                <?php endforeach; ?>
-            </div>
-        </div>
-    </div>
-</div>
 
 
 <!-- ===== MODALS ===== -->
@@ -980,12 +981,9 @@
 <script src="<?= base_url('js/print_employment_status_table.js') ?>"></script>
 <script src="<?= base_url('js/employment_status.js') ?>"></script>
 
-<!-- gender pie graph -->
+<!-- pie graph -->
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
-<!-- eligibility pie graph -->
-<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
-<!-- age pie graph -->
-<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+
 
 
 <?= $this->endSection(); ?>

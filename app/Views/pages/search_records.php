@@ -139,67 +139,67 @@
             <div class="table-responsive">
 
                 <?php
-                function renderMultiLines($value)
+                function renderMulti($value, $emptyText = '—')
                 {
-                    // Normalize
-                    if ($value === null) {
-                        return '<div class="multi-line-item">Currently Working</div>';
-                    }
+                    if ($value === null) return '<div class="multi-line-item">' . $emptyText . '</div>';
 
-                    $value = trim((string)$value);
+                    $value = (string)$value;
+                    if ($value === '') return '<div class="multi-line-item">' . $emptyText . '</div>';
 
-                    if ($value === '' || $value === '0000-00-00') {
-                        return '<div class="multi-line-item">Currently Working</div>';
-                    }
-
-                    // Split multi-line values
-                    $parts = array_filter(array_map('trim', explode('||', $value)));
+                    $parts = explode('||', $value);
 
                     $out = '';
-
                     foreach ($parts as $p) {
+                        $p = trim($p);
+                        $out .= '<div class="multi-line-item">' . ($p === '' ? $emptyText : esc($p)) . '</div>';
+                    }
+                    return $out;
+                }
 
-                        // ✅ Convert zero-date to "Currently Working"
-                        if ($p === '0000-00-00' || $p === '') {
+                function renderEnded($value)
+                {
+                    if ($value === null || $value === '') {
+                        return '<div class="multi-line-item">Currently Working</div>';
+                    }
+
+                    $parts = explode('||', (string)$value);
+
+                    $out = '';
+                    foreach ($parts as $p) {
+                        $p = trim($p);
+
+                        if ($p === '' || $p === '0000-00-00') {
                             $out .= '<div class="multi-line-item">Currently Working</div>';
                         } else {
                             $out .= '<div class="multi-line-item">' . esc($p) . '</div>';
                         }
                     }
-
                     return $out;
                 }
-                ?>
 
-                <!-- for full name -->
-                <?php
+
+
+
                 function formatFullName($rec)
                 {
-                    $last  = trim($rec['last_name'] ?? '');
-                    $first = trim($rec['first_name'] ?? '');
+                    $last   = trim($rec['last_name'] ?? '');
+                    $first  = trim($rec['first_name'] ?? '');
                     $middle = trim($rec['middle_name'] ?? '');
-                    $ext   = trim($rec['extensions'] ?? '');
+                    $ext    = trim($rec['extensions'] ?? '');
 
                     $name = $last;
-
-                    if ($first !== '') {
-                        $name .= ', ' . $first;
-                    }
-
-                    if ($middle !== '') {
-                        $name .= ' ' . $middle;
-                    }
-
-                    if ($ext !== '') {
-                        $name .= ' ' . $ext;
-                    }
+                    if ($first !== '')  $name .= ', ' . $first;
+                    if ($middle !== '') $name .= ' ' . $middle;
+                    if ($ext !== '')    $name .= ' ' . $ext;
 
                     return esc($name);
                 }
                 ?>
 
 
-                <table class="table table-modern align-middle text-center table-sm" id="searchTable" style="table-layout: fixed; width: 100%;">
+
+                <table class="table table-modern align-middle text-center"
+                    id="searchTable" style="table-layout: fixed; width: 100%;">
                     <thead>
                         <tr>
                             <?php foreach ($columns as $col): ?>
@@ -221,32 +221,31 @@
                                     <td><?= esc($rec['gender']) ?></td>
 
                                     <td class="multi-cell">
-                                        <?= renderMultiLines($rec['department'] ?? '') ?>
+                                        <?= renderMulti($rec['departments'] ?? '') ?>
                                     </td>
 
                                     <td><?= esc($rec['educational_attainment']) ?></td>
 
                                     <td class="multi-cell">
-                                        <?= renderMultiLines($rec['designation'] ?? '') ?>
+                                        <?= renderMulti($rec['designations'] ?? '') ?>
                                     </td>
 
                                     <td class="multi-cell">
-                                        <?= renderMultiLines($rec['rate'] ?? '') ?>
+                                        <?= renderMulti($rec['rates'] ?? '') ?>
                                     </td>
 
                                     <td><?= esc($rec['eligibility']) ?></td>
 
                                     <td class="multi-cell">
-                                        <?= renderMultiLines($rec['date_of_appointment'] ?? '') ?>
+                                        <?= renderMulti($rec['dates'] ?? '') ?>
+
                                     </td>
 
                                     <td class="multi-cell">
-                                        <?= renderMultiLines($rec['status'] ?? '') ?>
+                                        <?= renderMulti($rec['statuses'] ?? '') ?>
                                     </td>
 
-                                    <td class="multi-cell">
-                                        <?= renderMultiLines($rec['date_ended'] ?? '') ?>
-                                    </td>
+                                    <td class="multi-cell"><?= renderEnded($rec['date_ended'] ?? '') ?></td>
 
                                     <td><?= esc($rec['remarks']) ?></td>
 
@@ -431,6 +430,8 @@
                                             <template id="editServiceRowTpl">
                                                 <div class="service-row mb-4">
 
+                                                    <input type="hidden" name="service_id[]" class="js-service-id">
+
                                                     <!-- HEADER (same vibe as Add Record) -->
                                                     <div class="form-card-header px-4 py-3 d-flex align-items-center justify-content-between rounded-4"
                                                         style="background: rgba(255,255,255,.06);">
@@ -573,8 +574,9 @@
                                                             <div class="col-12 col-md-6 js-ended-wrap">
                                                                 <label class="form-label-soft">Date Ended</label>
 
-                                                                <!-- visible (datetime-local like Add Record) -->
-                                                                <input type="datetime-local" class="form-control form-modern js-ended">
+
+                                                                <input type="date" class="form-control form-modern js-ended">
+
 
                                                                 <!-- submitted -->
                                                                 <input type="hidden" name="date_ended[]" class="js-ended-hidden">
@@ -779,7 +781,7 @@
         if (!needsEndDate(status)) {
             if (endedRow) endedRow.classList.add("d-none");
             if (endedEl) endedEl.value = "";
-            if (endedHidden) endedHidden.value = "0000-00-00";
+            if (endedHidden) endedHidden.value = "";
             if (durationEl) durationEl.value = "Currently Working";
             if (hintEl) hintEl.textContent = "Currently Working";
             return;
@@ -789,6 +791,8 @@
         if (endedRow) endedRow.classList.remove("d-none");
         if (hintEl) hintEl.textContent = "Required";
         if (endedEl) endedEl.required = true;
+        if (endedEl) endedEl.disabled = false;
+
 
         const endedISO = toISODate(endedEl?.value || "");
         if (endedHidden) endedHidden.value = endedISO;
@@ -815,6 +819,8 @@
     }
 
     function fillRow(row, data) {
+        const idEl = row.querySelector(".js-service-id"); // ✅ add this
+
         row.querySelector(".js-dept")?.setAttribute("value", "");
         const deptEl = row.querySelector(".js-dept");
         const desigEl = row.querySelector(".js-desig");
@@ -824,6 +830,7 @@
         const endedEl = row.querySelector(".js-ended");
         const endedHidden = row.querySelector(".js-ended-hidden");
 
+        if (idEl) idEl.value = data.service_id || ""; // ✅
         if (deptEl) deptEl.value = data.department || "";
         if (desigEl) desigEl.value = data.designation || "";
         if (rateEl) rateEl.value = data.rate || "";
@@ -831,8 +838,10 @@
         if (statusEl) statusEl.value = (data.status || "Employed").trim();
 
         const endedISO = toISODate(data.date_ended || "");
-        if (endedEl) endedEl.value = endedISO ? `${endedISO}T00:00` : "";
-        if (endedHidden) endedHidden.value = endedISO || ((statusEl?.value || "") === "Employed" ? "0000-00-00" : "");
+        if (endedEl) endedEl.value = endedISO;
+
+        if (endedHidden) endedHidden.value = endedISO || ((statusEl?.value || "") === "Employed" ? "" : "");
+
 
         updateRow(row);
     }
@@ -853,12 +862,13 @@
         const container = document.getElementById("editServiceContainer");
         container.innerHTML = "";
 
-        const departments = splitPipe(rec.department);
-        const designations = splitPipe(rec.designation);
-        const rates = splitPipe(rec.rate);
-        const appoints = splitPipe(rec.date_of_appointment);
-        const statuses = splitPipe(rec.status);
+        const departments = splitPipe(rec.departments);
+        const designations = splitPipe(rec.designations);
+        const rates = splitPipe(rec.rates);
+        const appoints = splitPipe(rec.dates);
+        const statuses = splitPipe(rec.statuses);
         const endeds = splitPipe(rec.date_ended);
+        const serviceIds = splitPipe(rec.service_ids);
 
         const maxLen = Math.max(
             departments.length,
@@ -875,6 +885,7 @@
             if (!row) continue;
 
             fillRow(row, {
+                service_id: serviceIds[i] || "",
                 department: departments[i] || "",
                 designation: designations[i] || "",
                 rate: rates[i] || "",

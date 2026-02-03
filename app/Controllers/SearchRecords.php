@@ -27,21 +27,23 @@ class SearchRecords extends BaseController
                 'extensions' => $emp['extensions'],
                 'birthdate' => $emp['birthdate'],
                 'gender' => $emp['gender'],
-                'department' => $emp['departments'] ?? '',
-                'designation' => $emp['designations'] ?? '',
 
-                // ✅ RATE NOW COMES FROM SERVICE TABLE GROUP_CONCAT
-                'rate' => $emp['rates'] ?? '',
+                // ✅ IMPORTANT: must match VIEW + JS
+                'departments'  => $emp['departments'] ?? '',
+                'designations' => $emp['designations'] ?? '',
+                'rates'        => $emp['rates'] ?? '',
+                'dates'        => $emp['dates'] ?? '',
+                'statuses'     => $emp['statuses'] ?? '',
+                'date_ended'   => $emp['date_ended'] ?? '',
+
+                // ✅ REQUIRED for correct update per row
+                'service_ids'  => $emp['service_ids'] ?? '',
 
                 'educational_attainment' => $emp['educational_attainment'],
                 'eligibility' => $emp['eligibility'],
-                'date_of_appointment' => $emp['dates'] ?? '',
-                'status' => $emp['statuses'] ?? '',
-                'date_ended' => $emp['date_ended'] ?? '',
-                'remarks' => $emp['remarks']
+                'remarks' => $emp['remarks'],
             ];
         }
-
 
         return view('pages/search_records', $data);
     }
