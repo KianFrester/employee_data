@@ -17,66 +17,53 @@ class Dashboard extends BaseController
         $username = $session->get('username');
         $recordsModel = new RecordsModel();
 
+        /**
+         * ✅ LATEST SERVICE RECORD JOIN (per employee)
+         * This joins ONLY the latest service_records row by:
+         *   date_of_appointment DESC, id DESC
+         */
+        $latestServiceSub = "(SELECT s2.id
+            FROM service_records s2
+            WHERE s2.employee_id = records.id
+            ORDER BY s2.date_of_appointment DESC, s2.id DESC
+            LIMIT 1)";
+
         // ================= GENDER COUNTS =================
-        $maleCount = $recordsModel->where('gender', 'Male')->countAllResults();
+        $maleCount   = $recordsModel->where('gender', 'Male')->countAllResults();
         $femaleCount = $recordsModel->where('gender', 'Female')->countAllResults();
 
-        // ================= GENDER RECORDS (WITH SERVICE DATA) =================
+        // ================= GENDER RECORDS (LATEST SERVICE) =================
         $gender_records = $recordsModel
             ->select("
                 records.*,
-                GROUP_CONCAT(
-                    CONCAT(
-                        '<div>', service_records.department, '</div>'
-                    ) SEPARATOR ''
-                ) AS department,
-                GROUP_CONCAT(
-                    CONCAT(
-                        '<div>', service_records.designation, '</div>'
-                    ) SEPARATOR ''
-                ) AS designation
+                sr.department AS department,
+                sr.designation AS designation
             ")
-            ->join('service_records', 'service_records.employee_id = records.id', 'left')
-            ->groupBy('records.id')
+            ->join("service_records sr", "sr.id = $latestServiceSub", "left", false)
             ->orderBy('records.last_name', 'ASC')
             ->findAll();
 
-
-        // ================= ELIGIBILITY RECORDS (WITH SERVICE DATA) =================
+        // ================= ELIGIBILITY RECORDS (LATEST SERVICE) =================
         $eligibility_records = $recordsModel
             ->select("
-        records.*,
-        GROUP_CONCAT(
-            CONCAT('<div>', service_records.department, '</div>')
-            SEPARATOR ''
-        ) AS department,
-        GROUP_CONCAT(
-            CONCAT('<div>', service_records.designation, '</div>')
-            SEPARATOR ''
-        ) AS designation
-    ")
-            ->join('service_records', 'service_records.employee_id = records.id', 'left')
-            ->groupBy('records.id')
+                records.*,
+                sr.department AS department,
+                sr.designation AS designation
+            ")
+            ->join("service_records sr", "sr.id = $latestServiceSub", "left", false)
             ->orderBy('records.last_name', 'ASC')
             ->findAll();
 
-        // ================= AGE RECORDS (WITH SERVICE DATA) =================
+        // ================= AGE RECORDS (LATEST SERVICE) =================
         $age_records = $recordsModel
             ->select("
-        records.*,
-        TIMESTAMPDIFF(YEAR, records.birthdate, CURDATE()) AS age,
-        GROUP_CONCAT(
-            CONCAT('<div>', service_records.department, '</div>')
-            SEPARATOR ''
-        ) AS department,
-        GROUP_CONCAT(
-            CONCAT('<div>', service_records.designation, '</div>')
-            SEPARATOR ''
-        ) AS designation
-    ")
-            ->join('service_records', 'service_records.employee_id = records.id', 'left')
+                records.*,
+                TIMESTAMPDIFF(YEAR, records.birthdate, CURDATE()) AS age,
+                sr.department AS department,
+                sr.designation AS designation
+            ")
+            ->join("service_records sr", "sr.id = $latestServiceSub", "left", false)
             ->where('records.birthdate IS NOT NULL')
-            ->groupBy('records.id')
             ->orderBy('records.last_name', 'ASC')
             ->findAll();
 
@@ -89,65 +76,55 @@ class Dashboard extends BaseController
             '60+'   => 0,
         ];
 
-
         foreach ($age_records as $rec) {
-            $age = (int) $rec['age'];
+            $age = (int)($rec['age'] ?? 0);
 
-            if ($age >= 18 && $age <= 30) {
-                $ageGroups['18-30']++;
-            } elseif ($age >= 31 && $age <= 40) {
-                $ageGroups['31-40']++;
-            } elseif ($age >= 41 && $age <= 50) {
-                $ageGroups['41-50']++;
-            } elseif ($age >= 51 && $age <= 60) {
-                $ageGroups['51-60']++;
-            } elseif ($age > 60) {
-                $ageGroups['60+']++;
-            }
+            if ($age >= 18 && $age <= 30) $ageGroups['18-30']++;
+            elseif ($age >= 31 && $age <= 40) $ageGroups['31-40']++;
+            elseif ($age >= 41 && $age <= 50) $ageGroups['41-50']++;
+            elseif ($age >= 51 && $age <= 60) $ageGroups['51-60']++;
+            elseif ($age > 60) $ageGroups['60+']++;
         }
 
         // ================= EDUCATION COUNTS =================
         $raw_education_counts = $recordsModel
             ->select('educational_attainment, COUNT(*) as value')
-            ->where('educational_attainment !=', null)
+            ->where('educational_attainment IS NOT NULL')
             ->groupBy('educational_attainment')
             ->findAll();
 
         $education_counts = [
-            'ELEM'    => 0,
-            'HS'      => 0,
-            'COLLEGE' => 0,
-            'VOC'     => 0,
-            'GRAD'    => 0,
-            'N/A'     => 0,
+            'ELEM'       => 0,
+            'HS'         => 0,
+            'COLLEGE'    => 0,
+            'VOC'        => 0,
+            'GRAD'       => 0,
+            'N/A'        => 0,
             'UNDER-GRAD' => 0,
         ];
 
         foreach ($raw_education_counts as $row) {
-            $key = strtoupper(trim($row['educational_attainment']));
+            $key = strtoupper(trim($row['educational_attainment'] ?? ''));
             if (isset($education_counts[$key])) {
-                $education_counts[$key] = (int) $row['value'];
+                $education_counts[$key] = (int)$row['value'];
             }
         }
 
-        // ================= EDUCATION RECORDS (WITH SERVICE DATA) =================
+        // ================= EDUCATION RECORDS (LATEST SERVICE) =================
         $education_records = $recordsModel
             ->select("
-        records.last_name,
-        records.first_name,
-        records.middle_name,
-        records.extensions,
-        records.educational_attainment,
-        GROUP_CONCAT(CONCAT('<div>', service_records.department, '</div>') SEPARATOR '') AS department,
-        GROUP_CONCAT(CONCAT('<div>', service_records.designation, '</div>') SEPARATOR '') AS designation
-    ")
-            ->join('service_records', 'service_records.employee_id = records.id', 'left')
-            ->where('records.educational_attainment !=', null)
-            ->groupBy('records.id')
+                records.last_name,
+                records.first_name,
+                records.middle_name,
+                records.extensions,
+                records.educational_attainment,
+                sr.department AS department,
+                sr.designation AS designation
+            ")
+            ->join("service_records sr", "sr.id = $latestServiceSub", "left", false)
+            ->where('records.educational_attainment IS NOT NULL')
             ->orderBy('records.last_name', 'ASC')
             ->findAll();
-
-
 
         // ================= ELIGIBILITY COUNTS =================
         $raw_counts = $recordsModel
@@ -156,29 +133,74 @@ class Dashboard extends BaseController
             ->findAll();
 
         $eligibility_counts = [
-            'PRO' => 0,
+            'PRO'     => 0,
             'NON PRO' => 0,
-            'PRC' => 0,
-            'NON' => 0
+            'PRC'     => 0,
+            'NON'     => 0
         ];
 
         foreach ($raw_counts as $row) {
-            if (isset($eligibility_counts[$row['eligibility']])) {
-                $eligibility_counts[$row['eligibility']] = (int) $row['value'];
+            $k = $row['eligibility'] ?? '';
+            if (isset($eligibility_counts[$k])) {
+                $eligibility_counts[$k] = (int)$row['value'];
             }
         }
 
+        // ================= EMPLOYMENT COUNTS (LATEST STATUS) =================
+        // ✅ If employee has no service record, treat as Employed (change if you want)
+        $employment_raw = $recordsModel
+            ->select("IFNULL(sr.status, 'Employed') AS status, COUNT(*) AS value")
+            ->join("service_records sr", "sr.id = $latestServiceSub", "left", false)
+            ->groupBy("IFNULL(sr.status, 'Employed')")
+            ->findAll();
+
+        $employment_counts = [
+            'Employed'         => 0,
+            'Terminated'       => 0,
+            'Resigned/Retired' => 0,
+        ];
+
+        foreach ($employment_raw as $row) {
+            $status = $row['status'] ?? '';
+            if (isset($employment_counts[$status])) {
+                $employment_counts[$status] = (int)$row['value'];
+            }
+        }
+
+        // ================= EMPLOYMENT RECORDS (LATEST STATUS + LATEST SERVICE) =================
+        $employment_records = $recordsModel
+            ->select("
+                records.last_name,
+                records.first_name,
+                records.middle_name,
+                records.extensions,
+                sr.department AS department,
+                sr.designation AS designation,
+                IFNULL(sr.status, 'Employed') AS employment_status
+            ")
+            ->join("service_records sr", "sr.id = $latestServiceSub", "left", false)
+            ->orderBy('records.last_name', 'ASC')
+            ->findAll();
+
         return view('pages/dashboard', [
             'username'            => $username,
-            'gender_records'      => $gender_records,
+
             'maleCount'           => $maleCount,
             'femaleCount'         => $femaleCount,
-            'eligibility_records' => $eligibility_records,
+            'gender_records'      => $gender_records,
+
             'eligibility_counts'  => $eligibility_counts,
-            'age_records'         => $age_records,
-            'education_counts'   => $education_counts,
-            'education_records' => $education_records,
+            'eligibility_records' => $eligibility_records,
+
             'ageGroups'           => $ageGroups,
+            'age_records'         => $age_records,
+
+            'education_counts'    => $education_counts,
+            'education_records'   => $education_records,
+
+            // ✅ ADD THESE (THIS FIXES YOUR EMPTY EMPLOYMENT TABLE)
+            'employment_counts'   => $employment_counts,
+            'employment_records'  => $employment_records,
         ]);
     }
 }

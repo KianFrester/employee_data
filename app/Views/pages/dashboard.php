@@ -2,6 +2,41 @@
 <?= $this->section('content') ?>
 <?= $this->include('main/navbar') ?>
 
+<?php
+// ✅ helpers (LATEST FIRST: we take the first item from "A||B||C")
+function firstPipe($val, $fallback = '—')
+{
+    $val = trim((string)($val ?? ''));
+    if ($val === '') return $fallback;
+
+    $parts = explode('||', $val);
+    $first = trim($parts[0] ?? '');
+
+    return $first !== '' ? esc($first) : $fallback;
+}
+
+function firstPipeRaw($val, $fallback = '—') // allow already-rendered HTML if needed
+{
+    $val = trim((string)($val ?? ''));
+    if ($val === '') return $fallback;
+
+    $parts = explode('||', $val);
+    $first = trim($parts[0] ?? '');
+
+    return $first !== '' ? $first : $fallback;
+}
+
+// ✅ employment counts coming from controller (recommended):
+// $employment_counts = ['Employed'=>X,'Terminated'=>Y,'Resigned/Retired'=>Z];
+// If not set yet, fallback to 0 to avoid errors.
+$employment_counts = $employment_counts ?? [
+    'Employed' => 0,
+    'Terminated' => 0,
+    'Resigned/Retired' => 0,
+];
+$employment_total = array_sum($employment_counts);
+?>
+
 <div class="container-fluid my-4 px-4">
 
     <!-- ===== DASHBOARD TITLE ===== -->
@@ -12,13 +47,13 @@
         <hr style="border-color: #16166c;">
     </div>
 
-
     <div class="row g-4">
 
-        <!-- GENDER CARD -->
+        <!-- ===================== -->
+        <!-- ✅ GENDER CARD -->
+        <!-- ===================== -->
         <div class="col-12 col-lg-6 d-flex">
             <div class="card card-dash h-100 w-100">
-                <!-- Header -->
                 <div class="card-dash-header px-4 py-3 d-flex align-items-center justify-content-between">
                     <div class="d-flex align-items-center gap-2">
                         <div class="rounded-3 d-flex align-items-center justify-content-center"
@@ -38,10 +73,9 @@
                     </a>
                 </div>
 
-                <!-- Body -->
                 <div class="card-body px-4 py-4">
                     <div class="row g-3">
-                        <!-- Male -->
+
                         <div class="col-12 col-md-6">
                             <div class="stat-tile d-flex gap-3 align-items-start">
                                 <div class="rounded-4 bg-primary bg-opacity-10 d-flex align-items-center justify-content-center"
@@ -56,7 +90,6 @@
                             </div>
                         </div>
 
-                        <!-- Female -->
                         <div class="col-12 col-md-6">
                             <div class="stat-tile d-flex gap-3 align-items-start">
                                 <div class="rounded-4 bg-danger bg-opacity-10 d-flex align-items-center justify-content-center"
@@ -71,7 +104,6 @@
                             </div>
                         </div>
 
-                        <!-- Gender Pie Chart -->
                         <div class="mt-4">
                             <div class="d-flex justify-content-between align-items-center mb-2">
                                 <span class="fw-semibold text-secondary small text-uppercase">
@@ -89,64 +121,17 @@
                             </div>
                         </div>
 
-                        <script>
-                            document.addEventListener("DOMContentLoaded", function() {
-                                const male = Number("<?= esc($maleCount) ?>") || 0;
-                                const female = Number("<?= esc($femaleCount) ?>") || 0;
-
-                                const ctx = document.getElementById("genderPieChart");
-                                if (!ctx) return;
-
-                                const hasData = male + female > 0;
-
-                                new Chart(ctx, {
-                                    type: "pie",
-                                    data: {
-                                        labels: hasData ? ["Male", "Female"] : ["No Data"],
-                                        datasets: [{
-                                            data: hasData ? [male, female] : [1],
-                                            backgroundColor: hasData ? ["#0d6efd", "#dc3545"] : ["#adb5bd"],
-                                            borderColor: "#fff",
-                                            borderWidth: 2,
-                                        }, ],
-                                    },
-                                    options: {
-                                        responsive: true,
-                                        maintainAspectRatio: false,
-                                        plugins: {
-                                            legend: {
-                                                position: "bottom",
-                                                labels: {
-                                                    usePointStyle: true,
-                                                    boxWidth: 12,
-                                                    padding: 15,
-                                                },
-                                            },
-                                            tooltip: {
-                                                callbacks: {
-                                                    label: function(ctx) {
-                                                        const total = ctx.dataset.data.reduce((a, b) => a + b, 0);
-                                                        const val = ctx.raw;
-                                                        const pct = total ? ((val / total) * 100).toFixed(1) : 0;
-                                                        return `${ctx.label}: ${val} (${pct}%)`;
-                                                    },
-                                                },
-                                            },
-                                        },
-                                    },
-                                });
-                            });
-                        </script>
-
                     </div>
                 </div>
             </div>
         </div>
 
-        <!-- ELIGIBILITY CARD -->
+        <!-- ===================== -->
+        <!-- ✅ ELIGIBILITY CARD -->
+        <!-- ===================== -->
         <div class="col-12 col-lg-6 d-flex">
             <div class="card card-dash h-100 w-100">
-                <!-- Header -->
+
                 <div class="card-dash-header px-4 py-3 d-flex align-items-center justify-content-between">
                     <div class="d-flex align-items-center gap-2">
                         <div class="rounded-3 d-flex align-items-center justify-content-center"
@@ -167,8 +152,8 @@
                     </a>
                 </div>
 
-                <!-- Body -->
                 <div class="card-body px-4 py-4">
+
                     <div class="row g-3">
                         <?php foreach ($eligibility_counts as $label => $value): ?>
                             <div class="col-12 col-md-6 col-lg-3">
@@ -193,7 +178,7 @@
                             </div>
                         <?php endforeach; ?>
                     </div>
-                    <!-- Eligibility Pie Chart -->
+
                     <div class="mt-4">
                         <div class="d-flex justify-content-between align-items-center mb-2">
                             <span class="fw-semibold text-secondary small text-uppercase">
@@ -210,79 +195,17 @@
                             </div>
                         </div>
                     </div>
+
                 </div>
-
-
-
-                <script>
-                    document.addEventListener("DOMContentLoaded", function() {
-
-                        const labels = <?= json_encode(array_keys($eligibility_counts)) ?>;
-                        const values = <?= json_encode(array_values($eligibility_counts)) ?>;
-
-                        const canvas = document.getElementById("eligibilityPieChart");
-                        if (!canvas) return;
-
-                        const total = values.reduce((a, b) => a + b, 0);
-                        const hasData = total > 0;
-
-                        const bootstrapColors = [
-                            "#0d6efd", // primary
-                            "#198754", // success
-                            "#ffc107", // warning
-                            "#dc3545", // danger
-                            "#6f42c1", // purple
-                            "#20c997" // teal
-                        ];
-
-                        new Chart(canvas, {
-                            type: "pie",
-                            data: {
-                                labels: hasData ? labels : ["No Data"],
-                                datasets: [{
-                                    data: hasData ? values : [1],
-                                    backgroundColor: hasData ?
-                                        bootstrapColors.slice(0, labels.length) : ["#adb5bd"],
-                                    borderColor: "#ffffff",
-                                    borderWidth: 2
-                                }]
-                            },
-                            options: {
-                                responsive: true,
-                                maintainAspectRatio: false,
-                                plugins: {
-                                    legend: {
-                                        position: "bottom",
-                                        labels: {
-                                            usePointStyle: true,
-                                            boxWidth: 12,
-                                            padding: 15
-                                        }
-                                    },
-                                    tooltip: {
-                                        callbacks: {
-                                            label: function(ctx) {
-                                                const val = ctx.raw;
-                                                const pct = total ? ((val / total) * 100).toFixed(1) : 0;
-                                                return `${ctx.label}: ${val} (${pct}%)`;
-                                            }
-                                        }
-                                    }
-                                }
-                            }
-                        });
-                    });
-                </script>
-
-
             </div>
         </div>
 
-
-        <!-- AGE CARD -->
+        <!-- ===================== -->
+        <!-- ✅ AGE CARD -->
+        <!-- ===================== -->
         <div class="col-12 col-lg-6 d-flex">
             <div class="card card-dash h-100 w-100">
-                <!-- Header -->
+
                 <div class="card-dash-header px-4 py-3 d-flex align-items-center justify-content-between">
                     <div class="d-flex align-items-center gap-2">
                         <div class="rounded-3 d-flex align-items-center justify-content-center"
@@ -303,29 +226,23 @@
                     </a>
                 </div>
 
-                <!-- Body -->
                 <div class="card-body px-4 py-4">
                     <div class="row g-3">
                         <?php foreach ($ageGroups as $age => $count): ?>
                             <div class="col-12 col-md-4 col-lg">
                                 <div class="stat-tile text-center">
                                     <div class="text-uppercase text-secondary small fw-semibold mb-2"><?= esc($age) ?></div>
-                                    <div class="fw-bold" style="font-size:34px; line-height:1;">
-                                        <?= esc($count) ?>
-                                    </div>
+                                    <div class="fw-bold" style="font-size:34px; line-height:1;"><?= esc($count) ?></div>
                                     <div class="text-secondary small mt-1">People</div>
                                 </div>
                             </div>
                         <?php endforeach; ?>
-                    </div> <!-- Age Pie Chart (bottom aligned) -->
+                    </div>
+
                     <div class="mt-auto pt-3">
                         <div class="d-flex justify-content-between align-items-center mb-2">
-                            <span class="fw-semibold text-secondary small text-uppercase">
-                                Age Distribution
-                            </span>
-                            <span class="badge bg-light text-dark">
-                                Total: <?= esc(array_sum($ageGroups)) ?>
-                            </span>
+                            <span class="fw-semibold text-secondary small text-uppercase">Age Distribution</span>
+                            <span class="badge bg-light text-dark">Total: <?= esc(array_sum($ageGroups)) ?></span>
                         </div>
 
                         <div class="d-flex justify-content-center">
@@ -334,72 +251,16 @@
                             </div>
                         </div>
                     </div>
+
                 </div>
             </div>
         </div>
-        <script>
-            document.addEventListener("DOMContentLoaded", function() {
 
-                const labels = <?= json_encode(array_keys($ageGroups)) ?>;
-                const values = <?= json_encode(array_values($ageGroups)) ?>;
-
-                const canvas = document.getElementById("agePieChart");
-                if (!canvas) return;
-
-                const total = values.reduce((a, b) => a + b, 0);
-                const hasData = total > 0;
-
-                const bootstrapColors = [
-                    "#0d6efd", "#198754", "#ffc107", "#dc3545",
-                    "#6f42c1", "#20c997", "#0dcaf0", "#fd7e14",
-                    "#6c757d"
-                ];
-
-                new Chart(canvas, {
-                    type: "pie",
-                    data: {
-                        labels: hasData ? labels : ["No Data"],
-                        datasets: [{
-                            data: hasData ? values : [1],
-                            backgroundColor: hasData ?
-                                labels.map((_, i) => bootstrapColors[i % bootstrapColors.length]) : ["#adb5bd"],
-                            borderColor: "#ffffff",
-                            borderWidth: 2
-                        }]
-                    },
-                    options: {
-                        responsive: true,
-                        maintainAspectRatio: false,
-                        plugins: {
-                            legend: {
-                                position: "bottom",
-                                labels: {
-                                    usePointStyle: true,
-                                    boxWidth: 12,
-                                    padding: 15
-                                }
-                            },
-                            tooltip: {
-                                callbacks: {
-                                    label: function(ctx) {
-                                        const val = ctx.raw || 0;
-                                        const pct = total ? ((val / total) * 100).toFixed(1) : 0;
-                                        return `${ctx.label}: ${val} (${pct}%)`;
-                                    }
-                                }
-                            }
-                        }
-                    }
-                });
-            });
-        </script>
-
-
-
-        <!-- EDUCATION CARD -->
+        <!-- ===================== -->
+        <!-- ✅ EDUCATION CARD -->
+        <!-- ===================== -->
         <div class="col-12 col-lg-6">
             <div class="card card-dash">
-                <!-- Header -->
                 <div class="card-dash-header px-4 py-3 d-flex align-items-center justify-content-between">
                     <div class="d-flex align-items-center gap-2">
                         <div class="rounded-3 d-flex align-items-center justify-content-center"
@@ -420,41 +281,27 @@
                     </a>
                 </div>
 
-                <!-- Body -->
                 <div class="card-body px-4 py-4">
                     <div class="row g-3">
                         <?php foreach (['ELEM', 'HS', 'COLLEGE', 'VOC', 'UNDER-GRAD', 'N/A'] as $edu): ?>
                             <div class="col-12 col-md-4 col-lg">
                                 <div class="stat-tile text-center">
-
                                     <?php
-                                    $labelMap = [
-                                        'UNDER-GRAD' => 'UNDERGRAD',
-                                    ];
+                                    $labelMap = ['UNDER-GRAD' => 'UNDERGRAD'];
                                     $displayLabel = $labelMap[$edu] ?? $edu;
                                     ?>
-
-                                    <div class="text-uppercase text-secondary small fw-semibold mb-2 tile-label">
-                                        <?= esc($displayLabel) ?>
-                                    </div>
-
-                                    <div class="fw-bold" style="font-size:34px; line-height:1;">
-                                        <?= esc($education_counts[$edu] ?? 0) ?>
-                                    </div>
-
+                                    <div class="text-uppercase text-secondary small fw-semibold mb-2 tile-label"><?= esc($displayLabel) ?></div>
+                                    <div class="fw-bold" style="font-size:34px; line-height:1;"><?= esc($education_counts[$edu] ?? 0) ?></div>
                                     <div class="text-secondary small mt-1">People</div>
                                 </div>
                             </div>
                         <?php endforeach; ?>
                     </div>
+
                     <div class="mt-auto pt-3">
                         <div class="d-flex justify-content-between align-items-center mb-2">
-                            <span class="fw-semibold text-secondary small text-uppercase">
-                                Educational Attainment
-                            </span>
-                            <span class="badge bg-light text-dark">
-                                Total: <?= esc(array_sum($education_counts)) ?>
-                            </span>
+                            <span class="fw-semibold text-secondary small text-uppercase">Educational Attainment</span>
+                            <span class="badge bg-light text-dark">Total: <?= esc(array_sum($education_counts)) ?></span>
                         </div>
 
                         <div class="d-flex justify-content-center">
@@ -463,14 +310,14 @@
                             </div>
                         </div>
                     </div>
+
                 </div>
-
-
-
-
             </div>
         </div>
 
+        <!-- ===================== -->
+        <!-- ✅ EMPLOYMENT CARD (REVISED + PIE GRAPH) -->
+        <!-- ===================== -->
         <div class="col-12 col-lg-6">
             <div class="card card-dash">
                 <div class="card-dash-header px-4 py-3 d-flex align-items-center justify-content-between">
@@ -495,88 +342,304 @@
 
                 <div class="card-body px-4 py-4">
                     <div class="row g-3">
-                        <?php foreach (['Employed', 'Unemployed', 'Retired'] as $emp): ?>
+
+                        <?php foreach (['Employed', 'Terminated', 'Resigned/Retired'] as $emp): ?>
                             <div class="col-12 col-md-4 col-lg">
                                 <div class="stat-tile text-center">
                                     <div class="text-uppercase text-secondary small fw-semibold mb-2"><?= esc($emp) ?></div>
-                                    <div class="fw-bold" style="font-size:34px; line-height:1;">10</div>
+                                    <div class="fw-bold" style="font-size:34px; line-height:1;">
+                                        <?= esc($employment_counts[$emp] ?? 0) ?>
+                                    </div>
                                     <div class="text-secondary small mt-1">People</div>
                                 </div>
                             </div>
                         <?php endforeach; ?>
+
                     </div>
+
+                    <!-- ✅ Employment Pie Chart -->
+                    <div class="mt-auto pt-3">
+                        <div class="d-flex justify-content-between align-items-center mb-2">
+                            <span class="fw-semibold text-secondary small text-uppercase">Employment Distribution</span>
+                            <span class="badge bg-light text-dark">Total: <?= esc($employment_total) ?></span>
+                        </div>
+
+                        <div class="d-flex justify-content-center">
+                            <div class="w-100" style="max-width:300px; height:230px;">
+                                <canvas id="employmentPieChart"></canvas>
+                            </div>
+                        </div>
+                    </div>
+
                 </div>
             </div>
         </div>
+
     </div>
 </div>
+
+<!-- ===================== -->
+<!-- ✅ Chart.js (only once) -->
+<!-- ===================== -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+
 <script>
     document.addEventListener("DOMContentLoaded", function() {
 
-        const labels = <?= json_encode(array_keys($education_counts)) ?>;
-        const values = <?= json_encode(array_values($education_counts)) ?>;
+        // =========================
+        // ✅ GENDER PIE
+        // =========================
+        const male = Number("<?= esc($maleCount) ?>") || 0;
+        const female = Number("<?= esc($femaleCount) ?>") || 0;
 
-        const canvas = document.getElementById("educationPieChart");
-        if (!canvas) return;
-
-        const total = values.reduce((a, b) => a + b, 0);
-        const hasData = total > 0;
-
-        const bootstrapColors = [
-            "#0d6efd", "#198754", "#ffc107", "#dc3545",
-            "#6f42c1", "#20c997", "#0dcaf0", "#fd7e14",
-            "#6c757d"
-        ];
-
-        new Chart(canvas, {
-            type: "pie",
-            data: {
-                labels: hasData ? labels : ["No Data"],
-                datasets: [{
-                    data: hasData ? values : [1],
-                    backgroundColor: hasData ?
-                        labels.map((_, i) => bootstrapColors[i % bootstrapColors.length]) : ["#adb5bd"],
-                    borderColor: "#ffffff",
-                    borderWidth: 2
-                }]
-            },
-            options: {
-                responsive: true,
-                maintainAspectRatio: false,
-                plugins: {
-                    legend: {
-                        position: "bottom",
-                        labels: {
-                            usePointStyle: true,
-                            boxWidth: 12,
-                            padding: 15
-                        }
-                    },
-                    tooltip: {
-                        callbacks: {
-                            label: function(ctx) {
-                                const val = ctx.raw || 0;
-                                const pct = total ? ((val / total) * 100).toFixed(1) : 0;
-                                return `${ctx.label}: ${val} (${pct}%)`;
+        const genderCanvas = document.getElementById("genderPieChart");
+        if (genderCanvas) {
+            const hasData = male + female > 0;
+            new Chart(genderCanvas, {
+                type: "pie",
+                data: {
+                    labels: hasData ? ["Male", "Female"] : ["No Data"],
+                    datasets: [{
+                        data: hasData ? [male, female] : [1],
+                        backgroundColor: hasData ? ["#0d6efd", "#dc3545"] : ["#adb5bd"],
+                        borderColor: "#fff",
+                        borderWidth: 2,
+                    }],
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            position: "bottom",
+                            labels: {
+                                usePointStyle: true,
+                                boxWidth: 12,
+                                padding: 15
+                            }
+                        },
+                        tooltip: {
+                            callbacks: {
+                                label: function(ctx) {
+                                    const total = ctx.dataset.data.reduce((a, b) => a + b, 0);
+                                    const val = ctx.raw;
+                                    const pct = total ? ((val / total) * 100).toFixed(1) : 0;
+                                    return `${ctx.label}: ${val} (${pct}%)`;
+                                }
                             }
                         }
                     }
                 }
-            }
-        });
+            });
+        }
+
+        // =========================
+        // ✅ ELIGIBILITY PIE
+        // =========================
+        const eligLabels = <?= json_encode(array_keys($eligibility_counts)) ?>;
+        const eligValues = <?= json_encode(array_values($eligibility_counts)) ?>;
+
+        const eligCanvas = document.getElementById("eligibilityPieChart");
+        if (eligCanvas) {
+            const total = eligValues.reduce((a, b) => a + b, 0);
+            const hasData = total > 0;
+
+            const bootstrapColors = ["#0d6efd", "#198754", "#ffc107", "#dc3545", "#6f42c1", "#20c997", "#0dcaf0", "#fd7e14", "#6c757d"];
+            new Chart(eligCanvas, {
+                type: "pie",
+                data: {
+                    labels: hasData ? eligLabels : ["No Data"],
+                    datasets: [{
+                        data: hasData ? eligValues : [1],
+                        backgroundColor: hasData ? bootstrapColors.slice(0, eligLabels.length) : ["#adb5bd"],
+                        borderColor: "#ffffff",
+                        borderWidth: 2
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            position: "bottom",
+                            labels: {
+                                usePointStyle: true,
+                                boxWidth: 12,
+                                padding: 15
+                            }
+                        },
+                        tooltip: {
+                            callbacks: {
+                                label: function(ctx) {
+                                    const val = ctx.raw;
+                                    const pct = total ? ((val / total) * 100).toFixed(1) : 0;
+                                    return `${ctx.label}: ${val} (${pct}%)`;
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+        }
+
+        // =========================
+        // ✅ AGE PIE
+        // =========================
+        const ageLabels = <?= json_encode(array_keys($ageGroups)) ?>;
+        const ageValues = <?= json_encode(array_values($ageGroups)) ?>;
+        const ageCanvas = document.getElementById("agePieChart");
+        if (ageCanvas) {
+            const total = ageValues.reduce((a, b) => a + b, 0);
+            const hasData = total > 0;
+            const colors = ["#0d6efd", "#198754", "#ffc107", "#dc3545", "#6f42c1", "#20c997", "#0dcaf0", "#fd7e14", "#6c757d"];
+
+            new Chart(ageCanvas, {
+                type: "pie",
+                data: {
+                    labels: hasData ? ageLabels : ["No Data"],
+                    datasets: [{
+                        data: hasData ? ageValues : [1],
+                        backgroundColor: hasData ? ageLabels.map((_, i) => colors[i % colors.length]) : ["#adb5bd"],
+                        borderColor: "#ffffff",
+                        borderWidth: 2
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            position: "bottom",
+                            labels: {
+                                usePointStyle: true,
+                                boxWidth: 12,
+                                padding: 15
+                            }
+                        },
+                        tooltip: {
+                            callbacks: {
+                                label: function(ctx) {
+                                    const val = ctx.raw || 0;
+                                    const pct = total ? ((val / total) * 100).toFixed(1) : 0;
+                                    return `${ctx.label}: ${val} (${pct}%)`;
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+        }
+
+        // =========================
+        // ✅ EDUCATION PIE
+        // =========================
+        const eduLabels = <?= json_encode(array_keys($education_counts)) ?>;
+        const eduValues = <?= json_encode(array_values($education_counts)) ?>;
+        const eduCanvas = document.getElementById("educationPieChart");
+        if (eduCanvas) {
+            const total = eduValues.reduce((a, b) => a + b, 0);
+            const hasData = total > 0;
+            const colors = ["#0d6efd", "#198754", "#ffc107", "#dc3545", "#6f42c1", "#20c997", "#0dcaf0", "#fd7e14", "#6c757d"];
+
+            new Chart(eduCanvas, {
+                type: "pie",
+                data: {
+                    labels: hasData ? eduLabels : ["No Data"],
+                    datasets: [{
+                        data: hasData ? eduValues : [1],
+                        backgroundColor: hasData ? eduLabels.map((_, i) => colors[i % colors.length]) : ["#adb5bd"],
+                        borderColor: "#ffffff",
+                        borderWidth: 2
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            position: "bottom",
+                            labels: {
+                                usePointStyle: true,
+                                boxWidth: 12,
+                                padding: 15
+                            }
+                        },
+                        tooltip: {
+                            callbacks: {
+                                label: function(ctx) {
+                                    const val = ctx.raw || 0;
+                                    const pct = total ? ((val / total) * 100).toFixed(1) : 0;
+                                    return `${ctx.label}: ${val} (${pct}%)`;
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+        }
+
+        // =========================
+        // ✅ EMPLOYMENT PIE (NEW)
+        // =========================
+        const empCanvas = document.getElementById("employmentPieChart");
+        if (empCanvas) {
+            const labels = ["Employed", "Terminated", "Resigned/Retired"];
+            const values = [
+                Number("<?= (int)($employment_counts['Employed'] ?? 0) ?>"),
+                Number("<?= (int)($employment_counts['Terminated'] ?? 0) ?>"),
+                Number("<?= (int)($employment_counts['Resigned/Retired'] ?? 0) ?>"),
+            ];
+            const total = values.reduce((a, b) => a + b, 0);
+            const hasData = total > 0;
+
+            new Chart(empCanvas, {
+                type: "pie",
+                data: {
+                    labels: hasData ? labels : ["No Data"],
+                    datasets: [{
+                        data: hasData ? values : [1],
+                        backgroundColor: hasData ? ["#0d6efd", "#dc3545", "#ffc107"] : ["#adb5bd"],
+                        borderColor: "#ffffff",
+                        borderWidth: 2
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            position: "bottom",
+                            labels: {
+                                usePointStyle: true,
+                                boxWidth: 12,
+                                padding: 15
+                            }
+                        },
+                        tooltip: {
+                            callbacks: {
+                                label: function(ctx) {
+                                    const val = ctx.raw || 0;
+                                    const pct = total ? ((val / total) * 100).toFixed(1) : 0;
+                                    return `${ctx.label}: ${val} (${pct}%)`;
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+        }
     });
 </script>
 
-
-
+<!-- ===================== -->
 <!-- ===== MODALS ===== -->
+<!-- (your existing modals below are kept, only the Employment modal table is revised to show LATEST) -->
+<!-- ===================== -->
 
 <!-- Gender Modal -->
 <div class="modal fade" id="genderModal" tabindex="-1" aria-labelledby="genderModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable" style="max-width: 80vw;">
         <div class="modal-content rounded-4 shadow">
-
-            <!-- HEADER -->
             <div class="modal-header text-white" style="background-color:#16166c;">
                 <h5 class="modal-title fw-bold" id="genderModalLabel">
                     <i class="bi bi-gender-ambiguous me-2"></i>Gender Records
@@ -584,12 +647,8 @@
                 <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
             </div>
 
-            <!-- BODY -->
             <div class="modal-body">
-
-                <!-- FILTERS -->
                 <div class="d-flex justify-content-end mb-3 gap-3 flex-wrap">
-
                     <div>
                         <label class="form-label fw-bold me-2">Filter Gender:</label>
                         <select id="genderFilter" class="form-select d-inline-block w-auto">
@@ -603,21 +662,18 @@
                         <label class="form-label fw-bold me-2">Search:</label>
                         <input type="text" id="genderSearch" class="form-control d-inline-block w-auto" placeholder="Search...">
                     </div>
-
                 </div>
 
-                <!-- TABLE -->
                 <div class="table-responsive">
                     <table class="table table-bordered table-striped align-middle text-center" id="genderTable">
-
                         <thead style="background-color:#16166c; color:#fff;">
                             <tr>
                                 <th>Last Name</th>
                                 <th>First Name</th>
                                 <th>Middle Name</th>
                                 <th>Ext</th>
-                                <th>Department</th>
-                                <th>Designation</th>
+                                <th>Department (Latest)</th>
+                                <th>Designation (Latest)</th>
                                 <th>Gender</th>
                             </tr>
                         </thead>
@@ -631,9 +687,9 @@
                                         <td><?= esc($rec['middle_name'] ?? '') ?></td>
                                         <td><?= esc($rec['extensions'] ?? '') ?></td>
 
-                                        <!-- 🔥 MULTIPLE SERVICE RECORDS (HTML ALLOWED) -->
-                                        <td><?= $rec['department'] ?? '' ?></td>
-                                        <td><?= $rec['designation'] ?? '' ?></td>
+                                        <!-- ✅ latest only -->
+                                        <td><?= firstPipeRaw($rec['department'] ?? '') ?></td>
+                                        <td><?= firstPipeRaw($rec['designation'] ?? '') ?></td>
 
                                         <td><?= esc($rec['gender'] ?? '') ?></td>
                                     </tr>
@@ -644,27 +700,22 @@
                                 </tr>
                             <?php endif; ?>
                         </tbody>
-
                     </table>
                 </div>
             </div>
 
-            <!-- FOOTER -->
             <div class="modal-footer">
                 <button class="btn btn-success rounded-pill" id="printGenderTable">
                     <i class="bi bi-printer me-1"></i>Print
                 </button>
-                <button class="btn btn-secondary rounded-pill" data-bs-dismiss="modal">
-                    Close
-                </button>
+                <button class="btn btn-secondary rounded-pill" data-bs-dismiss="modal">Close</button>
             </div>
 
         </div>
     </div>
 </div>
 
-
-<!-- Eligibility Modal -->
+<!-- Eligibility Modal (latest dept/desig) -->
 <div class="modal fade" id="eligibilityModal" tabindex="-1" aria-labelledby="eligibilityModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable" style="max-width: 80vw;">
         <div class="modal-content rounded-4">
@@ -689,6 +740,7 @@
                         <input type="text" id="eligibilitySearch" class="form-control w-auto d-inline-block" placeholder="Search...">
                     </div>
                 </div>
+
                 <table class="table table-bordered table-striped text-center" id="eligibilityTable">
                     <thead style="background-color: #16166c; color: #fff;">
                         <tr>
@@ -696,8 +748,8 @@
                             <th>First Name</th>
                             <th>Middle Name</th>
                             <th>Ext</th>
-                            <th>Department</th>
-                            <th>Designation</th>
+                            <th>Department (Latest)</th>
+                            <th>Designation (Latest)</th>
                             <th>Eligibility</th>
                         </tr>
                     </thead>
@@ -710,9 +762,9 @@
                                     <td><?= esc($rec['middle_name'] ?? '') ?></td>
                                     <td><?= esc($rec['extensions'] ?? '') ?></td>
 
-                                    <!-- 🔥 MULTIPLE SERVICE RECORDS (HTML ALLOWED) -->
-                                    <td><?= $rec['department'] ?? '' ?></td>
-                                    <td><?= $rec['designation'] ?? '' ?></td>
+                                    <td><?= firstPipeRaw($rec['department'] ?? '') ?></td>
+                                    <td><?= firstPipeRaw($rec['designation'] ?? '') ?></td>
+
                                     <td><?= esc($rec['eligibility']) ?></td>
                                 </tr>
                             <?php endforeach; ?>
@@ -733,8 +785,7 @@
     </div>
 </div>
 
-<!-- Age Modal -->
-
+<!-- Age Modal (latest dept/desig) -->
 <div class="modal fade" id="ageModal" tabindex="-1" aria-labelledby="ageModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable" style="max-width: 80vw;">
         <div class="modal-content rounded-4">
@@ -767,8 +818,8 @@
                             <th>First Name</th>
                             <th>Middle Name</th>
                             <th>Ext</th>
-                            <th>Department</th>
-                            <th>Designation</th>
+                            <th>Department (Latest)</th>
+                            <th>Designation (Latest)</th>
                             <th>Age</th>
                         </tr>
                     </thead>
@@ -781,11 +832,9 @@
                                     <td><?= esc($rec['middle_name'] ?? '') ?></td>
                                     <td><?= esc($rec['extensions'] ?? '') ?></td>
 
-                                    <!-- 🔥 MULTIPLE SERVICE RECORDS (HTML ALLOWED) -->
-                                    <td><?= $rec['department'] ?? '' ?></td>
-                                    <td><?= $rec['designation'] ?? '' ?></td>
+                                    <td><?= firstPipeRaw($rec['department'] ?? '') ?></td>
+                                    <td><?= firstPipeRaw($rec['designation'] ?? '') ?></td>
 
-                                    <!-- age count -->
                                     <td><?= esc($rec['age']) ?></td>
                                 </tr>
                             <?php endforeach; ?>
@@ -801,15 +850,13 @@
                 <button class="btn btn-success rounded-pill" id="printEducationalAttainmentTable">
                     <i class="bi bi-printer me-1"></i>Print
                 </button>
-                <button class="btn btn-secondary rounded-pill" data-bs-dismiss="modal">
-                    Close
-                </button>
+                <button class="btn btn-secondary rounded-pill" data-bs-dismiss="modal">Close</button>
             </div>
         </div>
     </div>
 </div>
 
-<!-- Education Modal -->
+<!-- Education Modal (latest dept/desig) -->
 <div class="modal fade" id="educationModal" tabindex="-1" aria-labelledby="educationModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable" style="max-width: 80vw;">
         <div class="modal-content rounded-4">
@@ -843,8 +890,8 @@
                             <th>First Name</th>
                             <th>Middle Name</th>
                             <th>Extensions</th>
-                            <th>Department</th>
-                            <th>Designation</th>
+                            <th>Department (Latest)</th>
+                            <th>Designation (Latest)</th>
                             <th>Educational Attainment</th>
                         </tr>
                     </thead>
@@ -857,9 +904,8 @@
                                     <td><?= esc($rec['middle_name'] ?? '') ?></td>
                                     <td><?= esc($rec['extensions'] ?? '') ?></td>
 
-                                    <!-- 🔥 MULTIPLE SERVICE RECORDS (HTML ALLOWED) -->
-                                    <td><?= $rec['department'] ?? '' ?></td>
-                                    <td><?= $rec['designation'] ?? '' ?></td>
+                                    <td><?= firstPipeRaw($rec['department'] ?? '') ?></td>
+                                    <td><?= firstPipeRaw($rec['designation'] ?? '') ?></td>
 
                                     <td><?= esc($rec['educational_attainment']) ?></td>
                                 </tr>
@@ -876,17 +922,13 @@
                 <button class="btn btn-success rounded-pill" id="printEducationTable">
                     <i class="bi bi-printer me-1"></i>Print
                 </button>
-                <button class="btn btn-secondary rounded-pill" data-bs-dismiss="modal">
-                    Close
-                </button>
+                <button class="btn btn-secondary rounded-pill" data-bs-dismiss="modal">Close</button>
             </div>
         </div>
     </div>
 </div>
 
-<!-- ========================= -->
-<!-- EMPLOYMENT STATUS MODAL -->
-<!-- ========================= -->
+<!-- ✅ Employment Status Modal (LATEST DATA DISPLAY FIXED) -->
 <div class="modal fade" id="employmentModal" tabindex="-1" aria-labelledby="employmentModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable" style="max-width: 80vw;">
         <div class="modal-content rounded-4">
@@ -896,16 +938,14 @@
             </div>
 
             <div class="modal-body">
-
-                <!-- Filter + Search (same layout as education modal) -->
                 <div class="d-flex justify-content-end mb-3 gap-2">
                     <div>
                         <label for="employmentFilter" class="form-label fw-bold me-2">Filter Status:</label>
                         <select id="employmentFilter" class="form-select w-auto d-inline-block">
                             <option value="All" selected>All</option>
                             <option value="Employed">Employed</option>
-                            <option value="Unemployed">Unemployed</option>
-                            <option value="Retired">Retired</option>
+                            <option value="Terminated">Terminated</option>
+                            <option value="Resigned/Retired">Resigned/Retired</option>
                         </select>
                     </div>
 
@@ -915,7 +955,6 @@
                     </div>
                 </div>
 
-                <!-- Table -->
                 <table class="table table-bordered table-striped text-center" id="employmentTable">
                     <thead style="background-color: #16166c; color: #fff;">
                         <tr>
@@ -923,9 +962,9 @@
                             <th>First Name</th>
                             <th>Middle Name</th>
                             <th>Ext</th>
-                            <th>Department</th>
-                            <th>Designation</th>
-                            <th>Employment Status</th>
+                            <th>Department (Latest)</th>
+                            <th>Designation (Latest)</th>
+                            <th>Employment Status (Latest)</th>
                         </tr>
                     </thead>
 
@@ -938,11 +977,10 @@
                                     <td><?= esc($rec['middle_name'] ?? '') ?></td>
                                     <td><?= esc($rec['extensions'] ?? '') ?></td>
 
-                                    <!-- allow HTML if your department/designation contains multiple records -->
-                                    <td><?= $rec['department'] ?? '' ?></td>
-                                    <td><?= $rec['designation'] ?? '' ?></td>
-
-                                    <td><?= esc($rec['employment_status'] ?? '') ?></td>
+                                    <!-- ✅ show latest -->
+                                    <td><?= firstPipeRaw($rec['department'] ?? '') ?></td>
+                                    <td><?= firstPipeRaw($rec['designation'] ?? '') ?></td>
+                                    <td><?= esc(firstPipe($rec['employment_status'] ?? '')) ?></td>
                                 </tr>
                             <?php endforeach; ?>
                         <?php else: ?>
@@ -959,14 +997,11 @@
                 <button class="btn btn-success rounded-pill" id="printEmploymentTable">
                     <i class="bi bi-printer me-1"></i>Print
                 </button>
-                <button class="btn btn-secondary rounded-pill" data-bs-dismiss="modal">
-                    Close
-                </button>
+                <button class="btn btn-secondary rounded-pill" data-bs-dismiss="modal">Close</button>
             </div>
         </div>
     </div>
 </div>
-
 
 <!-- JS Search and Filters -->
 <script src="<?= base_url('js/gender_search.js') ?>"></script>
@@ -980,10 +1015,5 @@
 <script src="<?= base_url('js/print_educational_attainment_table.js') ?>"></script>
 <script src="<?= base_url('js/print_employment_status_table.js') ?>"></script>
 <script src="<?= base_url('js/employment_status.js') ?>"></script>
-
-<!-- pie graph -->
-<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
-
-
 
 <?= $this->endSection(); ?>
