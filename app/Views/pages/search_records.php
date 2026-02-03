@@ -2,6 +2,8 @@
 <?= $this->section('content'); ?>
 <?= $this->include('main/navbar'); ?>
 
+
+
 <div class="container-fluid my-5 px-4">
 
     <!-- Page Title -->

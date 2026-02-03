@@ -1,6 +1,8 @@
 // public/js/edit_dynamic_services.js
 // ✅ FULL WORKING CODE: Edit modal shows Date Ended + Duration when status is Resigned/Retired or Terminated
 
+
+
 function splitPipe(val) {
   if (!val) return [];
   return String(val)

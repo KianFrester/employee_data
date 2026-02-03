@@ -42,6 +42,7 @@ class SearchRecords extends BaseController
             ];
         }
 
+
         return view('pages/search_records', $data);
     }
 }
