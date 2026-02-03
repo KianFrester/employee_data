@@ -89,7 +89,7 @@ class Dashboard extends BaseController
             '60+'   => 0,
         ];
 
-        
+
         foreach ($age_records as $rec) {
             $age = (int) $rec['age'];
 
@@ -109,17 +109,18 @@ class Dashboard extends BaseController
         // ================= EDUCATION COUNTS =================
         $raw_education_counts = $recordsModel
             ->select('educational_attainment, COUNT(*) as value')
-            ->where('educational_attainment IS NOT NULL')
+            ->where('educational_attainment !=', null)
             ->groupBy('educational_attainment')
             ->findAll();
 
-        // default values (so always shows 0 if none)
         $education_counts = [
-            'ELEM'   => 0,
-            'HS'     => 0,
+            'ELEM'    => 0,
+            'HS'      => 0,
             'COLLEGE' => 0,
-            'VOC'    => 0,
-            'GRAD'   => 0,
+            'VOC'     => 0,
+            'GRAD'    => 0,
+            'N/A'     => 0,
+            'UNDER-GRAD' => 0,
         ];
 
         foreach ($raw_education_counts as $row) {
@@ -129,6 +130,22 @@ class Dashboard extends BaseController
             }
         }
 
+        // ================= EDUCATION RECORDS (WITH SERVICE DATA) =================
+        $education_records = $recordsModel
+            ->select("
+        records.last_name,
+        records.first_name,
+        records.middle_name,
+        records.extensions,
+        records.educational_attainment,
+        GROUP_CONCAT(CONCAT('<div>', service_records.department, '</div>') SEPARATOR '') AS department,
+        GROUP_CONCAT(CONCAT('<div>', service_records.designation, '</div>') SEPARATOR '') AS designation
+    ")
+            ->join('service_records', 'service_records.employee_id = records.id', 'left')
+            ->where('records.educational_attainment !=', null)
+            ->groupBy('records.id')
+            ->orderBy('records.last_name', 'ASC')
+            ->findAll();
 
 
 
@@ -160,6 +177,7 @@ class Dashboard extends BaseController
             'eligibility_counts'  => $eligibility_counts,
             'age_records'         => $age_records,
             'education_counts'   => $education_counts,
+            'education_records' => $education_records,
             'ageGroups'           => $ageGroups,
         ]);
     }
