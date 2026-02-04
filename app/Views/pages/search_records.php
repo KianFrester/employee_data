@@ -58,14 +58,15 @@
                         'Full Name',
                         'Birthdate',
                         'Gender',
-                        'Department',
                         'Educational Attainment',
+                        'Eligibility',
+                        'Department',
                         'Designation',
                         'Rate',
-                        'Eligibility',
                         'Date of Appointment',
                         'Status',
                         'Date Ended',
+                        'Service Duration',
                         'Remarks',
                         'Actions'
                     ];
@@ -144,46 +145,90 @@
             <div class="table-responsive">
 
                 <?php
-                function renderMulti($value, $emptyText = '—')
+                function statusClass($status)
                 {
-                    if ($value === null) return '<div class="multi-line-item">' . $emptyText . '</div>';
+                    $s = strtolower(trim((string)$status));
+                    if ($s === 'employed') return 'row-employed';
+                    if ($s === 'resigned/retired') return 'row-resigned';
+                    if ($s === 'terminated') return 'row-terminated';
+                    return 'row-default';
+                }
 
-                    $value = (string)$value;
-                    if ($value === '') return '<div class="multi-line-item">' . $emptyText . '</div>';
+                /**
+                 * ✅ MULTI renderer that colors each line based on matching status index
+                 * $value = "A||B||C"
+                 * $statuses = "Employed||Terminated||Resigned/Retired"
+                 */
+                function renderMulti($value, $statuses = '', $emptyText = '—')
+                {
+                    $vals = [];
+                    if ($value !== null && trim((string)$value) !== '') {
+                        $vals = array_map('trim', explode('||', (string)$value));
+                    }
 
-                    $parts = explode('||', $value);
+                    $stats = [];
+                    if ($statuses !== null && trim((string)$statuses) !== '') {
+                        $stats = array_map('trim', explode('||', (string)$statuses));
+                    }
+
+                    // determine how many lines to print
+                    $max = max(count($vals), count($stats), 1);
 
                     $out = '';
-                    foreach ($parts as $p) {
-                        $p = trim($p);
-                        $out .= '<div class="multi-line-item">' . ($p === '' ? $emptyText : esc($p)) . '</div>';
+                    for ($i = 0; $i < $max; $i++) {
+                        $v = $vals[$i] ?? '';
+                        $st = $stats[$i] ?? '';
+                        $cls = statusClass($st);
+
+                        $text = ($v === '') ? $emptyText : $v;
+                        $out .= '<div class="multi-line-item ' . $cls . '">' . esc($text) . '</div>';
                     }
+
                     return $out;
                 }
 
-                function renderEnded($value)
+                /**
+                 * ✅ Date Ended renderer that shows "Currently Working" for empty/0000-00-00,
+                 * and ALSO colors each line based on matching status index.
+                 */
+                function renderEnded($value, $statuses = '')
                 {
-                    if ($value === null || $value === '') {
-                        return '<div class="multi-line-item">Currently Working</div>';
+                    $vals = [];
+                    if ($value !== null && trim((string)$value) !== '') {
+                        $vals = array_map('trim', explode('||', (string)$value));
                     }
 
-                    $parts = explode('||', (string)$value);
+                    $stats = [];
+                    if ($statuses !== null && trim((string)$statuses) !== '') {
+                        $stats = array_map('trim', explode('||', (string)$statuses));
+                    }
+
+                    $max = max(count($vals), count($stats), 1);
 
                     $out = '';
-                    foreach ($parts as $p) {
-                        $p = trim($p);
+                    for ($i = 0; $i < $max; $i++) {
+                        $v = trim((string)($vals[$i] ?? ''));
+                        $st = $stats[$i] ?? '';
+                        $cls = statusClass($st);
 
-                        if ($p === '' || $p === '0000-00-00') {
-                            $out .= '<div class="multi-line-item">Currently Working</div>';
+                        if ($v === '' || $v === '0000-00-00' || strcasecmp($v, 'Currently Working') === 0) {
+                            $out .= '<div class="multi-line-item ' . $cls . '">Currently Working</div>';
                         } else {
-                            $out .= '<div class="multi-line-item">' . esc($p) . '</div>';
+                            $out .= '<div class="multi-line-item ' . $cls . '">' . esc($v) . '</div>';
                         }
                     }
+
                     return $out;
                 }
 
-
-
+                /**
+                 * ✅ Status renderer (still uses the same coloring per line)
+                 */
+                function renderStatusMulti($value, $emptyText = '—')
+                {
+                    // just call renderMulti(value, value) so each line colors itself
+                    return renderMulti($value, $value, $emptyText);
+                }
 
                 function formatFullName($rec)
                 {
@@ -221,56 +266,61 @@
                                     <td class="full-name-cell" style="max-width: 220px;">
                                         <?= formatFullName($rec) ?>
                                     </td>
-
                                     <td><?= esc($rec['birthdate']) ?></td>
                                     <td><?= esc($rec['gender']) ?></td>
-
-                                    <td class="multi-cell">
-                                        <?= renderMulti($rec['departments'] ?? '') ?>
-                                    </td>
-
                                     <td><?= esc($rec['educational_attainment']) ?></td>
-
-                                    <td class="multi-cell">
-                                        <?= renderMulti($rec['designations'] ?? '') ?>
-                                    </td>
-
-                                    <td class="multi-cell">
-                                        <?= renderMulti($rec['rates'] ?? '') ?>
-                                    </td>
-
                                     <td><?= esc($rec['eligibility']) ?></td>
-
                                     <td class="multi-cell">
-                                        <?= renderMulti($rec['dates'] ?? '') ?>
-
+                                        <?= renderMulti($rec['departments'] ?? '', $rec['statuses'] ?? '') ?>
                                     </td>
 
                                     <td class="multi-cell">
-                                        <?= renderMulti($rec['statuses'] ?? '') ?>
+                                        <?= renderMulti($rec['designations'] ?? '', $rec['statuses'] ?? '') ?>
                                     </td>
 
-                                    <td class="multi-cell"><?= renderEnded($rec['date_ended'] ?? '') ?></td>
+                                    <td class="multi-cell">
+                                        <?= renderMulti($rec['rates'] ?? '', $rec['statuses'] ?? '') ?>
+                                    </td>
 
+                                    <td class="multi-cell">
+                                        <?= renderMulti($rec['dates'] ?? '', $rec['statuses'] ?? '') ?>
+                                    </td>
+
+                                    <td class="multi-cell">
+                                        <?= renderStatusMulti($rec['statuses'] ?? '') ?>
+                                    </td>
+
+                                    <td class="multi-cell">
+                                        <?= renderEnded($rec['date_ended'] ?? '', $rec['statuses'] ?? '') ?>
+                                    </td>
+
+                                    <td class="multi-cell">
+                                        <?= renderMulti($rec['service_duration'] ?? '', $rec['statuses'] ?? '') ?>
+                                    </td>
                                     <td><?= esc($rec['remarks']) ?></td>
 
                                     <td>
                                         <div class="d-flex justify-content-center gap-2">
-                                            <button
-                                                class="btn btn-sm btn-primary btn-pill"
+                                            <button type="button"
+                                                class="btn btn-sm btn-primary btn-pill edit-trigger"
                                                 data-bs-toggle="modal"
                                                 data-bs-target="#editModal"
-                                                onclick="openEditModal(<?= htmlspecialchars(json_encode($rec), ENT_QUOTES, 'UTF-8') ?>)">
+                                                data-rec='<?= esc(json_encode($rec), 'attr') ?>'>
                                                 <i class="bi bi-pencil-square"></i>
                                             </button>
 
+
                                             <button
+                                                type="button"
                                                 class="btn btn-sm btn-danger btn-pill delete-trigger"
+                                                data-bs-toggle="modal"
+                                                data-bs-target="#deleteConfirmModal"
                                                 data-record-id="<?= $rec['id'] ?>">
                                                 <i class="bi bi-trash-fill"></i>
                                             </button>
                                         </div>
                                     </td>
+
 
                                 </tr>
                             <?php endforeach; ?>
@@ -314,7 +364,7 @@
 
 
                 <!-- ========================= -->
-                <!-- EDIT MODAL (DYNAMIC SERVICES) -->
+                <!-- EDIT MODAL (FULL + DYNAMIC SERVICES) -->
                 <!-- ========================= -->
                 <div class="modal fade" id="editModal" tabindex="-1" aria-hidden="true">
                     <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable" style="max-width: 80vw;">
@@ -328,7 +378,8 @@
                                 <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
                             </div>
 
-                            <form id="editForm" action="<?= site_url('update_record') ?>" method="post">
+                            <!-- ✅ FORM WRAPS BODY + FOOTER -->
+                            <form id="editForm" action="<?= site_url('update_record') ?>" method="post" novalidate>
                                 <?= csrf_field() ?>
                                 <input type="hidden" name="id" id="edit_id">
 
@@ -342,12 +393,8 @@
                                                 <i class="bi bi-clipboard2-check-fill text-primary"></i>
                                             </div>
                                             <div>
-                                                <div class="fw-bold text-uppercase text-secondary small mb-0">
-                                                    Employee & Service Information
-                                                </div>
-                                                <div class="text-secondary" style="font-size:12px;">
-                                                    Update employee and service records
-                                                </div>
+                                                <div class="fw-bold text-uppercase text-secondary small mb-0">Employee & Service Information</div>
+                                                <div class="text-secondary" style="font-size:12px;">Update employee and service records</div>
                                             </div>
                                         </div>
 
@@ -379,7 +426,6 @@
                                                     <label class="form-label-soft">Birthdate</label>
                                                     <input type="date" name="birthdate" id="edit_birthdate" class="form-control form-modern">
                                                 </div>
-
                                                 <div class="col-md-6">
                                                     <label class="form-label-soft">Gender</label>
                                                     <select name="gender" id="edit_gender" class="form-select form-modern">
@@ -388,7 +434,6 @@
                                                     </select>
                                                 </div>
                                             </div>
-
 
                                             <!-- Row 3 -->
                                             <div class="row g-3 mt-1">
@@ -415,204 +460,179 @@
 
                                             <hr class="border-secondary opacity-25 my-4">
 
-                                            <div class="d-flex justify-content-between align-items-center mb-3">
-                                                <div class="fw-semibold text-secondary">
-                                                    Service Information
-                                                </div>
+                                            <div class="form-card-header px-4 py-3 d-flex align-items-center justify-content-between mb-3">
+                                                <div class="d-flex align-items-center gap-2">
+                                                    <div class="rounded-3 d-flex align-items-center justify-content-center"
+                                                        style="width:38px;height:38px;background:rgba(13,110,253,.15);">
+                                                        <i class="bi bi-briefcase-fill text-primary"></i>
+                                                    </div>
 
-                                                <button type="button"
-                                                    id="editAddServiceBtn"
-                                                    class="btn btn-outline-primary btn-sm rounded-pill fw-semibold px-3">
-                                                    <i class="bi bi-plus-circle me-1"></i>
-                                                    Add Service
-                                                </button>
+                                                    <div>
+                                                        <div class="fw-bold text-uppercase text-secondary small mb-0">
+                                                            Service Information
+                                                        </div>
+                                                        <div class="text-secondary" style="font-size:12px;">
+                                                            Employment history and service records
+                                                        </div>
+                                                    </div>
+                                                </div>
                                             </div>
 
+
+                                            <!-- ✅ DYNAMIC SERVICE CONTAINER -->
                                             <div id="editServiceContainer"></div>
 
-                                            <!-- ✅ Template (hidden) -->
-                                            <!-- ✅ Template (hidden) -->
+                                            <!-- ✅ TEMPLATE -->
                                             <template id="editServiceRowTpl">
                                                 <div class="service-row mb-4">
 
                                                     <input type="hidden" name="service_id[]" class="js-service-id">
 
-                                                    <!-- HEADER (same vibe as Add Record) -->
-                                                    <div class="form-card-header px-4 py-3 d-flex align-items-center justify-content-between rounded-4"
-                                                        style="background: rgba(255,255,255,.06);">
-                                                        <div class="d-flex align-items-center gap-2">
-                                                            <div class="rounded-3 d-flex align-items-center justify-content-center"
-                                                                style="width:38px;height:38px;background:rgba(13,110,253,.15);">
-                                                                <i class="bi bi-clipboard2-plus-fill text-primary"></i>
-                                                            </div>
-                                                            <div>
-                                                                <div class="fw-bold text-uppercase text-secondary small mb-0">Employee's Service Information</div>
-                                                                <div class="text-secondary" style="font-size:12px;">Update a service record</div>
-                                                            </div>
+                                                    <!-- Department + Designation + Rate -->
+                                                    <div class="row g-3 mt-1">
+                                                        <div class="col-12 col-md-4">
+                                                            <label class="form-label-soft">Department</label>
+                                                            <select name="department[]" class="form-select form-modern js-dept" required>
+                                                                <option value="" selected disabled>Select Department</option>
+                                                                <option value="Accounting Office">Accounting Office</option>
+                                                                <option value="Administrator's Office">Administrator's Office</option>
+                                                                <option value="Agriculture Office">Agriculture Office</option>
+                                                                <option value="Assessor">Assessor</option>
+                                                                <option value="BIR">BIR</option>
+                                                                <option value="BFP">BFP</option>
+                                                                <option value="Bolinao Water Works System">Bolinao Water Works System</option>
+                                                                <option value="Budget">Budget</option>
+                                                                <option value="COA">COA</option>
+                                                                <option value="COMELEC">COMELEC</option>
+                                                                <option value="DEPED">DEPED</option>
+                                                                <option value="DILG">DILG</option>
+                                                                <option value="Engineering Office">Engineering Office</option>
+                                                                <option value="GAD">GAD</option>
+                                                                <option value="Garbage Collection">Garbage Collection</option>
+                                                                <option value="GSO">GSO</option>
+                                                                <option value="HRMO">HRMO</option>
+                                                                <option value="LCR">LCR</option>
+                                                                <option value="Market / Slaughter">Market / Slaughter</option>
+                                                                <option value="MDRRMO">MDRRMO</option>
+                                                                <option value="MPDC">MPDC</option>
+                                                                <option value="MSWD / STAC">MSWD / STAC</option>
+                                                                <option value="Mayor's Office">Mayor's Office</option>
+                                                                <option value="PESO">PESO</option>
+                                                                <option value="PNP">PNP</option>
+                                                                <option value="RHU">RHU</option>
+                                                                <option value="SB / Municipal Library">SB / Municipal Library</option>
+                                                                <option value="Sanitary Land Filling">Sanitary Land Filling</option>
+                                                                <option value="Street Cleaning">Street Cleaning</option>
+                                                                <option value="Traffic Enforcement">Traffic Enforcement</option>
+                                                                <option value="Tourism Office">Tourism Office</option>
+                                                                <option value="Treasurer Office">Treasurer Office</option>
+                                                            </select>
                                                         </div>
 
-                                                        <span class="badge rounded-pill text-bg-secondary js-service-index">Service</span>
+                                                        <div class="col-12 col-md-4">
+                                                            <label class="form-label-soft">Designation</label>
+                                                            <select name="designation[]" class="form-select form-modern js-desig" required>
+                                                                <option value="" selected disabled>Select Designation</option>
+                                                                <option value="Aircon Maintenance">Aircon Maintenance</option>
+                                                                <option value="Administrative Assistance">Administrative Assistance</option>
+                                                                <option value="Backhoe Operator">Backhoe Operator</option>
+                                                                <option value="Beach Ward">Beach Ward</option>
+                                                                <option value="Building Guard">Building Guard</option>
+                                                                <option value="Caregiver">Caregiver</option>
+                                                                <option value="Carpenter">Carpenter</option>
+                                                                <option value="Clerk">Clerk</option>
+                                                                <option value="Computer Technician">Computer Technician</option>
+                                                                <option value="Daycare Teacher">Daycare Teacher</option>
+                                                                <option value="Driver">Driver</option>
+                                                                <option value="Electrician">Electrician</option>
+                                                                <option value="Encoder">Encoder</option>
+                                                                <option value="Engineering Brigade">Engineering Brigade</option>
+                                                                <option value="Focal Person for Senior Citizen">Focal Person for Senior Citizen</option>
+                                                                <option value="Financial Assistance Staff">Financial Assistance Staff</option>
+                                                                <option value="First Responder">First Responder</option>
+                                                                <option value="GAD Personnel">GAD Personnel</option>
+                                                                <option value="Heavy Equipment Operator">Heavy Equipment Operator</option>
+                                                                <option value="Laboratory Assistant">Laboratory Assistant</option>
+                                                                <option value="Laboratory Technician">Laboratory Technician</option>
+                                                                <option value="Market Aide">Market Aide</option>
+                                                                <option value="Market Cleaner">Market Cleaner</option>
+                                                                <option value="Market Watchman">Market Watchman</option>
+                                                                <option value="Mechanic">Mechanic</option>
+                                                                <option value="Midwife Assistant">Midwife Assistant</option>
+                                                                <option value="Nurse">Nurse</option>
+                                                                <option value="Nursing Assistant">Nursing Assistant</option>
+                                                                <option value="OSCA Head">OSCA Head</option>
+                                                                <option value="Plumber">Plumber</option>
+                                                                <option value="Pump Tender">Pump Tender</option>
+                                                                <option value="Pumping Station Guard">Pumping Station Guard</option>
+                                                                <option value="Recorder">Recorder</option>
+                                                                <option value="Rescue Personnel">Rescue Personnel</option>
+                                                                <option value="School Guard">School Guard</option>
+                                                                <option value="Security">Security</option>
+                                                                <option value="SPED Teacher">SPED Teacher</option>
+                                                                <option value="Spring Guard">Spring Guard</option>
+                                                                <option value="Street Cleaner">Street Cleaner</option>
+                                                                <option value="Traffic Enforcer">Traffic Enforcer</option>
+                                                                <option value="Utility Worker">Utility Worker</option>
+                                                                <option value="Shadow Teacher">Shadow Teacher</option>
+                                                                <option value="STAC Staff">STAC Staff</option>
+                                                                <option value="Child Development Teacher">Child Development Teacher</option>
+                                                                <option value="Tourism Aide">Tourism Aide</option>
+                                                                <option value="Maintenance Personnel">Maintenance Personnel</option>
+                                                            </select>
+                                                        </div>
+
+                                                        <div class="col-12 col-md-4">
+                                                            <label class="form-label-soft">Rate</label>
+                                                            <input type="text" name="rate[]" class="form-control form-modern js-rate" required>
+                                                        </div>
                                                     </div>
 
-                                                    <!-- BODY -->
-                                                    <div class="border rounded-4 p-3 mt-2" style="background: rgba(255,255,255,.06);">
-
-                                                        <!-- Department + Designation + Rate -->
-                                                        <div class="row g-3 mt-1">
-                                                            <div class="col-12 col-md-4">
-                                                                <label class="form-label-soft">Department</label>
-                                                                <select name="department[]" class="form-select form-modern js-dept" required>
-                                                                    <option value="" selected disabled>Select Department</option>
-                                                                    <option value="Accounting Office">Accounting Office</option>
-                                                                    <option value="Administrator's Office">Administrator's Office</option>
-                                                                    <option value="Agriculture Office">Agriculture Office</option>
-                                                                    <option value="Assessor">Assessor</option>
-                                                                    <option value="BIR">BIR</option>
-                                                                    <option value="BFP">BFP</option>
-                                                                    <option value="Bolinao Water Works System">Bolinao Water Works System</option>
-                                                                    <option value="Budget">Budget</option>
-                                                                    <option value="COA">COA</option>
-                                                                    <option value="COMELEC">COMELEC</option>
-                                                                    <option value="DEPED">DEPED</option>
-                                                                    <option value="DILG">DILG</option>
-                                                                    <option value="Engineering Office">Engineering Office</option>
-                                                                    <option value="GAD">GAD</option>
-                                                                    <option value="Garbage Collection">Garbage Collection</option>
-                                                                    <option value="GSO">GSO</option>
-                                                                    <option value="HRMO">HRMO</option>
-                                                                    <option value="LCR">LCR</option>
-                                                                    <option value="Market / Slaughter">Market / Slaughter</option>
-                                                                    <option value="MDRRMO">MDRRMO</option>
-                                                                    <option value="MPDC">MPDC</option>
-                                                                    <option value="MSWD / STAC">MSWD / STAC</option>
-                                                                    <option value="Mayor's Office">Mayor's Office</option>
-                                                                    <option value="PESO">PESO</option>
-                                                                    <option value="PNP">PNP</option>
-                                                                    <option value="RHU">RHU</option>
-                                                                    <option value="SB / Municipal Library">SB / Municipal Library</option>
-                                                                    <option value="Sanitary Land Filling">Sanitary Land Filling</option>
-                                                                    <option value="Street Cleaning">Street Cleaning</option>
-                                                                    <option value="Traffic Enforcement">Traffic Enforcement</option>
-                                                                    <option value="Tourism Office">Tourism Office</option>
-                                                                    <option value="Treasurer Office">Treasurer Office</option>
-                                                                </select>
-                                                            </div>
-
-                                                            <div class="col-12 col-md-4">
-                                                                <label class="form-label-soft">Designation</label>
-                                                                <select name="designation[]" class="form-select form-modern js-desig" required>
-                                                                    <option value="" selected disabled>Select Designation</option>
-                                                                    <option value="Aircon Maintenance">Aircon Maintenance</option>
-                                                                    <option value="Administrative Assistance">Administrative Assistance</option>
-                                                                    <option value="Backhoe Operator">Backhoe Operator</option>
-                                                                    <option value="Beach Ward">Beach Ward</option>
-                                                                    <option value="Building Guard">Building Guard</option>
-                                                                    <option value="Caregiver">Caregiver</option>
-                                                                    <option value="Carpenter">Carpenter</option>
-                                                                    <option value="Clerk">Clerk</option>
-                                                                    <option value="Computer Technician">Computer Technician</option>
-                                                                    <option value="Daycare Teacher">Daycare Teacher</option>
-                                                                    <option value="Driver">Driver</option>
-                                                                    <option value="Electrician">Electrician</option>
-                                                                    <option value="Encoder">Encoder</option>
-                                                                    <option value="Engineering Brigade">Engineering Brigade</option>
-                                                                    <option value="Focal Person for Senior Citizen">Focal Person for Senior Citizen</option>
-                                                                    <option value="Financial Assistance Staff">Financial Assistance Staff</option>
-                                                                    <option value="First Responder">First Responder</option>
-                                                                    <option value="GAD Personnel">GAD Personnel</option>
-                                                                    <option value="Heavy Equipment Operator">Heavy Equipment Operator</option>
-                                                                    <option value="Laboratory Assistant">Laboratory Assistant</option>
-                                                                    <option value="Laboratory Technician">Laboratory Technician</option>
-                                                                    <option value="Market Aide">Market Aide</option>
-                                                                    <option value="Market Cleaner">Market Cleaner</option>
-                                                                    <option value="Market Watchman">Market Watchman</option>
-                                                                    <option value="Mechanic">Mechanic</option>
-                                                                    <option value="Midwife Assistant">Midwife Assistant</option>
-                                                                    <option value="Nurse">Nurse</option>
-                                                                    <option value="Nursing Assistant">Nursing Assistant</option>
-                                                                    <option value="OSCA Head">OSCA Head</option>
-                                                                    <option value="Plumber">Plumber</option>
-                                                                    <option value="Pump Tender">Pump Tender</option>
-                                                                    <option value="Pumping Station Guard">Pumping Station Guard</option>
-                                                                    <option value="Recorder">Recorder</option>
-                                                                    <option value="Rescue Personnel">Rescue Personnel</option>
-                                                                    <option value="School Guard">School Guard</option>
-                                                                    <option value="Security">Security</option>
-                                                                    <option value="SPED Teacher">SPED Teacher</option>
-                                                                    <option value="Spring Guard">Spring Guard</option>
-                                                                    <option value="Street Cleaner">Street Cleaner</option>
-                                                                    <option value="Traffic Enforcer">Traffic Enforcer</option>
-                                                                    <option value="Utility Worker">Utility Worker</option>
-                                                                    <option value="Shadow Teacher">Shadow Teacher</option>
-                                                                    <option value="STAC Staff">STAC Staff</option>
-                                                                    <option value="Child Development Teacher">Child Development Teacher</option>
-                                                                    <option value="Tourism Aide">Tourism Aide</option>
-                                                                    <option value="Maintenance Personnel">Maintenance Personnel</option>
-                                                                </select>
-                                                            </div>
-
-                                                            <div class="col-12 col-md-4">
-                                                                <label class="form-label-soft">Rate</label>
-                                                                <input type="text" name="rate[]" class="form-control form-modern js-rate" required>
-                                                            </div>
+                                                    <!-- Date of Appointment + Status -->
+                                                    <div class="row g-3 mt-1">
+                                                        <div class="col-12 col-md-6">
+                                                            <label class="form-label-soft">Date of Appointment</label>
+                                                            <input type="date" name="date_of_appointment[]" class="form-control form-modern js-appoint" required>
                                                         </div>
 
-                                                        <!-- Date of Appointment + Status -->
-                                                        <div class="row g-3 mt-1">
-                                                            <div class="col-12 col-md-6">
-                                                                <label class="form-label-soft">Date of Appointment</label>
-                                                                <input type="date" name="date_of_appointment[]" class="form-control form-modern js-appoint" required>
-                                                            </div>
-
-                                                            <div class="col-12 col-md-6">
-                                                                <label class="form-label-soft">Status</label>
-                                                                <select name="status[]" class="form-select form-modern js-status" required>
-                                                                    <option value="Employed">Employed</option>
-                                                                    <option value="Resigned/Retired">Resigned/Retired</option>
-                                                                    <option value="Terminated">Terminated</option>
-                                                                </select>
-                                                            </div>
+                                                        <div class="col-12 col-md-6">
+                                                            <label class="form-label-soft">Status</label>
+                                                            <select name="status[]" class="form-select form-modern js-status" required>
+                                                                <option value="" disabled selected>Select Status</option>
+                                                                <option value="Employed">Employed</option>
+                                                                <option value="Resigned/Retired">Resigned/Retired</option>
+                                                                <option value="Terminated">Terminated</option>
+                                                            </select>
                                                         </div>
-
-                                                        <!-- Date Ended + Duration (hidden until needed) -->
-                                                        <div class="row g-3 mt-1 js-ended-row d-none">
-                                                            <div class="col-12 col-md-6 js-ended-wrap">
-                                                                <label class="form-label-soft">Date Ended</label>
-
-
-                                                                <input type="date" class="form-control form-modern js-ended">
-
-
-                                                                <!-- submitted -->
-                                                                <input type="hidden" name="date_ended[]" class="js-ended-hidden">
-
-                                                                <small class="text-secondary d-block mt-1 js-ended-hint" style="font-size:12px;"></small>
-                                                            </div>
-
-                                                            <div class="col-12 col-md-6">
-                                                                <label class="form-label-soft">Service Duration</label>
-                                                                <input type="text" name="service_duration[]" class="form-control form-modern js-duration" readonly>
-                                                            </div>
-                                                        </div>
-
-                                                        <!-- Buttons (same as Add Record) -->
-                                                        <div class="d-flex gap-2 justify-content-center mt-4">
-                                                            <button type="button" class="btn btn-danger mt-1 js-remove-service">Remove</button>
-                                                            <button type="button" class="btn btn-outline-primary mt-1 js-add-service">
-                                                                + Add Service Record
-                                                            </button>
-                                                        </div>
-
                                                     </div>
+
+                                                    <!-- Date Ended + Duration -->
+                                                    <div class="row g-3 mt-1 js-ended-row d-none">
+                                                        <div class="col-12 col-md-6">
+                                                            <label class="form-label-soft">Date Ended</label>
+                                                            <input type="datetime" name="date_ended[]" class="form-control form-modern js-ended">
+                                                        </div>
+
+                                                        <div class="col-12 col-md-6">
+                                                            <label class="form-label-soft">Service Duration</label>
+                                                            <input type="text" name="service_duration[]" class="form-control form-modern js-duration" readonly>
+                                                        </div>
+                                                    </div>
+
+                                                    <div class="d-flex gap-2 justify-content-center mt-4">
+                                                        <button type="button" class="btn btn-danger mt-1 js-remove-service">Remove</button>
+                                                        <button type="button" class="btn btn-outline-primary mt-1 js-add-service">+ Add Service Record</button>
+                                                    </div>
+
+                                                    <hr class="border-secondary opacity-25 my-3">
                                                 </div>
                                             </template>
-
 
                                         </div>
                                     </div>
                                 </div>
 
-                                <!-- Footer -->
+                                <!-- ✅ FOOTER ALWAYS VISIBLE -->
                                 <div class="modal-footer">
                                     <button type="button" class="btn btn-light btn-pill" data-bs-dismiss="modal">Cancel</button>
                                     <button type="submit" class="btn btn-primary btn-pill">
@@ -626,11 +646,9 @@
                 </div>
 
 
-
-
-
-
-
+                <script>
+                    document.querySelectorAll("#editModal").length
+                </script>
 
 
                 <!-- ========================= -->
@@ -660,26 +678,29 @@
                         </div>
                     </div>
                 </div>
+            </div>
+        </div>
+    </div>
+</div>
 
-            </div><!-- table-responsive -->
-        </div><!-- p-4 -->
-    </div><!-- form-card -->
-
-</div><!-- container -->
 <script>
-    // public/js/edit_dynamic_services.js
-    // ✅ Bulletproof version (event delegation) for Edit Modal dynamic services
+    // ✅ Edit modal dynamic services (aligned to create.php)
+    // - same show/hide end date row behavior
+    // - uses datetime-local for Date Ended
+    // - computes duration like create.php
 
     function splitPipe(val) {
         if (!val) return [];
-        return String(val).split("||").map((s) => s.trim());
+        return String(val).split("||").map(s => s.trim());
     }
 
     function isZeroDate(v) {
-        return String(v || "").trim() === "0000-00-00";
+        const s = String(v || "").trim();
+        return s === "0000-00-00" || s === "0000-00-00 00:00:00";
     }
 
     // Accepts: "YYYY-MM-DD", "YYYY-MM-DD HH:mm:ss", "YYYY-MM-DDTHH:mm"
+    // Returns: "YYYY-MM-DD" for date input
     function toISODate(val) {
         if (!val) return "";
         val = String(val).trim();
@@ -689,8 +710,35 @@
         return "";
     }
 
+    // For datetime-local input: "YYYY-MM-DDTHH:mm"
+    function toISODatetimeLocal(val) {
+        if (!val) return "";
+        val = String(val).trim();
+        if (isZeroDate(val)) return "";
+
+        // already datetime-local
+        if (/^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}$/.test(val)) return val;
+
+        // "YYYY-MM-DD HH:mm:ss"
+        if (/^\d{4}-\d{2}-\d{2}\s\d{2}:\d{2}/.test(val)) {
+            return val.slice(0, 16).replace(" ", "T");
+        }
+
+        // "YYYY-MM-DD"
+        if (/^\d{4}-\d{2}-\d{2}$/.test(val)) {
+            return val + "T00:00";
+        }
+
+        // fallback
+        return "";
+    }
+
     function parseDateOnly(iso) {
         return iso ? new Date(iso + "T00:00:00") : null;
+    }
+
+    function parseDateTimeLocal(dt) {
+        return dt ? new Date(dt) : null;
     }
 
     function needsEndDate(status) {
@@ -709,8 +757,8 @@
         if (d < 0) {
             m -= 1;
             const prevMonth = (toDate.getMonth() - 1 + 12) % 12;
-            const prevMonthYear = prevMonth === 11 ? toDate.getFullYear() - 1 : toDate.getFullYear();
-            d += daysInMonth(prevMonthYear, prevMonth);
+            const prevYear = prevMonth === 11 ? toDate.getFullYear() - 1 : toDate.getFullYear();
+            d += daysInMonth(prevYear, prevMonth);
         }
 
         if (m < 0) {
@@ -739,10 +787,7 @@
 
     function createRow(container) {
         const tpl = document.getElementById("editServiceRowTpl");
-        if (!tpl) {
-            console.error("❌ #editServiceRowTpl not found");
-            return null;
-        }
+        if (!tpl) return null;
         const node = tpl.content.cloneNode(true);
         container.appendChild(node);
         return container.querySelector(".service-row:last-child");
@@ -755,103 +800,90 @@
         });
     }
 
-    function updateRow(row) {
-        const statusEl = row.querySelector(".js-status");
-        const appointEl = row.querySelector(".js-appoint");
+    function resetRow(row) {
+        row.querySelectorAll("select").forEach(s => (s.selectedIndex = 0));
+        row.querySelectorAll("input").forEach(i => (i.value = ""));
         const endedRow = row.querySelector(".js-ended-row");
-        const endedEl = row.querySelector(".js-ended"); // datetime-local visible
-        const endedHidden = row.querySelector(".js-ended-hidden"); // hidden date_ended[]
+        if (endedRow) endedRow.classList.add("d-none");
+        const dur = row.querySelector(".js-duration");
+        if (dur) dur.value = "";
+    }
+
+    function updateRow(row) {
+        const appointEl = row.querySelector(".js-appoint");
+        const statusEl = row.querySelector(".js-status");
+        const endedRow = row.querySelector(".js-ended-row");
+        const endedEl = row.querySelector(".js-ended");
         const durationEl = row.querySelector(".js-duration");
-        const hintEl = row.querySelector(".js-ended-hint");
 
-        const status = (statusEl?.value || "").trim();
-        const startISO = toISODate(appointEl?.value || "");
+        if (!appointEl || !statusEl || !durationEl) return;
+
+        const status = (statusEl.value || "").trim();
+
+        // show/hide end row
+        if (endedRow) {
+            if (needsEndDate(status)) {
+                endedRow.classList.remove("d-none");
+                if (endedEl) endedEl.required = true;
+            } else {
+                endedRow.classList.add("d-none");
+                if (endedEl) {
+                    endedEl.required = false;
+                    endedEl.value = "";
+                }
+                // still compute duration for employed (until today)
+            }
+        }
+
+        const startISO = toISODate(appointEl.value);
         const startDate = parseDateOnly(startISO);
-
-        if (endedEl) {
-            endedEl.required = false;
-            endedEl.setCustomValidity("");
-        }
-
-        // no start
         if (!startDate) {
-            if (endedRow) endedRow.classList.add("d-none");
-            if (durationEl) durationEl.value = "";
-            if (endedHidden) endedHidden.value = "";
-            if (hintEl) hintEl.textContent = "";
+            durationEl.value = "";
             return;
         }
 
-        // employed -> hide
-        if (!needsEndDate(status)) {
-            if (endedRow) endedRow.classList.add("d-none");
-            if (endedEl) endedEl.value = "";
-            if (endedHidden) endedHidden.value = "";
-            if (durationEl) durationEl.value = "Currently Working";
-            if (hintEl) hintEl.textContent = "Currently Working";
-            return;
-        }
+        let endDate;
 
-        // terminated/resigned -> show
-        if (endedRow) endedRow.classList.remove("d-none");
-        if (hintEl) hintEl.textContent = "Required";
-        if (endedEl) endedEl.required = true;
-        if (endedEl) endedEl.disabled = false;
+        if (needsEndDate(status)) {
+            const endedISO = toISODate(endedEl?.value || "");
+            endDate = parseDateOnly(endedISO);
 
-
-        const endedISO = toISODate(endedEl?.value || "");
-        if (endedHidden) endedHidden.value = endedISO;
-
-        if (!endedISO) {
-            if (durationEl) durationEl.value = "Waiting for end date";
-            if (endedEl) endedEl.setCustomValidity("Date Ended is required.");
-            return;
-        }
-
-        const endDate = parseDateOnly(endedISO);
-        if (!endDate) {
-            if (durationEl) durationEl.value = "Waiting for end date";
+            if (!endDate) {
+                durationEl.value = "Waiting for end date";
+                return;
+            }
+        } else if (status === "Employed") {
+            const now = new Date();
+            endDate = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+        } else {
+            durationEl.value = "";
             return;
         }
 
         if (startDate > endDate) {
-            if (durationEl) durationEl.value = "Invalid dates";
-            if (endedEl) endedEl.setCustomValidity("Date Ended cannot be earlier than Date of Appointment.");
+            durationEl.value = "Invalid dates";
             return;
         }
 
-        if (durationEl) durationEl.value = formatDuration(diffYMD(startDate, endDate));
+        durationEl.value = formatDuration(diffYMD(startDate, endDate));
     }
 
     function fillRow(row, data) {
-        const idEl = row.querySelector(".js-service-id"); // ✅ add this
+        row.querySelector(".js-service-id").value = data.service_id || "";
 
-        row.querySelector(".js-dept")?.setAttribute("value", "");
-        const deptEl = row.querySelector(".js-dept");
-        const desigEl = row.querySelector(".js-desig");
-        const rateEl = row.querySelector(".js-rate");
-        const appointEl = row.querySelector(".js-appoint");
-        const statusEl = row.querySelector(".js-status");
-        const endedEl = row.querySelector(".js-ended");
-        const endedHidden = row.querySelector(".js-ended-hidden");
+        row.querySelector(".js-dept").value = data.department || "";
+        row.querySelector(".js-desig").value = data.designation || "";
+        row.querySelector(".js-rate").value = data.rate || "";
+        row.querySelector(".js-appoint").value = toISODate(data.date_of_appointment || "");
+        row.querySelector(".js-status").value = (data.status || "Employed").trim();
 
-        if (idEl) idEl.value = data.service_id || ""; // ✅
-        if (deptEl) deptEl.value = data.department || "";
-        if (desigEl) desigEl.value = data.designation || "";
-        if (rateEl) rateEl.value = data.rate || "";
-        if (appointEl) appointEl.value = toISODate(data.date_of_appointment || "");
-        if (statusEl) statusEl.value = (data.status || "Employed").trim();
-
-        const endedISO = toISODate(data.date_ended || "");
-        if (endedEl) endedEl.value = endedISO;
-
-        if (endedHidden) endedHidden.value = endedISO || ((statusEl?.value || "") === "Employed" ? "" : "");
-
+        // datetime-local
+        row.querySelector(".js-ended").value = toISODate(data.date_ended || "");
 
         updateRow(row);
     }
 
-    // ========= PUBLIC: called by your onclick openEditModal(JSON) =========
+    // Called when clicking edit button
     window.openEditModal = function(rec) {
         document.getElementById("edit_id").value = rec.id ?? "";
         document.getElementById("edit_last_name").value = rec.last_name ?? "";
@@ -896,7 +928,7 @@
                 rate: rates[i] || "",
                 date_of_appointment: appoints[i] || "",
                 status: statuses[i] || "Employed",
-                date_ended: endeds[i] || "",
+                date_ended: endeds[i] || ""
             });
         }
 
@@ -909,37 +941,30 @@
         const form = document.getElementById("editForm");
         const topAddBtn = document.getElementById("editAddServiceBtn");
 
-        if (!container) {
-            console.warn("❌ #editServiceContainer not found. JS will not work.");
-            return;
-        }
+        if (!container) return;
 
-        // ✅ event delegation: Add/Remove buttons inside rows
+        // inside-row add/remove (delegation)
         container.addEventListener("click", (e) => {
-            // add button inside row
             const addInside = e.target.closest(".js-add-service");
+            const removeBtn = e.target.closest(".js-remove-service");
+
             if (addInside) {
                 const row = createRow(container);
                 if (!row) return;
-
-                // default values
+                // default status employed
                 row.querySelector(".js-status").value = "Employed";
-                row.querySelector(".js-ended-hidden").value = "0000-00-00";
                 updateRow(row);
                 renumber(container);
                 return;
             }
 
-            // remove
-            const removeBtn = e.target.closest(".js-remove-service");
             if (removeBtn) {
                 const row = removeBtn.closest(".service-row");
                 const all = container.querySelectorAll(".service-row");
                 if (all.length <= 1) {
-                    // reset instead of remove
-                    row.querySelectorAll("select").forEach((s) => (s.selectedIndex = 0));
-                    row.querySelectorAll("input").forEach((i) => (i.value = ""));
-                    row.querySelector(".js-ended-hidden").value = "0000-00-00";
+                    resetRow(row);
+                    // set default employed after reset
+                    row.querySelector(".js-status").value = "Employed";
                     updateRow(row);
                     renumber(container);
                     return;
@@ -949,8 +974,8 @@
             }
         });
 
-        // ✅ delegation: change/input updates
-        container.addEventListener("change", (e) => {
+        // live update
+        function handleUpdate(e) {
             const row = e.target.closest(".service-row");
             if (!row) return;
 
@@ -961,45 +986,33 @@
             ) {
                 updateRow(row);
             }
-        });
+        }
+        container.addEventListener("change", handleUpdate);
+        container.addEventListener("input", handleUpdate);
 
-        container.addEventListener("input", (e) => {
-            const row = e.target.closest(".service-row");
-            if (!row) return;
-            if (e.target.classList.contains("js-ended")) updateRow(row);
-        });
-
-        // ✅ top add service button
+        // top add
         if (topAddBtn) {
             topAddBtn.addEventListener("click", () => {
                 const row = createRow(container);
                 if (!row) return;
-
                 row.querySelector(".js-status").value = "Employed";
-                row.querySelector(".js-ended-hidden").value = "0000-00-00";
                 updateRow(row);
                 renumber(container);
             });
         }
 
-        // ✅ on modal show: force refresh (fix "still hidden")
+        // when modal opens, ensure durations are correct
         if (modalEl) {
             modalEl.addEventListener("shown.bs.modal", () => {
                 setTimeout(() => {
                     const rows = container.querySelectorAll(".service-row");
-                    if (rows.length === 0) {
-                        const row = createRow(container);
-                        if (!row) return;
-                        row.querySelector(".js-status").value = "Employed";
-                        row.querySelector(".js-ended-hidden").value = "0000-00-00";
-                    }
-                    container.querySelectorAll(".service-row").forEach(updateRow);
+                    rows.forEach(updateRow);
                     renumber(container);
-                }, 80);
+                }, 60);
             });
         }
 
-        // ✅ submit: sync + validate
+        // submit validate
         if (form) {
             form.addEventListener("submit", (e) => {
                 container.querySelectorAll(".service-row").forEach(updateRow);
@@ -1013,6 +1026,31 @@
         }
     });
 </script>
+
+
+<script>
+    document.addEventListener("click", function(e) {
+        const btn = e.target.closest(".edit-trigger");
+        if (!btn) return;
+
+        const raw = btn.getAttribute("data-rec") || "{}";
+
+        let rec = {};
+        try {
+            rec = JSON.parse(raw);
+        } catch (err) {
+            console.error("❌ Failed to parse data-rec JSON", err, raw);
+            return;
+        }
+
+        if (typeof window.openEditModal === "function") {
+            window.openEditModal(rec);
+        } else {
+            console.error("❌ openEditModal is not defined on window");
+        }
+    });
+</script>
+
 
 <!-- DELETE BUTTON SCRIPT -->
 <script>

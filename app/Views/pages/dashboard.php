@@ -370,10 +370,46 @@ $employment_total = array_sum($employment_counts);
                             </div>
                         </div>
                     </div>
-
                 </div>
             </div>
         </div>
+        <!-- ===================== -->
+        <!-- ✅ SERVICE RANKING CARD (PLACE BESIDE EMPLOYMENT CARD) -->
+        <!-- ===================== -->
+        <div class="col-12 col-lg-6">
+            <div class="card card-dash h-100">
+                <div class="card-dash-header px-4 py-3 d-flex align-items-center justify-content-between">
+                    <div class="d-flex align-items-center gap-2">
+                        <div class="rounded-3 d-flex align-items-center justify-content-center"
+                            style="width:38px;height:38px;background:rgba(13,110,253,.15);">
+                            <i class="bi bi-bar-chart-fill text-primary"></i>
+                        </div>
+                        <div>
+                            <div class="fw-bold text-uppercase text-secondary small mb-0">Service Ranking</div>
+                            <div class="text-secondary" style="font-size:12px;">Longest service → Lowest</div>
+                        </div>
+                    </div>
+
+                    <!-- ✅ VIEW DETAILS BUTTON -->
+                    <a class="btn btn-outline-primary btn-sm rounded-pill fw-semibold"
+                        href="#"
+                        data-bs-toggle="modal"
+                        data-bs-target="#serviceRankingModal">
+                        View Details →
+                    </a>
+                </div>
+
+                <div class="card-body px-4 py-4">
+                    <div class="w-100" style="height:320px;">
+                        <canvas id="serviceBarChart"></canvas>
+                    </div>
+                    <div class="text-secondary small mt-2">
+                        Showing top <?= esc(count($service_labels ?? [])) ?> employees
+                    </div>
+                </div>
+            </div>
+        </div>
+
 
     </div>
 </div>
@@ -629,6 +665,59 @@ $employment_total = array_sum($employment_counts);
             });
         }
     });
+</script>
+
+// =========================
+// ✅ SERVICE RANKING BAR (NEW)
+// =========================
+<script>
+    const serviceLabels = <?= json_encode($service_labels ?? []) ?>;
+    const serviceYears = <?= json_encode($service_years ?? []) ?>;
+
+    const serviceCanvas = document.getElementById("serviceBarChart");
+    if (serviceCanvas) {
+        const hasData = serviceLabels.length > 0;
+
+        new Chart(serviceCanvas, {
+            type: "bar",
+            data: {
+                labels: hasData ? serviceLabels : ["No Data"],
+                datasets: [{
+                    label: "Years of Service",
+                    data: hasData ? serviceYears : [0],
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                indexAxis: "y", // ✅ horizontal bars so names fit
+                scales: {
+                    x: {
+                        beginAtZero: true,
+                        ticks: {
+                            callback: (v) => v + " yrs"
+                        }
+                    },
+                    y: {
+                        ticks: {
+                            autoSkip: false
+                        }
+                    }
+                },
+                plugins: {
+                    legend: {
+                        display: false
+                    },
+                    tooltip: {
+                        callbacks: {
+                            label: (ctx) => `${ctx.raw} years`
+                        }
+                    }
+                }
+            }
+        });
+    }
 </script>
 
 <!-- ===================== -->
@@ -1003,6 +1092,125 @@ $employment_total = array_sum($employment_counts);
     </div>
 </div>
 
+<!-- ===================== -->
+<!-- ✅ SERVICE RANKING MODAL -->
+<!-- ===================== -->
+<div class="modal fade" id="serviceRankingModal" tabindex="-1" aria-labelledby="serviceRankingModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable" style="max-width: 90vw;">
+        <div class="modal-content rounded-4 shadow">
+
+            <div class="modal-header text-white" style="background-color:#16166c;">
+                <h5 class="modal-title fw-bold" id="serviceRankingModalLabel">
+                    <i class="bi bi-bar-chart-fill me-2"></i>Service Ranking Records
+                </h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+            </div>
+
+            <div class="modal-body">
+                <div class="d-flex justify-content-end mb-3 gap-2 flex-wrap">
+                    <div>
+                        <label class="form-label fw-bold me-2">Search:</label>
+                        <input type="text" id="serviceRankingSearch" class="form-control w-auto d-inline-block" placeholder="Search...">
+                    </div>
+                </div>
+
+                <div class="table-responsive">
+                    <table class="table table-bordered table-striped align-middle text-center" id="serviceRankingTable">
+                        <thead style="background-color:#16166c; color:#fff;">
+                            <tr>
+                                <th>Full Name</th>
+                                <th>Department</th>
+                                <th>Designation</th>
+                                <th>Date of Appointment</th>
+                                <th>Service Duration</th>
+                            </tr>
+                        </thead>
+
+                        <tbody>
+                            <?php if (!empty($service_ranking_records)): ?>
+                                <?php foreach ($service_ranking_records as $rec): ?>
+                                    <?php
+                                    $fullName = trim(
+                                        ($rec['last_name'] ?? '') . ', ' .
+                                            ($rec['first_name'] ?? '') . ' ' .
+                                            ($rec['middle_name'] ?? '') . ' ' .
+                                            ($rec['extensions'] ?? '')
+                                    );
+
+                                    $days = (int)($rec['service_days'] ?? 0);
+
+                                    // ✅ format days into years/months/days
+                                    $years  = intdiv($days, 365);
+                                    $months = intdiv($days % 365, 30);
+                                    $remDays = ($days % 365) % 30;
+
+                                    $durParts = [];
+                                    if ($years > 0)  $durParts[] = $years . " year" . ($years !== 1 ? "s" : "");
+                                    if ($months > 0) $durParts[] = $months . " month" . ($months !== 1 ? "s" : "");
+                                    $durParts[] = $remDays . " day" . ($remDays !== 1 ? "s" : "");
+
+                                    $durationText = implode(", ", $durParts);
+                                    ?>
+                                    <tr>
+                                        <td><?= esc($fullName) ?></td>
+                                        <td><?= esc($rec['department'] ?? '—') ?></td>
+                                        <td><?= esc($rec['designation'] ?? '—') ?></td>
+                                        <td><?= esc($rec['date_of_appointment'] ?? '—') ?></td>
+                                        <td><?= esc($durationText) ?></td>
+                                    </tr>
+                                <?php endforeach; ?>
+                            <?php else: ?>
+                                <tr>
+                                    <td colspan="5" class="text-muted">No records found.</td>
+                                </tr>
+                            <?php endif; ?>
+                        </tbody>
+
+                    </table>
+                </div>
+            </div>
+
+            <div class="modal-footer">
+                <button class="btn btn-success rounded-pill" id="printServiceRankingTable">
+                    <i class="bi bi-printer me-1"></i>Print
+                </button>
+                <button class="btn btn-secondary rounded-pill" data-bs-dismiss="modal">Close</button>
+            </div>
+
+        </div>
+    </div>
+</div>
+<script>
+    document.addEventListener("DOMContentLoaded", () => {
+        const btn = document.getElementById("printServiceRankingTable");
+        if (!btn) return;
+
+        btn.addEventListener("click", async () => {
+            const table = document.getElementById("serviceRankingTable");
+            if (!table) return;
+
+            // Clone table so we can safely remove inputs/buttons if any later
+            const clone = table.cloneNode(true);
+
+            // Optional: remove last column if it ever becomes "Actions"
+            // (not needed right now, but safe)
+            // clone.querySelectorAll("th, td").forEach(cell => { ... });
+
+            await window.printWithBolinaoHeader({
+                title: "Service Ranking Records",
+                headerColor: "#16166c",
+                tableHTML: `
+        <div class="table-responsive">
+          ${clone.outerHTML}
+        </div>
+      `
+            });
+        });
+    });
+</script>
+
+
+
 <!-- JS Search and Filters -->
 <script src="<?= base_url('js/gender_search.js') ?>"></script>
 <script src="<?= base_url('js/eligibility_search.js') ?>"></script>
@@ -1015,5 +1223,7 @@ $employment_total = array_sum($employment_counts);
 <script src="<?= base_url('js/print_education_table.js') ?>"></script>
 <script src="<?= base_url('js/print_employment_status_table.js') ?>"></script>
 <script src="<?= base_url('js/employment_status.js') ?>"></script>
+<script src="<?= base_url('js/service_ranking_search.js') ?>"></script>
+
 
 <?= $this->endSection(); ?>

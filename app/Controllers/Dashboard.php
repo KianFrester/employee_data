@@ -19,8 +19,8 @@ class Dashboard extends BaseController
 
         /**
          * ✅ LATEST SERVICE RECORD JOIN (per employee)
-         * This joins ONLY the latest service_records row by:
-         *   date_of_appointment DESC, id DESC
+         * joins ONLY the latest service_records row by:
+         * date_of_appointment DESC, id DESC
          */
         $latestServiceSub = "(SELECT s2.id
             FROM service_records s2
@@ -147,7 +147,6 @@ class Dashboard extends BaseController
         }
 
         // ================= EMPLOYMENT COUNTS (LATEST STATUS) =================
-        // ✅ If employee has no service record, treat as Employed (change if you want)
         $employment_raw = $recordsModel
             ->select("IFNULL(sr.status, 'Employed') AS status, COUNT(*) AS value")
             ->join("service_records sr", "sr.id = $latestServiceSub", "left", false)
@@ -182,25 +181,91 @@ class Dashboard extends BaseController
             ->orderBy('records.last_name', 'ASC')
             ->findAll();
 
+        // ==========================================================
+        // ✅ SERVICE RANKING CHART DATA (TOTAL SERVICE YEARS, TOP 10)
+        // SUM all service_records durations per employee
+        // date_ended null/empty/0000-00-00 => today
+        // ==========================================================
+        $service_rankings = $recordsModel->db->table('records r')
+            ->select("
+                r.id,
+                r.last_name,
+                r.first_name,
+                r.middle_name,
+                r.extensions,
+                SUM(
+                    DATEDIFF(
+                        COALESCE(NULLIF(NULLIF(s.date_ended,''),'0000-00-00'), CURDATE()),
+                        s.date_of_appointment
+                    )
+                ) AS total_days
+            ")
+            ->join('service_records s', 's.employee_id = r.id', 'left')
+            ->groupBy('r.id')
+            ->orderBy('total_days', 'DESC')
+            ->limit(10)
+            ->get()
+            ->getResultArray();
+
+        $service_labels = [];
+        $service_years  = [];
+
+        foreach ($service_rankings as $r) {
+            $name = trim(($r['last_name'] ?? '') . ', ' . ($r['first_name'] ?? '') . ' ' . ($r['middle_name'] ?? '') . ' ' . ($r['extensions'] ?? ''));
+            $days = (int)($r['total_days'] ?? 0);
+            $years = $days > 0 ? round($days / 365.25, 2) : 0;
+
+            $service_labels[] = $name;
+            $service_years[]  = $years;
+        }
+
+        // ==========================================================
+        // ✅ SERVICE RANKING MODAL TABLE (LATEST SERVICE ONLY)
+        // Fullname, dept, designation, date_of_appointment, duration
+        // ==========================================================
+        $service_ranking_records = $recordsModel
+            ->select("
+                records.id,
+                records.last_name,
+                records.first_name,
+                records.middle_name,
+                records.extensions,
+                sr.department AS department,
+                sr.designation AS designation,
+                sr.date_of_appointment AS date_of_appointment,
+                sr.date_ended AS date_ended,
+                DATEDIFF(
+                    COALESCE(NULLIF(NULLIF(sr.date_ended,''),'0000-00-00'), CURDATE()),
+                    sr.date_of_appointment
+                ) AS service_days
+            ")
+            ->join("service_records sr", "sr.id = $latestServiceSub", "left", false)
+            ->orderBy('service_days', 'DESC')
+            ->findAll();
+
         return view('pages/dashboard', [
-            'username'            => $username,
+            'username'                 => $username,
 
-            'maleCount'           => $maleCount,
-            'femaleCount'         => $femaleCount,
-            'gender_records'      => $gender_records,
+            'maleCount'                => $maleCount,
+            'femaleCount'              => $femaleCount,
+            'gender_records'           => $gender_records,
 
-            'eligibility_counts'  => $eligibility_counts,
-            'eligibility_records' => $eligibility_records,
+            'eligibility_counts'       => $eligibility_counts,
+            'eligibility_records'      => $eligibility_records,
 
-            'ageGroups'           => $ageGroups,
-            'age_records'         => $age_records,
+            'ageGroups'                => $ageGroups,
+            'age_records'              => $age_records,
 
-            'education_counts'    => $education_counts,
-            'education_records'   => $education_records,
+            'education_counts'         => $education_counts,
+            'education_records'        => $education_records,
 
-            // ✅ ADD THESE (THIS FIXES YOUR EMPTY EMPLOYMENT TABLE)
-            'employment_counts'   => $employment_counts,
-            'employment_records'  => $employment_records,
+            'employment_counts'        => $employment_counts,
+            'employment_records'       => $employment_records,
+
+            // ✅ NEW: bar chart data + modal records
+            'service_labels'           => $service_labels,
+            'service_years'            => $service_years,
+            'service_ranking_records'  => $service_ranking_records,
         ]);
     }
 }

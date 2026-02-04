@@ -1,48 +1,48 @@
-/* =========================
-   MULTI-LINE CELLS
-   ========================= */
-.multi-cell{
-  white-space: normal !important;
-  word-break: break-word;
-  overflow-wrap: anywhere;
-  vertical-align: middle;
+/* =====================================================
+   STATUS COLORS (KEEP THESE)
+   ===================================================== */
+.table-modern .multi-line-item.row-employed {
+  color: #198754 !important;
+  font-weight: 700;
+}
+.table-modern .multi-line-item.row-resigned {
+  color: #ffc107 !important;
+  font-weight: 700;
+}
+.table-modern .multi-line-item.row-terminated {
+  color: #dc3545 !important;
+  font-weight: 700;
+}
+.table-modern .multi-line-item.row-default {
+  color: #6c757d !important;
 }
 
-.multi-line-item{
-  line-height: 1.35;
-  padding: 3px 0;
-  text-align: center;
-}
-
-/* =========================
-   EDIT MODAL SCROLL FIX
-   ========================= */
-#editModal .modal-dialog,
-#editModal .modal-content {
-  max-height: 90vh;
-}
-
-#editModal .modal-body {
-  max-height: calc(90vh - 140px);
-  overflow-y: auto;
-}
-
-/* =========================
-   TABLE BASE
-   ========================= */
+/* =====================================================
+   TABLE BASE (SAFE + CLEAN)
+   ===================================================== */
 .table-modern {
   width: 100%;
-  border-collapse: separate !important;
-  border-spacing: 0;
-  background: #ffffff;
-  border: 1px solid #cfd9ec;   /* visible but not thick */
-  border-radius: 12px;
-  overflow: hidden;
+  table-layout: fixed;          /* 🔑 prevents overlap */
+  border-collapse: collapse;
+  background: #fff;
 }
 
-/* =========================
+.table-modern th,
+.table-modern td {
+  border-right: 1px solid #e2e8f5;
+  border-bottom: 1px solid #e2e8f5;
+  overflow: hidden;             /* 🔑 stop spill */
+  vertical-align: top;
+}
+
+.table-modern th:last-child,
+.table-modern td:last-child {
+  border-right: none;
+}
+
+/* =====================================================
    TABLE HEADER
-   ========================= */
+   ===================================================== */
 .table-modern thead th {
   background: #eef3fb;
   color: #344767;
@@ -50,98 +50,197 @@
   font-size: 0.8rem;
   letter-spacing: 0.05em;
   text-transform: uppercase;
-
-  text-align: center !important;
-  vertical-align: middle !important;
-
+  text-align: center;
   padding: 12px 10px;
-  border-bottom: 1.5px solid #cfd9ec;
-  border-right: 1px solid #d8e0f0;
 }
 
-.table-modern thead th:last-child {
-  border-right: none;
-}
-
-/* =========================
+/* =====================================================
    TABLE BODY CELLS
-   ========================= */
+   ===================================================== */
 .table-modern tbody td {
-  text-align: center !important;
-  vertical-align: middle !important;
-
-  padding: 12px 10px;
+  padding: 0;                   /* important for alignment */
   font-size: 0.95rem;
-  color: #1f2937;
-
-  border-bottom: 1px solid #e2e8f5;
-  border-right: 1px solid #e2e8f5;
-
-  transition: background-color 0.25s ease;
+  text-align: center;
+  background: #fff;
 }
 
-.table-modern tbody td:last-child {
-  border-right: none;
-}
-
-/* =========================
-   ALTERNATE ROW COLOR
-   ========================= */
 .table-modern tbody tr:nth-child(even) td {
-  background-color: #fafcff;
+  background: #fafcff;
 }
 
-/* =========================
-   STRONG ROW HOVER EFFECT
-   ========================= */
-.table-modern tbody tr td {
-  transition:
-    background-color 0.25s ease,
-    box-shadow 0.25s ease,
-    transform 0.15s ease;
+/* =====================================================
+   MULTI-LINE CELLS (FINAL FIX)
+   ===================================================== */
+.table-modern td.multi-cell {
+  padding: 0 !important;
+  --rowH: 56px;                 /* base height per service */
 }
 
-.table-modern tbody tr:hover td {
-  background-color: #e7f0ff !important; /* strong but clean */
+/* each service line */
+.table-modern td.multi-cell .multi-line-item {
+  min-height: var(--rowH);      /* aligned baseline */
+  height: auto;                 /* allow growth */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  padding: 8px 10px;
+  text-align: center;
+  line-height: 1.25;
+
+  /* plain solid divider */
+  border-bottom: 1px solid #e2e8f5;
+
+  /* wrapping rules (NO Accountin g) */
+  white-space: normal;
+  word-break: normal;
+  overflow-wrap: break-word;
+
+  box-sizing: border-box;
+  max-width: 100%;
 }
 
-/* subtle lift */
-.table-modern tbody tr:hover {
-  /* transform: scale(1.002); */
-  transform:none;
+/* remove divider for last line */
+.table-modern td.multi-cell .multi-line-item:last-child {
+  border-bottom: none;
 }
 
-/* =========================
-   MULTI-LINE ITEM SEPARATOR
-   ========================= */
-.multi-line-item + .multi-line-item {
-  border-top: 1px dashed #cfd9ec;
-  margin-top: 4px;
-  padding-top: 5px;
-}
-
-/* =========================
-   ACTION BUTTONS
-   ========================= */
-.table-modern .btn-pill {
-  border-radius: 999px !important;
-}
-
-/* =========================
-   RESPONSIVE
-   ========================= */
-.table-responsive {
-  border-radius: 12px;
-  overflow: hidden;
-}
-
-/* Full name should wrap to new line instead of truncating */
-.table-modern td.full-name-cell{
-  white-space: normal !important;     /* allow wrapping */
-  overflow: visible !important;       /* remove ellipsis behavior */
-  text-overflow: clip !important;
-  word-break: break-word;             /* break long words if needed */
-  overflow-wrap: anywhere;            /* safer wrap for long names */
+/* =====================================================
+   FULL NAME CELL (SAFE WRAP)
+   ===================================================== */
+.table-modern td.full-name-cell {
+  padding: 12px 10px;
+  white-space: normal;
+  word-break: normal;
+  overflow-wrap: break-word;
   line-height: 1.3;
 }
 
+/* =====================================================
+   OPTIONAL COLUMN WIDTH TUNING
+   (adjust indexes if needed)
+   ===================================================== */
+
+/* STATUS column wider */
+.table-modern th:nth-child(10),
+.table-modern td:nth-child(10) {
+  width: 150px;
+}
+
+/* DATE columns slightly narrower */
+.table-modern th:nth-child(9),
+.table-modern td:nth-child(9),
+.table-modern th:nth-child(11),
+.table-modern td:nth-child(11) {
+  width: 130px;
+}
+
+/* SERVICE DURATION column */
+.table-modern th:nth-child(12),
+.table-modern td:nth-child(12) {
+  width: 160px;
+}
+
+/* ===== STATUS COLUMN: BALANCED WIDTH ===== */
+.table-modern th:nth-child(10),
+.table-modern td:nth-child(10) {
+  width: 140px !important;
+  min-width: 140px !important;
+}
+.table-modern td:nth-child(10) .multi-line-item {
+  white-space: normal !important;
+  word-break: normal !important;
+
+  /* 👇 allows break at "/" but not inside words */
+  overflow-wrap: break-word !important;
+
+  text-align: center;
+  line-height: 1.2;
+}
+
+/* =====================================================
+   CENTER SIMPLE (NON–MULTI) COLUMNS
+   ===================================================== */
+
+/* column indexes (based on your table order):
+   1  Full Name
+   2  Birthday
+   3  Gender
+   4  Educational Attainment
+   5  Eligibility
+   13 Remarks
+   14 Actions
+*/
+
+.table-modern td:nth-child(1),
+.table-modern td:nth-child(2),
+.table-modern td:nth-child(3),
+.table-modern td:nth-child(4),
+.table-modern td:nth-child(5),
+.table-modern td:nth-child(13),
+.table-modern td:nth-child(14) {
+  text-align: center !important;
+  vertical-align: middle !important;
+}
+
+/* ensure buttons in Actions are centered */
+.table-modern td:nth-child(14) {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+}
+
+/* Full name wrapping stays nice but centered */
+.table-modern td:nth-child(1) {
+  white-space: normal;
+  word-break: normal;
+  overflow-wrap: break-word;
+  line-height: 1.35;
+}
+
+/* ACTIONS: force one line + center */
+.table-modern td:nth-child(14){
+  display: table-cell !important;     /* undo flex on td */
+  text-align: center !important;
+  vertical-align: middle !important;
+  padding: 12px 10px !important;
+}
+
+/* center the inner wrapper and keep buttons in one row */
+.table-modern td:nth-child(14) > .d-flex{
+  display: inline-flex !important;   /* inline so it centers */
+  justify-content: center !important;
+  align-items: center !important;
+  gap: 8px !important;
+  flex-wrap: nowrap !important;      /* ✅ never go to 2nd line */
+  width: auto !important;
+}
+
+
+/* Keep the modal inside the viewport */
+#editModal .modal-dialog {
+  height: 90vh;
+}
+
+#editModal .modal-content {
+  max-height: 90vh;
+  overflow: hidden; /* important */
+}
+
+/* ✅ This is the real scroll area */
+#editModal .modal-body {
+  overflow-y: auto !important;
+  max-height: calc(90vh - 140px); /* header + footer space */
+}
+
+/* Your card wrapper should NOT block scroll */
+#editModal .form-card {
+  overflow: visible !important;
+}
+
+/* ✅ Stop remarks from eating the entire modal */
+#editModal #edit_remarks {
+  max-height: 140px;
+  resize: none;
+}

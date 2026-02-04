@@ -28,15 +28,16 @@ class SearchRecords extends BaseController
                 'birthdate' => $emp['birthdate'],
                 'gender' => $emp['gender'],
 
-                // ✅ IMPORTANT: must match VIEW + JS
+                // ✅ MUST match VIEW + JS keys
                 'departments'  => $emp['departments'] ?? '',
                 'designations' => $emp['designations'] ?? '',
                 'rates'        => $emp['rates'] ?? '',
                 'dates'        => $emp['dates'] ?? '',
                 'statuses'     => $emp['statuses'] ?? '',
                 'date_ended'   => $emp['date_ended'] ?? '',
+                'service_duration' => $emp['service_duration'] ?? '',
 
-                // ✅ REQUIRED for correct update per row
+                // ✅ REQUIRED for correct update per service row
                 'service_ids'  => $emp['service_ids'] ?? '',
 
                 'educational_attainment' => $emp['educational_attainment'],
