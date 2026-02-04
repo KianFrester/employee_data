@@ -1012,7 +1012,7 @@ $employment_total = array_sum($employment_counts);
 <script src="<?= base_url('js/print_gender_table.js') ?>"></script>
 <script src="<?= base_url('js/print_eligibility_table.js') ?>"></script>
 <script src="<?= base_url('js/print_age_table.js') ?>"></script>
-<script src="<?= base_url('js/print_educational_attainment_table.js') ?>"></script>
+<script src="<?= base_url('js/print_education_table.js') ?>"></script>
 <script src="<?= base_url('js/print_employment_status_table.js') ?>"></script>
 <script src="<?= base_url('js/employment_status.js') ?>"></script>
 

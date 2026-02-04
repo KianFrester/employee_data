@@ -134,3 +134,14 @@
   border-radius: 12px;
   overflow: hidden;
 }
+
+/* Full name should wrap to new line instead of truncating */
+.table-modern td.full-name-cell{
+  white-space: normal !important;     /* allow wrapping */
+  overflow: visible !important;       /* remove ellipsis behavior */
+  text-overflow: clip !important;
+  word-break: break-word;             /* break long words if needed */
+  overflow-wrap: anywhere;            /* safer wrap for long names */
+  line-height: 1.3;
+}
+

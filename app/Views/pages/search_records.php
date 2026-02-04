@@ -35,6 +35,11 @@
             </div>
         </div>
 
+        <script>
+            // CI4 base_url (always correct even if /public is in the URL)
+            window.ASSET_BASE = "<?= rtrim(base_url(), '/') ?>";
+        </script>
+
         <!-- Column Filter Dropdown -->
         <div class="col-12 col-md-4 col-lg-3 mb-3 mb-md-0">
             <div class="dropdown w-100">
@@ -213,7 +218,7 @@
                                 <tr>
 
                                     <!-- ✅ FULL NAME -->
-                                    <td class="text-truncate" style="max-width: 220px;">
+                                    <td class="full-name-cell" style="max-width: 220px;">
                                         <?= formatFullName($rec) ?>
                                     </td>
 
